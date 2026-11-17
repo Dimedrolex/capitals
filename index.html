@@ -88,8 +88,18 @@ h1{font-size:24px;line-height:1.2}
 .praise{position:fixed;left:50%;top:36%;transform:translate(-50%,-50%);font-size:30px;font-weight:800;color:var(--ok);opacity:0;pointer-events:none;text-shadow:0 2px 14px rgba(0,0,0,.18);white-space:nowrap;z-index:50}
 .praise.mega{color:#ff8a00;font-size:38px}
 .praise.go{animation:praise 1.1s ease-out forwards}
+.praise.go2{animation:praise2 1.1s ease-out forwards}
+.praise.go3{animation:praise3 1.15s ease-out forwards}
+.praise.go4{animation:praise4 1.1s ease-out forwards}
+@keyframes praise2{0%{opacity:0;transform:translate(-160%,-50%) rotate(-12deg)}25%{opacity:1;transform:translate(-45%,-50%) rotate(4deg)}40%{transform:translate(-50%,-50%) rotate(0)}75%{opacity:1}100%{opacity:0;transform:translate(60%,-50%)}}
+@keyframes praise3{0%{opacity:0;transform:translate(-50%,-260%)}30%{opacity:1;transform:translate(-50%,-40%)}45%{transform:translate(-50%,-62%)}60%{transform:translate(-50%,-50%)}80%{opacity:1}100%{opacity:0;transform:translate(-50%,-50%) scale(.8)}}
+@keyframes praise4{0%{opacity:0;transform:translate(-50%,-50%) rotate(-200deg) scale(.2)}35%{opacity:1;transform:translate(-50%,-50%) rotate(8deg) scale(1.15)}50%{transform:translate(-50%,-50%) rotate(0) scale(1)}80%{opacity:1}100%{opacity:0;transform:translate(-50%,-50%) scale(1.4)}}
 @keyframes praise{0%{opacity:0;transform:translate(-50%,-50%) scale(.5)}20%{opacity:1;transform:translate(-50%,-50%) scale(1.2)}40%{transform:translate(-50%,-50%) scale(1)}75%{opacity:1}100%{opacity:0;transform:translate(-50%,-110%) scale(1)}}
 .cf{position:fixed;top:-14px;width:9px;height:14px;border-radius:2px;z-index:60;pointer-events:none;animation:fall var(--d) ease-in forwards}
+.cf.round{width:11px;height:11px;border-radius:50%}
+.cf.emo{width:auto;height:auto;background:none;font-size:22px}
+.cf.burst{top:45%;left:50%;width:9px;height:9px;border-radius:50%;animation:burst var(--d) ease-out forwards}
+@keyframes burst{0%{transform:translate(-50%,-50%) scale(1);opacity:1}100%{transform:translate(calc(-50% + var(--bx)),calc(-50% + var(--by))) scale(.4);opacity:0}}
 @keyframes fall{to{transform:translate(var(--x),105vh) rotate(var(--r))}}
 /* --- справочник: мобильная раскладка (глобус сверху, лента карточек снизу) --- */
 #ref.screen.active{display:flex;flex-direction:column;height:calc(var(--tg-viewport-stable-height,100vh) - 56px)}
@@ -135,6 +145,66 @@ h1{font-size:24px;line-height:1.2}
 .glabel{background:rgba(0,0,0,.78);color:#fff;padding:6px 10px;border-radius:8px;font-size:13px;line-height:1.4}
 .item.clk{cursor:pointer}
 .item.sel{background:rgba(255,138,0,.16);border-radius:10px;padding-left:8px;padding-right:8px}
+.seg3{grid-template-columns:repeat(3,1fr)}
+.seg3 .chip{font-size:13px;padding:10px 4px;line-height:1.25}
+.type-hint{font-size:12px;color:var(--hint);margin:-6px 0 14px}
+.rank{background:var(--bg2);border-radius:16px;padding:12px 14px;margin-bottom:12px}
+.rank-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:15px}
+.rank-top em{display:block;font-style:normal;font-size:12px;color:var(--hint);margin-top:2px;font-weight:400}
+.rank-top span{color:var(--hint);font-size:13px;font-weight:600}
+.rank .bar{margin-bottom:6px;background:var(--bg)}
+.rank .bar i{background:linear-gradient(90deg,#ffb100,#ff6a00)}
+.rank small{color:var(--hint);font-size:12px}
+.loading{text-align:center;color:var(--hint);padding:80px 20px;font-size:16px}
+.shape{display:block;width:240px;height:170px;margin:0 auto 4px}
+.shape path{fill:var(--accent);stroke:var(--accent);stroke-width:1.2px;vector-effect:non-scaling-stroke;stroke-linejoin:round}
+.hard{display:grid;gap:10px}
+.hard input{width:100%;border:2px solid transparent;background:var(--bg2);color:var(--text);padding:16px;border-radius:14px;font-size:18px;outline:none}
+.hard input:focus{border-color:var(--accent)}
+.hard input.ok{border-color:var(--ok);background:rgba(34,165,90,.15)}
+.hard input.bad{border-color:var(--bad);background:rgba(229,72,77,.12);animation:shake .3s}
+.hard .btn{margin:0}
+.hard-hint{text-align:center;color:#ff8a00;font-weight:600;min-height:20px;margin-top:8px;font-size:14px}
+.praise.minus{color:var(--bad);font-size:34px}
+#timerBar.low{background:var(--bad)}
+.xp-line{text-align:center;font-weight:700;color:#ff8a00;margin-bottom:10px}
+.ach-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px}
+.badge-card{background:var(--bg2);border-radius:14px;padding:12px;text-align:center;opacity:.5}
+.badge-card.on{opacity:1;box-shadow:inset 0 0 0 2px rgba(255,138,0,.5)}
+.badge-card .bi{font-size:34px;margin-bottom:4px}
+.badge-card b{display:block;font-size:14px}
+.badge-card small{display:block;font-size:12px;color:var(--hint);margin-top:2px}
+.ach-row{display:flex;flex-wrap:wrap;gap:8px}
+.ach-row span{background:var(--bg);border-radius:20px;padding:6px 10px;font-size:13px}
+.ach-banner{position:fixed;left:50%;top:12px;transform:translate(-50%,-150%);display:flex;align-items:center;gap:10px;background:linear-gradient(135deg,#ffb100,#ff6a00);color:#fff;padding:10px 18px 10px 12px;border-radius:16px;box-shadow:0 6px 24px rgba(0,0,0,.25);z-index:70;transition:transform .35s cubic-bezier(.2,1.4,.4,1);max-width:92vw}
+.ach-banner.show{transform:translate(-50%,0)}
+.ach-banner .ai{font-size:32px}
+.ach-banner small{display:block;font-size:11px;opacity:.9;text-transform:uppercase;letter-spacing:.04em}
+.ach-banner b{font-size:16px}
+.tier{display:inline-block;font-size:12px;font-weight:700;padding:2px 7px;border-radius:10px;margin-left:4px;vertical-align:middle;background:rgba(34,165,90,.15);color:var(--ok)}
+.tier.t15{background:rgba(255,177,0,.18);color:#d48a00}
+.tier.t2{background:rgba(229,72,77,.15);color:var(--bad)}
+.gain{color:#ff8a00;font-weight:700;white-space:nowrap}
+#ref header{justify-content:flex-start;align-items:center}
+.back{border:0;background:var(--bg2);color:var(--accent);font-weight:700;font-size:15px;padding:8px 12px;border-radius:10px;cursor:pointer;flex-shrink:0}
+#ach header{justify-content:flex-start;align-items:center}
+.daily.res{background:linear-gradient(135deg,#00b4db,#0083b0)}
+#resorts header{justify-content:flex-start;align-items:center}
+.rtype{color:var(--hint);font-size:13px;margin-top:2px}
+.opt .fl.sm{margin-right:6px}
+.daily.countries{background:linear-gradient(135deg,#667eea,#764ba2)}
+#countries header{justify-content:flex-start;align-items:center}
+.daily.kids{background:linear-gradient(135deg,#a18cd1,#f78fb3)}
+.daily.kflag{background:linear-gradient(135deg,#ff9a44,#fc6076);padding:22px 16px}
+.daily.kcap{background:linear-gradient(135deg,#43cea2,#185a9d);padding:22px 16px}
+.daily.kflag b,.daily.kcap b{font-size:20px}
+#kids header{justify-content:flex-start;align-items:center}
+.fl.kid{font-size:90px}
+.fl.kid img{height:120px;width:auto;border-radius:10px;box-shadow:0 3px 14px rgba(0,0,0,.2)}
+.opts.kid{gap:12px}
+.opts.kid .opt{font-size:20px;padding:20px;text-align:center;border-radius:18px;font-weight:600}
+.opt.soft{opacity:.4}
+.stars{font-size:58px;text-align:center;margin:10px 0 4px;letter-spacing:4px}
 .toast{position:fixed;left:50%;bottom:30px;transform:translateX(-50%);background:rgba(0,0,0,.8);color:#fff;padding:10px 18px;border-radius:20px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none}
 .toast.show{opacity:1}
 </style>
@@ -145,9 +215,14 @@ h1{font-size:24px;line-height:1.2}
   <section id="game" class="screen"></section>
   <section id="result" class="screen"></section>
   <section id="ref" class="screen"></section>
+  <section id="ach" class="screen"></section>
+  <section id="resorts" class="screen"></section>
+  <section id="kids" class="screen"></section>
+  <section id="countries" class="screen"></section>
 </div>
 <div class="toast" id="toast"></div>
 <div class="praise" id="praise"></div>
+<div class="ach-banner" id="achBanner"></div>
 
 <script>
 // ===== НАСТРОЙКИ =====
@@ -197,7 +272,6 @@ SI|eu|Slovenia|Ljubljana|Словения|Любляна
 ES|eu|Spain|Madrid|Испания|Мадрид
 SE|eu|Sweden|Stockholm|Швеция|Стокгольм
 CH|eu|Switzerland|Bern|Швейцария|Берн
-UA|eu|Ukraine|Kyiv|Украина|Киев
 GB|eu|United Kingdom|London|Великобритания|Лондон
 VA|eu|Vatican City|Vatican City|Ватикан|Ватикан
 AF|as|Afghanistan|Kabul|Афганистан|Кабул
@@ -214,7 +288,6 @@ IN|as|India|New Delhi|Индия|Нью-Дели
 ID|as|Indonesia|Jakarta|Индонезия|Джакарта
 IR|as|Iran|Tehran|Иран|Тегеран
 IQ|as|Iraq|Baghdad|Ирак|Багдад
-IL|as|Israel|Jerusalem|Израиль|Иерусалим
 JP|as|Japan|Tokyo|Япония|Токио
 JO|as|Jordan|Amman|Иордания|Амман
 KZ|as|Kazakhstan|Astana|Казахстан|Астана
@@ -300,28 +373,28 @@ TN|af|Tunisia|Tunis|Тунис|Тунис
 UG|af|Uganda|Kampala|Уганда|Кампала
 ZM|af|Zambia|Lusaka|Замбия|Лусака
 ZW|af|Zimbabwe|Harare|Зимбабве|Хараре
-AG|na|Antigua and Barbuda|Saint John's|Антигуа и Барбуда|Сент-Джонс
-BS|na|Bahamas|Nassau|Багамы|Нассау
-BB|na|Barbados|Bridgetown|Барбадос|Бриджтаун
+AG|cb|Antigua and Barbuda|Saint John's|Антигуа и Барбуда|Сент-Джонс
+BS|cb|Bahamas|Nassau|Багамы|Нассау
+BB|cb|Barbados|Bridgetown|Барбадос|Бриджтаун
 BZ|na|Belize|Belmopan|Белиз|Бельмопан
 CA|na|Canada|Ottawa|Канада|Оттава
 CR|na|Costa Rica|San Jose|Коста-Рика|Сан-Хосе
-CU|na|Cuba|Havana|Куба|Гавана
-DM|na|Dominica|Roseau|Доминика|Розо
-DO|na|Dominican Republic|Santo Domingo|Доминиканская Республика|Санто-Доминго
+CU|cb|Cuba|Havana|Куба|Гавана
+DM|cb|Dominica|Roseau|Доминика|Розо
+DO|cb|Dominican Republic|Santo Domingo|Доминиканская Республика|Санто-Доминго
 SV|na|El Salvador|San Salvador|Сальвадор|Сан-Сальвадор
-GD|na|Grenada|St. George's|Гренада|Сент-Джорджес
+GD|cb|Grenada|St. George's|Гренада|Сент-Джорджес
 GT|na|Guatemala|Guatemala City|Гватемала|Гватемала
-HT|na|Haiti|Port-au-Prince|Гаити|Порт-о-Пренс
+HT|cb|Haiti|Port-au-Prince|Гаити|Порт-о-Пренс
 HN|na|Honduras|Tegucigalpa|Гондурас|Тегусигальпа
-JM|na|Jamaica|Kingston|Ямайка|Кингстон
+JM|cb|Jamaica|Kingston|Ямайка|Кингстон
 MX|na|Mexico|Mexico City|Мексика|Мехико
 NI|na|Nicaragua|Managua|Никарагуа|Манагуа
 PA|na|Panama|Panama City|Панама|Панама
-KN|na|Saint Kitts and Nevis|Basseterre|Сент-Китс и Невис|Бастер
-LC|na|Saint Lucia|Castries|Сент-Люсия|Кастри
-VC|na|Saint Vincent and the Grenadines|Kingstown|Сент-Винсент и Гренадины|Кингстаун
-TT|na|Trinidad and Tobago|Port of Spain|Тринидад и Тобаго|Порт-оф-Спейн
+KN|cb|Saint Kitts and Nevis|Basseterre|Сент-Китс и Невис|Бастер
+LC|cb|Saint Lucia|Castries|Сент-Люсия|Кастри
+VC|cb|Saint Vincent and the Grenadines|Kingstown|Сент-Винсент и Гренадины|Кингстаун
+TT|cb|Trinidad and Tobago|Port of Spain|Тринидад и Тобаго|Порт-оф-Спейн
 US|na|United States|Washington, D.C.|США|Вашингтон
 AR|sa|Argentina|Buenos Aires|Аргентина|Буэнос-Айрес
 BO|sa|Bolivia|Sucre|Боливия|Сукре
@@ -355,9 +428,9 @@ const COUNTRIES = RAW.trim().split('\n').map(l => {
   return { id, r, en: { n: en, c: enc }, ru: { n: ru, c: ruc } };
 });
 const BY_ID = Object.fromEntries(COUNTRIES.map(c => [c.id, c]));
-const REGIONS = ['world', 'eu', 'as', 'af', 'na', 'sa', 'oc'];
-const PARTS = ['eu', 'as', 'af', 'na', 'sa', 'oc'];
-const LENS = [10, 15, 20, 'all'];
+const REGIONS = ['world', 'eu', 'as', 'af', 'na', 'cb', 'sa', 'oc'];
+const PARTS = ['eu', 'as', 'af', 'na', 'cb', 'sa', 'oc'];
+const LENS = [10, 20, 'all'];
 
 // ===== ТЕКСТЫ =====
 const I18N = {
@@ -365,49 +438,160 @@ const I18N = {
     title: 'Столицы мира', sub: 'Угадай столицу любой страны',
     daily: '🔥 Ежедневный челлендж', dailyDesc: '10 вопросов — одинаковые для всех сегодня',
     dailyDone: s => `Сегодня: ${s}/10 ✓ · можно переиграть`,
-    mode: 'Режим', c2cap: 'Столица по стране', cap2c: 'Страна по столице',
+    mode: 'Что угадываем', c2cap: 'Столицу по стране', cap2c: 'Страну по столице', shape: 'Страну по контуру',
+    type: 'Тип игры', normal: 'Обычная', blitz: '⚡ Блиц 60 с', hardcore: '💀 Хардкор',
+    typeHint: { normal: '4 варианта ответа', blitz: 'Максимум ответов за 60 секунд, ошибка −3 с', hardcore: 'Без вариантов — печатаешь ответ сам, опыт ×2' },
     region: 'Регионы — можно несколько', world: 'Весь мир', eu: 'Европа', as: 'Азия', af: 'Африка',
-    na: 'Сев. Америка', sa: 'Юж. Америка', oc: 'Океания',
+    na: 'Сев. Америка', cb: 'Карибы', sa: 'Юж. Америка', oc: 'Океания',
     len: 'Вопросов', all: 'До конца', start: 'Начать',
-    errors: n => `🧠 Ошибки (${n})`, ref: 'Справочник',
+    errors: n => `🧠 Ошибки (${n})`, ref: 'Справочник', achBtn: (a, b) => `🏅 Достижения ${a}/${b}`,
     played: 'Игр', acc: 'Точность', bestStreak: 'Лучшая серия',
-    qc2cap: 'Столица страны', qcap2c: 'Чья это столица?',
+    qc2cap: 'Столица страны', qcap2c: 'Чья это столица?', qshape: 'Чей это контур?',
     streak: 'Серия', quit: 'Выйти', capOf: 'столица',
     newRecord: '🏆 Новый рекорд!', best: 'Рекорд', mist: 'Запомни', noMist: 'Ни одной ошибки! 🔥',
     again: 'Ещё раз', share: 'Позвать друзей', home: 'В меню',
     search: 'Страна или столица…', copied: 'Скопировано',
-    shareText: (s, t) => `Я угадал ${s} из ${t} столиц в «Столицах мира» 🌍 Сможешь лучше?`,
-    shareDaily: s => `Ежедневный челлендж «Столицы мира»: ${s}/10 🌍 Попробуй побить!`,
+    shareText: (s, t, tm) => `Я угадал ${s} из ${t}${tm || ''} в «Столицах мира» 🌍 Сможешь лучше?`,
+    shareBlitz: s => `${s} правильных за 60 секунд в блице «Столиц мира» ⚡ Побьёшь?`,
+    shareDaily: (s, tm) => `Ежедневный челлендж «Столицы мира»: ${s}/10${tm || ''} 🌍 Попробуй побить!`,
     dailyTitle: 'Ежедневный челлендж', errorsTitle: 'Работа над ошибками',
     streakMsg: s => `🔥 Серия ${s}!`,
     globeHint: 'Нажми на страну на глобусе или в списке', globeLoading: '🌍 Загружаем глобус…',
     globeFail: 'Глобус не загрузился — проверь интернет', capital: 'Столица',
-    praise: ['Верно! ✨', 'Отлично! 👏', 'Супер! 🎯', 'Так держать! 💪', 'Браво! 🌟', 'В точку! 🎯', 'Красавчик! 😎', 'Огонь! 🔥', 'Знаток! 🧠', 'Идеально! ⭐', 'Молодец! 🙌', 'Есть! ✅']
+    praise: ['Верно! ✨', 'Отлично! 👏', 'Супер! 🎯', 'Так держать! 💪', 'Браво! 🌟', 'В точку! 🎯', 'Красавчик! 😎', 'Огонь! 🔥', 'Знаток! 🧠', 'Идеально! ⭐', 'Молодец! 🙌', 'Есть! ✅'],
+    typeAnswer: 'Напиши ответ…', answerBtn: 'Ответить', dontKnow: 'Не знаю',
+    hintLetter: (l, n) => `Начинается на «${l}», букв: ${n}`, hintBtn: '💡 Первая буква',
+    penalty: '−3 с', timeUp: '⏱ Время вышло!', answers: 'Ответов', correctW: 'правильно',
+    youTyped: 'Ты написал', almost: 'Засчитано (почти точно) ✍️',
+    loadingShapes: '🗺️ Загружаем контуры стран…', shapesFail: 'Контуры не загрузились — проверь интернет',
+    rankNext: (r, n) => `до «${r}» ещё ${n} XP`, rankMax: 'Высшее звание!', newRank: r => `🎉 Новое звание: ${r}!`,
+    resorts: 'Курорты', resortsSub: n => `Морские, островные и горнолыжные — ${n} мест`,
+    resortsBtn: '🏖 Курорты', resortsBtnSub: 'Где этот курорт? Бали, Хургада, Куршевель, Занзибар…',
+    r_where_hint: 'Показываем курорт — выбери, в какой он стране',
+    r_where_q: 'В какой стране?',
+    island: 'остров', resort: 'курорт', skiResort: 'горнолыжный курорт', dir: 'Направление',
+    d_all: 'Все направления', d_tr: '🇹🇷 Турция, Египет и арабские страны', d_eu: '🇪🇺 Европа и Россия', d_asia: '🌏 Азия', d_exo: '🌴 Экзотика',
+    shareRes: (s, n, tm) => `Я угадал ${s} из ${n} курортов${tm || ''} в «Столицах мира» 🏖 Сможешь лучше?`,
+    countriesBtn: '🌍 Страны и столицы', countriesBtnSub: n => `Столицы, контуры, блиц и хардкор — ${n} стран`,
+    countriesTitle: 'Страны и столицы', countriesSub: n => `${n} стран мира`, toCountries: 'К странам',
+    kidsBtn: '👶 Для детей', kidsBtnSub: 'Флаги и столицы известных стран — без очков и таймера',
+    kidsTitle: 'Для детей', kidsSub: 'Самые известные страны мира', kidsNote: 'Без очков, таймера и рекордов — просто играем и учимся 🙂',
+    kFlags: '🚩 Угадай флаг', kCaps: '🏙 Угадай столицу', kCount: n => `${n} стран · 10 вопросов`,
+    kQFlag: 'Какая это страна?', kQCap: 'Какая столица у страны',
+    kPraise: ['Умница! 🌟', 'Правильно! 🎉', 'Молодец! 👏', 'Ура! 🥳', 'Супер! ⭐', 'Отлично! 🙌'],
+    kAlmost: 'Почти! Правильно —', kDone: (s, n) => `${s} из ${n}`,
+    kGreat: 'Молодец! Ты отлично знаешь страны 🎉', kTry: 'Хорошо получилось! Давай ещё раз — будет ещё лучше 💪',
+    kAgain: 'Играть ещё', kBack: 'К детскому разделу',
+    back: 'Назад', gotXp: n => `+${n} XP`, ach: 'Достижения', achNew: 'Новое достижение!', achGot: 'Получено в этой игре',
+    timeLine: (t, a) => `⏱ Время: ${t} · в среднем ${a} с на вопрос`, bestTime: 'Лучшее время без ошибок',
+    newBestTime: '🏎️ Рекорд скорости!', shareTime: t => ` за ${t}`
   },
   en: {
     title: 'World Capitals', sub: 'Guess the capital of every country',
     daily: '🔥 Daily challenge', dailyDesc: '10 questions — the same for everyone today',
     dailyDone: s => `Today: ${s}/10 ✓ · play again`,
-    mode: 'Mode', c2cap: 'Capital by country', cap2c: 'Country by capital',
+    mode: 'What to guess', c2cap: 'Capital by country', cap2c: 'Country by capital', shape: 'Country by shape',
+    type: 'Game type', normal: 'Classic', blitz: '⚡ Blitz 60s', hardcore: '💀 Hardcore',
+    typeHint: { normal: '4 answer options', blitz: 'As many as you can in 60 s, mistake −3 s', hardcore: 'No options — type the answer yourself, XP ×2' },
     region: 'Regions — pick several', world: 'Whole world', eu: 'Europe', as: 'Asia', af: 'Africa',
-    na: 'N. America', sa: 'S. America', oc: 'Oceania',
+    na: 'N. America', cb: 'Caribbean', sa: 'S. America', oc: 'Oceania',
     len: 'Questions', all: 'All of them', start: 'Start',
-    errors: n => `🧠 Mistakes (${n})`, ref: 'Atlas',
+    errors: n => `🧠 Mistakes (${n})`, ref: 'Atlas', achBtn: (a, b) => `🏅 Achievements ${a}/${b}`,
     played: 'Games', acc: 'Accuracy', bestStreak: 'Best streak',
-    qc2cap: 'Capital of', qcap2c: 'Which country is this the capital of?',
+    qc2cap: 'Capital of', qcap2c: 'Which country is this the capital of?', qshape: 'Whose shape is this?',
     streak: 'Streak', quit: 'Quit', capOf: 'capital of',
     newRecord: '🏆 New record!', best: 'Best', mist: 'Remember these', noMist: 'No mistakes at all! 🔥',
     again: 'Play again', share: 'Challenge friends', home: 'Menu',
     search: 'Country or capital…', copied: 'Copied',
-    shareText: (s, t) => `I guessed ${s} of ${t} capitals in World Capitals 🌍 Can you beat me?`,
-    shareDaily: s => `World Capitals daily challenge: ${s}/10 🌍 Can you beat it?`,
+    shareText: (s, t, tm) => `I got ${s} of ${t}${tm || ''} in World Capitals 🌍 Can you beat me?`,
+    shareBlitz: s => `${s} correct in 60 seconds in World Capitals blitz ⚡ Can you beat it?`,
+    shareDaily: (s, tm) => `World Capitals daily challenge: ${s}/10${tm || ''} 🌍 Can you beat it?`,
     dailyTitle: 'Daily challenge', errorsTitle: 'Practice mistakes',
     streakMsg: s => `🔥 ${s} in a row!`,
     globeHint: 'Tap a country on the globe or in the list', globeLoading: '🌍 Loading the globe…',
     globeFail: "Globe didn't load — check your connection", capital: 'Capital',
-    praise: ['Correct! ✨', 'Great! 👏', 'Awesome! 🎯', 'Keep it up! 💪', 'Bravo! 🌟', 'Spot on! 🎯', 'Nice one! 😎', 'On fire! 🔥', 'Genius! 🧠', 'Perfect! ⭐', 'Well done! 🙌', 'Yes! ✅']
+    praise: ['Correct! ✨', 'Great! 👏', 'Awesome! 🎯', 'Keep it up! 💪', 'Bravo! 🌟', 'Spot on! 🎯', 'Nice one! 😎', 'On fire! 🔥', 'Genius! 🧠', 'Perfect! ⭐', 'Well done! 🙌', 'Yes! ✅'],
+    typeAnswer: 'Type your answer…', answerBtn: 'Answer', dontKnow: "Don't know",
+    hintLetter: (l, n) => `Starts with “${l}”, ${n} letters`, hintBtn: '💡 First letter',
+    penalty: '−3 s', timeUp: "⏱ Time's up!", answers: 'Answers', correctW: 'correct',
+    youTyped: 'You typed', almost: 'Accepted (close enough) ✍️',
+    loadingShapes: '🗺️ Loading country shapes…', shapesFail: "Shapes didn't load — check your connection",
+    rankNext: (r, n) => `${n} XP to “${r}”`, rankMax: 'Top rank!', newRank: r => `🎉 New rank: ${r}!`,
+    resorts: 'Resorts', resortsSub: n => `Beach, island and ski resorts — ${n} places`,
+    resortsBtn: '🏖 Resorts', resortsBtnSub: 'Where is it? Bali, Hurghada, Courchevel, Zanzibar…',
+    r_where_hint: 'We show a resort — pick the country it is in',
+    r_where_q: 'Which country?',
+    island: 'island', resort: 'resort', skiResort: 'ski resort', dir: 'Destination',
+    d_all: 'All destinations', d_tr: '🇹🇷 Turkey, Egypt & Arab countries', d_eu: '🇪🇺 Europe & Russia', d_asia: '🌏 Asia', d_exo: '🌴 Exotic',
+    shareRes: (s, n, tm) => `I got ${s} of ${n} resorts${tm || ''} in World Capitals 🏖 Can you beat me?`,
+    countriesBtn: '🌍 Countries & capitals', countriesBtnSub: n => `Capitals, shapes, blitz and hardcore — ${n} countries`,
+    countriesTitle: 'Countries & capitals', countriesSub: n => `${n} countries of the world`, toCountries: 'Countries',
+    kidsBtn: '👶 For kids', kidsBtnSub: 'Flags and capitals of famous countries — no points, no timer',
+    kidsTitle: 'For kids', kidsSub: 'The best-known countries of the world', kidsNote: 'No points, timer or records — just play and learn 🙂',
+    kFlags: '🚩 Guess the flag', kCaps: '🏙 Guess the capital', kCount: n => `${n} countries · 10 questions`,
+    kQFlag: 'Which country is this?', kQCap: 'What is the capital of',
+    kPraise: ['Clever! 🌟', 'Correct! 🎉', 'Well done! 👏', 'Hooray! 🥳', 'Super! ⭐', 'Great! 🙌'],
+    kAlmost: 'Almost! The answer is', kDone: (s, n) => `${s} of ${n}`,
+    kGreat: 'Well done! You know your countries 🎉', kTry: 'Nice try! Play again — it will be even better 💪',
+    kAgain: 'Play again', kBack: 'Back to kids',
+    back: 'Back', gotXp: n => `+${n} XP`, ach: 'Achievements', achNew: 'Achievement unlocked!', achGot: 'Unlocked this game',
+    timeLine: (t, a) => `⏱ Time: ${t} · ${a} s per question on average`, bestTime: 'Best flawless time',
+    newBestTime: '🏎️ Speed record!', shareTime: t => ` in ${t}`
   }
 };
+const MODES = ['c2cap', 'cap2c', 'shape'];
+const TYPES = ['normal', 'blitz', 'hardcore'];
+
+// ===== ЗВАНИЯ =====
+// [нужно XP, значок, название RU, название EN, описание RU, описание EN]
+const RANKS = [
+  [0, '🎒', 'Следопыт', 'Pathfinder', 'Первые шаги и открытия', 'First steps and discoveries'],
+  [300, '🧳', 'Странник', 'Wanderer', 'Путешествия становятся привычкой', 'Travel is becoming a habit'],
+  [1000, '🏖️', 'Покоритель пляжей', 'Beach Conqueror', 'Знает, где самое тёплое море', 'Knows where the sea is warmest'],
+  [2500, '🧭', 'Искатель приключений', 'Adventurer', 'Поиск новых мест и впечатлений', 'Seeking new places and experiences'],
+  [5000, '🌴', 'Знаток курортов', 'Resort Expert', 'Отличит Хургаду от Шарма с закрытыми глазами', 'Tells Hurghada from Sharm with eyes closed'],
+  [9000, '🗺️', 'Первопроходец', 'Trailblazer', 'Открывает новые маршруты', 'Opens up new routes'],
+  [15000, '🏝️', 'Хозяин островов', 'Lord of the Islands', 'От Бали до Бора-Бора', 'From Bali to Bora Bora'],
+  [25000, '🏔️', 'Покоритель земель', 'Land Conqueror', 'Покоряет новые территории', 'Conquers new territories'],
+  [45000, '⛵', 'Великий мореплаватель', 'Great Navigator', 'Масштабные путешествия', 'Voyages on a grand scale'],
+  [70000, '🌐', 'Легенда странствий', 'Travel Legend', 'Опыт настоящего исследователя мира', 'The experience of a true world explorer'],
+  [100000, '🌍', 'Покоритель семи морей', 'Conqueror of the Seven Seas', 'Весь мир у твоих ног', 'The whole world at your feet']
+];
+const rankDesc = i => settings.lang === 'ru' ? RANKS[i][4] : RANKS[i][5];
+const rankIdx = xp => { let i = 0; RANKS.forEach((r, k) => { if (xp >= r[0]) i = k; }); return i; };
+const rankName = i => `${RANKS[i][1]} ${settings.lang === 'ru' ? RANKS[i][2] : RANKS[i][3]}`;
+
+// ===== ДОСТИЖЕНИЯ =====
+const REG_ICON = { eu: '🏰', as: '🐉', af: '🦁', na: '🗽', cb: '🏝️', sa: '🦜', oc: '🦘' };
+const ACH = [
+  { id: 'first', i: '👣', ru: ['Первый шаг', 'Первый правильный ответ'], en: ['First step', 'First correct answer'], t: s => s.correct >= 1 },
+  { id: 's10', i: '🔥', ru: ['Горячая серия', '10 правильных подряд'], en: ['Hot streak', '10 correct in a row'], t: s => s.bestStreak >= 10 },
+  { id: 's20', i: '⚡', ru: ['Серия 20+', '20 правильных подряд'], en: ['20+ streak', '20 correct in a row'], t: s => s.bestStreak >= 20 },
+  { id: 's50', i: '🚀', ru: ['Безупречный', '50 вопросов подряд без ошибки'], en: ['Flawless', '50 in a row without a mistake'], t: s => s.bestStreak >= 50 },
+  { id: 'perfect', i: '💯', ru: ['Идеальный раунд', 'Раунд от 10 вопросов без ошибок'], en: ['Perfect round', 'A 10+ question round with no mistakes'], t: (s, g) => !!(g && g.over && g.type !== 'blitz' && g.asked >= 10 && !g.wrong.length) },
+  { id: 'k50', i: '🗺️', ru: ['50 стран', 'Угадал 50 разных стран'], en: ['50 countries', 'Guessed 50 different countries'], t: s => s.known.length >= 50 },
+  { id: 'k100', i: '🌐', ru: ['100 стран', 'Угадал 100 разных стран'], en: ['100 countries', 'Guessed 100 different countries'], t: s => s.known.length >= 100 },
+  { id: 'kall', i: '🏆', ru: ['Весь мир', `Угадал все страны мира (${COUNTRIES.length})`], en: ['Whole world', `Guessed all ${COUNTRIES.length} countries`], t: s => COUNTRIES.every(c => s.known.includes(c.id)) },
+  ...PARTS.map(r => ({
+    id: 'reg_' + r, i: REG_ICON[r],
+    ru: [`Знаток: ${I18N.ru[r]}`, `Угадал все страны региона «${I18N.ru[r]}»`],
+    en: [`Expert: ${I18N.en[r]}`, `Guessed every country in ${I18N.en[r]}`],
+    t: s => inRegion(r).every(c => s.known.includes(c.id))
+  })),
+  { id: 'blitz15', i: '⏱️', ru: ['Быстрые руки', '15+ правильных в блице'], en: ['Quick hands', '15+ correct in blitz'], t: s => s.blitzBest >= 15 },
+  { id: 'blitz25', i: '🌩️', ru: ['Молния', '25+ правильных в блице'], en: ['Lightning', '25+ correct in blitz'], t: s => s.blitzBest >= 25 },
+  { id: 'hard10', i: '💀', ru: ['Хардкорщик', '10 правильных за раунд в хардкоре'], en: ['Hardcore', '10 correct in one hardcore round'], t: (s, g) => !!(g && g.type === 'hardcore' && g.score >= 10) },
+  { id: 'shape10', i: '👁️', ru: ['Глаз-алмаз', 'Угадал 10 контуров'], en: ['Eagle eye', 'Guessed 10 shapes'], t: s => s.shapeOk >= 10 },
+  { id: 'shape50', i: '🔭', ru: ['Картограф-самоучка', 'Угадал 50 контуров'], en: ['Self-taught mapmaker', 'Guessed 50 shapes'], t: s => s.shapeOk >= 50 },
+  { id: 'fast10', i: '🏎️', ru: ['Скорострел', '10 вопросов без ошибок быстрее 40 секунд'], en: ['Speedster', '10 questions with no mistakes in under 40 s'], t: (s, g) => !!(g && g.over && g.type !== 'blitz' && g.asked >= 10 && !g.wrong.length && g.time < 40000) },
+  { id: 'res10', i: '🏖️', ru: ['Пляжник', 'Угадал 10 разных курортов'], en: ['Beach lover', 'Guessed 10 different resorts'], t: s => s.resKnown.length >= 10 },
+  { id: 'res40', i: '🌴', ru: ['Турагент', 'Угадал 40 разных курортов'], en: ['Travel agent', 'Guessed 40 different resorts'], t: s => s.resKnown.length >= 40 },
+  { id: 'resall', i: '🛳️', ru: ['Кругосветка', 'Угадал все курорты и острова'], en: ['Round the world', 'Guessed every resort and island'], t: s => RESORTS.every(r => s.resKnown.includes(r.id)) },
+  { id: 'daily7', i: '📅', ru: ['Неделя челленджей', 'Сыграл 7 ежедневных челленджей'], en: ['Challenge week', 'Played 7 daily challenges'], t: s => Object.keys(s.daily).length >= 7 },
+  { id: 'c500', i: '🎓', ru: ['Полтысячи', '500 правильных ответов'], en: ['Five hundred', '500 correct answers'], t: s => s.correct >= 500 },
+  { id: 'c1000', i: '👑', ru: ['Тысяча', '1000 правильных ответов'], en: ['One thousand', '1000 correct answers'], t: s => s.correct >= 1000 }
+];
+const achText = a => settings.lang === 'ru' ? a.ru : a.en;
 
 // ===== TELEGRAM =====
 const tg = window.Telegram && window.Telegram.WebApp;
@@ -416,7 +600,7 @@ const inTg = !!(tg && tg.initData);
 if (tg) {
   tg.ready(); tg.expand();
   if (tgv('7.7') && tg.disableVerticalSwipes) tg.disableVerticalSwipes();
-  if (tgv('6.1')) tg.BackButton.onClick(() => go('home'));
+  if (tgv('6.1')) tg.BackButton.onClick(() => { endGame(); go('home'); });
 }
 function haptic(type) {
   try { if (tgv('6.1')) tg.HapticFeedback.notificationOccurred(type); } catch (e) {}
@@ -436,23 +620,42 @@ function detectLang() {
   const lc = ((tg && tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.language_code) || navigator.language || 'en').toLowerCase();
   return /^(ru|uk|be|kk)/.test(lc) ? 'ru' : 'en';
 }
-let settings = store.get('settings', { lang: detectLang(), mode: 'c2cap', regions: PARTS.slice(), len: 10 });
-let stats = store.get('stats', { played: 0, answered: 0, correct: 0, bestStreak: 0, best: {}, daily: {} });
+let settings = store.get('settings', {});
+let stats = store.get('stats', {});
 let mistakes = store.get('mistakes', []);
-// Приводим старые/кривые настройки к новому формату (несколько регионов)
+// Приводим старые/кривые данные к текущему формату
 function fixSettings() {
+  if (!settings || typeof settings !== 'object') settings = {};
   if (!Array.isArray(settings.regions)) {
     settings.regions = (!settings.region || settings.region === 'world') ? PARTS.slice() : [settings.region];
   }
   settings.regions = settings.regions.filter(r => PARTS.includes(r));
   if (!settings.regions.length) settings.regions = PARTS.slice();
+  if (settings.v !== 2) { // v2: Карибы выделены из Сев. Америки в отдельный регион
+    if (settings.regions.includes('na') && !settings.regions.includes('cb')) settings.regions.push('cb');
+    settings.v = 2;
+  }
   delete settings.region;
   if (!LENS.includes(settings.len)) settings.len = 10;
-  if (settings.mode !== 'c2cap' && settings.mode !== 'cap2c') settings.mode = 'c2cap';
+  if (!MODES.includes(settings.mode)) settings.mode = 'c2cap';
+  if (!TYPES.includes(settings.type)) settings.type = 'normal';
   if (settings.lang !== 'ru' && settings.lang !== 'en') settings.lang = detectLang();
   if (typeof settings.sound !== 'boolean') settings.sound = true;
+  delete settings.rmode;
+  if (!['all', 'tr', 'eu', 'asia', 'exo'].includes(settings.rdir)) settings.rdir = 'all';
+  if (!LENS.includes(settings.rlen)) settings.rlen = 10;
 }
-fixSettings();
+function fixStats() {
+  if (!stats || typeof stats !== 'object') stats = {};
+  const d = { played: 0, answered: 0, correct: 0, bestStreak: 0, best: {}, daily: {}, xp: 0, known: [], ach: {}, blitzBest: 0, shapeOk: 0, bestTime: {}, resKnown: [], resBest: {}, resBestTime: {} };
+  for (const k in d) if (stats[k] == null || typeof stats[k] !== typeof d[k]) stats[k] = d[k];
+  if (!Array.isArray(stats.known)) stats.known = [];
+  if (!Array.isArray(stats.resKnown)) stats.resKnown = [];
+  if (!Array.isArray(mistakes)) mistakes = [];
+  stats.known = stats.known.filter(id => BY_ID[id]);
+  mistakes = mistakes.filter(id => BY_ID[id]);
+}
+fixSettings(); fixStats();
 function saveAll() { store.set('settings', settings); store.set('stats', stats); store.set('mistakes', mistakes); }
 
 // Подтягиваем прогресс из облака Telegram (синхронизация между устройствами)
@@ -465,7 +668,7 @@ if (cloudOk()) {
         if (vals.cq_stats) stats = JSON.parse(vals.cq_stats);
         if (vals.cq_mistakes) mistakes = JSON.parse(vals.cq_mistakes);
       } catch (e) {}
-      fixSettings();
+      fixSettings(); fixStats();
       if (document.getElementById('home').classList.contains('active')) renderHome();
     });
   } catch (e) {}
@@ -484,13 +687,18 @@ function flag(id, cls) {
 }
 function mulberry32(a) { return function () { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
 function shuffle(arr, rnd = Math.random) { const a = arr.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+const fmtTime = ms => { const s = Math.round(ms / 1000); return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`; };
 const todayKey = () => new Date().toISOString().slice(0, 10);
 const inRegion = r => r === 'world' ? COUNTRIES : COUNTRIES.filter(c => c.r === r);
 const isWorld = () => PARTS.every(p => settings.regions.includes(p));
 const selPool = () => COUNTRIES.filter(c => settings.regions.includes(c.r));
 const regKey = () => isWorld() ? 'world' : settings.regions.slice().sort().join('+');
 const regTitle = () => isWorld() ? T().world : PARTS.filter(p => settings.regions.includes(p)).map(p => T()[p]).join(' + ');
-const bestKey = () => `${settings.mode}_${regKey()}_${settings.len}`;
+const bestKey = () => {
+  if (settings.type === 'blitz') return `blitz_${settings.mode}_${regKey()}`;
+  const base = `${settings.mode}_${regKey()}_${settings.len}`;          // старый формат — чтобы сохранить прежние рекорды
+  return settings.type === 'hardcore' ? 'hard_' + base : base;
+};
 function toggleRegion(v) {
   if (v === 'world') { settings.regions = PARTS.slice(); return; }
   if (isWorld()) { settings.regions = [v]; return; }           // из «Весь мир» тап = только этот регион
@@ -501,25 +709,143 @@ function toggleRegion(v) {
     settings.regions.push(v);                                       // выбрали все 6 — это и есть весь мир
   }
 }
+
+// ===== СЛОЖНОСТЬ СТРАН: ×1 (по умолчанию), ×1.5, ×2 — множитель опыта =====
+const MED = new Set(('AL BA BG HR CY IS RO RS SK SI CH ME MT ' +
+  'SA AE PK ID PH MY SY LB JO NP KG TJ TM KH QA ' +
+  'MA LY KE ET ZA SD SN CD CG MG ' +
+  'JM DO CR HT SV BS EC UY PY AU NZ').split(' '));
+const HARD = new Set(('LI AD MK LK BD LA MM BT BN OM BH YE TL MV ' +
+  'AO BJ BW BF BI CV CM CF TD KM CI GQ ER SZ GA GM GH GN GW LS LR MW ML MR MU MZ NA NE NG RW ST SC SL SO SS TZ TG UG ZM ZW ' +
+  'NI HN BZ BB AG DM GD KN LC VC TT BO GY SR ' +
+  'FJ PG KI MH FM NR PW WS SB TO TV VU').split(' '));
+const mult = c => HARD.has(c.id) ? 2 : MED.has(c.id) ? 1.5 : 1;
+const tierTag = c => { const m = mult(c); return `<span class="tier t${String(m).replace('.', '')}">${m === 2 ? '🔴' : m === 1.5 ? '🟡' : '🟢'} ×${m}</span>`; };
+
+// Равномерная выборка: регионы чередуются по кругу, чтобы «весь мир» не превращался в «одну Африку»
+function balanced(list, rnd = Math.random) {
+  const groups = {};
+  list.forEach(c => { (groups[c.r] = groups[c.r] || []).push(c); });
+  const queues = shuffle(Object.keys(groups), rnd).map(r => shuffle(groups[r], rnd));
+  const out = [];
+  while (queues.some(q => q.length)) {
+    shuffle(queues, rnd).forEach(q => { if (q.length) out.push(q.pop()); });
+  }
+  return out;
+}
+
+// ===== ПРОВЕРКА ВВЕДЁННОГО ОТВЕТА (хардкор) =====
+// Синонимы: ключ «ISO:n» — названия страны, «ISO:c» — столицы
+const ALIASES = {
+  'US:n': ['США', 'USA', 'US', 'America', 'Америка', 'Соединенные Штаты', 'Соединенные Штаты Америки', 'United States of America'],
+  'US:c': ['Washington', 'Вашингтон'],
+  'GB:n': ['UK', 'Britain', 'Great Britain', 'Британия', 'Соединенное Королевство', 'Англия', 'England'],
+  'AE:n': ['UAE', 'Объединенные Арабские Эмираты', 'Эмираты', 'Emirates'],
+  'CF:n': ['CAR', 'Центральноафриканская Республика', 'Central African Rep'],
+  'ZA:n': ['Южная Африка', 'Южно-Африканская Республика', 'RSA'],
+  'ZA:c': ['Кейптаун', 'Cape Town', 'Блумфонтейн', 'Bloemfontein'],
+  'KP:n': ['Северная Корея', 'North Korea', 'DPRK'],
+  'KR:n': ['Корея', 'Республика Корея', 'Korea'],
+  'CD:n': ['ДРК', 'Демократическая Республика Конго', 'DRC', 'Congo-Kinshasa', 'Конго-Киншаса'],
+  'CG:n': ['Конго', 'Congo', 'Congo-Brazzaville', 'Конго-Браззавиль'],
+  'CI:n': ['Ivory Coast', 'Берег Слоновой Кости'],
+  'CZ:n': ['Czech Republic', 'Чешская Республика'],
+  'BY:n': ['Белоруссия', 'Belorussia'],
+  'KG:n': ['Кыргызстан', 'Kirgizia'],
+  'MD:n': ['Молдавия', 'Moldavia'],
+  'NL:n': ['Голландия', 'Holland'],
+  'MM:n': ['Бирма', 'Burma'],
+  'SZ:n': ['Свазиленд', 'Swaziland'],
+  'SZ:c': ['Ломбамба', 'Lobamba'],
+  'MK:n': ['Македония', 'Macedonia'],
+  'TL:n': ['Тимор-Лесте', 'East Timor', 'Тимор'],
+  'CV:n': ['Острова Зеленого Мыса', 'Cape Verde'],
+  'TR:n': ['Turkiye'],
+  'VA:n': ['Vatican', 'Святой Престол', 'Holy See'],
+  'VA:c': ['Vatican', 'Ватикан'],
+  'FM:n': ['Федеративные Штаты Микронезии', 'Federated States of Micronesia'],
+  'BA:n': ['Босния', 'Bosnia'],
+  'PG:n': ['Папуа Новая Гвинея', 'Папуа', 'Papua'],
+  'DO:n': ['Доминикана'],
+  'RU:n': ['Российская Федерация', 'РФ', 'Russian Federation'],
+  'MD:c': ['Kishinev'],
+  'MN:c': ['Улаанбаатар', 'Ulan Bator'],
+  'TM:c': ['Ашгабат', 'Ashkhabad'],
+  'BD:c': ['Дхака', 'Dacca'],
+  'BT:c': ['Тимпху'],
+  'MM:c': ['Нейпьидау', 'Нэйпьидо', 'Нейпидо', 'Nay Pyi Taw'],
+  'LK:c': ['Котте', 'Kotte', 'Шри-Джаяварденепура'],
+  'ER:c': ['Асмара'],
+  'GM:c': ['Банджул'],
+  'KW:c': ['Кувейт', 'Kuwait'],
+  'SA:c': ['Рияд', 'Riad', 'Ar Riyadh'],
+  'GT:c': ['Гватемала-Сити', 'Guatemala'],
+  'PA:c': ['Панама-Сити', 'Panama'],
+  'MX:c': ['Mexico', 'Мехико-Сити'],
+  'KI:c': ['Тарава', 'Tarawa'],
+  'BO:c': ['Ла-Пас', 'La Paz'],
+  'SG:c': ['Singapore'],
+  'IN:c': ['Дели', 'Delhi'],
+  'KZ:c': ['Нур-Султан', 'Nur-Sultan'],
+  'YE:c': ['Sana']
+};
+const norm = s => String(s).toLowerCase().replace(/ё/g, 'е').normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-zа-я0-9]/g, '');
+function lev(a, b) {
+  const m = a.length, n = b.length;
+  if (!m) return n; if (!n) return m;
+  let prev = Array.from({ length: n + 1 }, (_, j) => j);
+  for (let i = 1; i <= m; i++) {
+    const cur = [i];
+    for (let j = 1; j <= n; j++) cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+    prev = cur;
+  }
+  return prev[n];
+}
+// Возвращает 'exact' | 'close' | false
+function checkTyped(typed, c, what) {
+  const a = norm(typed);
+  if (!a) return false;
+  const targets = (what === 'c' ? [c.ru.c, c.en.c] : [c.ru.n, c.en.n]).concat(ALIASES[c.id + ':' + what] || []);
+  let res = false;
+  for (const t of targets) {
+    const b = norm(t);
+    if (a === b) return 'exact';
+    const tol = b.length <= 4 ? 0 : b.length <= 8 ? 1 : 2;
+    if (lev(a, b) <= tol) res = 'close';
+  }
+  return res;
+}
+
 // ===== ПОЗИТИВ: похвала, конфетти, звуки =====
-function praise(text, mega) {
+function praise(text, kind) {
   const el = $('#praise');
   el.textContent = text;
-  el.className = 'praise' + (mega ? ' mega' : '');
+  el.className = 'praise' + (kind ? ' ' + kind : '');
   void el.offsetWidth; // перезапуск анимации
-  el.classList.add('go');
+  el.classList.add(kind === 'minus' ? 'go' : ['go', 'go2', 'go3', 'go4'][Math.floor(Math.random() * 4)]);
 }
 function confetti(n) {
   const colors = ['#ff8a00', '#e52e71', '#2f7cf6', '#22a55a', '#ffd400', '#8b5cf6'];
+  const emo = (game && game.res) ? ['🌴', '🏖️', '☀️', '🐚', '🍹'] : kgame ? ['⭐', '🎈', '🧸', '🦄', '🍭'] : ['🌍', '⭐', '✨', '🎉', '🗺️'];
+  const style = Math.floor(Math.random() * 4); // 0 полоски, 1 кружки, 2 эмодзи-дождь, 3 взрыв из центра
   for (let i = 0; i < n; i++) {
     const d = document.createElement('i');
-    d.className = 'cf';
-    d.style.left = Math.random() * 100 + 'vw';
-    d.style.background = colors[i % colors.length];
-    d.style.setProperty('--x', (Math.random() * 160 - 80) + 'px');
-    d.style.setProperty('--r', (Math.random() * 720 - 360) + 'deg');
-    d.style.setProperty('--d', (0.9 + Math.random() * 0.9) + 's');
-    d.style.animationDelay = Math.random() * 0.25 + 's';
+    if (style === 3) {
+      d.className = 'cf burst';
+      const ang = Math.random() * Math.PI * 2, dist = 120 + Math.random() * 220;
+      d.style.setProperty('--bx', Math.cos(ang) * dist + 'px');
+      d.style.setProperty('--by', Math.sin(ang) * dist + 'px');
+      d.style.background = colors[i % colors.length];
+      d.style.setProperty('--d', (0.7 + Math.random() * 0.5) + 's');
+    } else {
+      d.className = 'cf' + (style === 1 ? ' round' : style === 2 ? ' emo' : '');
+      d.style.left = Math.random() * 100 + 'vw';
+      if (style === 2) d.textContent = emo[i % emo.length]; else d.style.background = colors[i % colors.length];
+      d.style.setProperty('--x', (Math.random() * 160 - 80) + 'px');
+      d.style.setProperty('--r', (Math.random() * 720 - 360) + 'deg');
+      d.style.setProperty('--d', (0.9 + Math.random() * 0.9) + 's');
+      d.style.animationDelay = Math.random() * 0.25 + 's';
+    }
     document.body.appendChild(d);
     setTimeout(() => d.remove(), 2300);
   }
@@ -540,10 +866,34 @@ function sfx(kind) {
       o.connect(g); g.connect(actx.destination);
       o.start(now + t); o.stop(now + t + d + 0.05);
     };
-    if (kind === 'ok') { play(784, 0, .15); play(1047, .09, .25); }
-    else if (kind === 'mega') { [523, 659, 784, 1047].forEach((f, i) => play(f, i * .09, i === 3 ? .4 : .15)); }
+    const pick = a => a[Math.floor(Math.random() * a.length)];
+    const k = 0.95 + Math.random() * 0.1; // лёгкий разброс высоты, чтобы не надоедало
+    if (kind === 'ok') {
+      pick([
+        () => { play(784 * k, 0, .15); play(1047 * k, .09, .25); },
+        () => { play(659 * k, 0, .12); play(880 * k, .07, .12); play(1319 * k, .14, .25); },
+        () => { play(523 * k, 0, .12, 'triangle', .14); play(784 * k, .08, .28, 'triangle', .14); },
+        () => { play(988 * k, 0, .1); play(1319 * k, .06, .1); play(1568 * k, .12, .22, 'sine', .09); },
+        () => { play(698 * k, 0, .1, 'triangle', .13); play(880 * k, .08, .1, 'triangle', .13); play(1047 * k, .16, .3, 'triangle', .13); }
+      ])();
+    }
+    else if (kind === 'mega') {
+      pick([
+        () => [523, 659, 784, 1047].forEach((f, i) => play(f, i * .09, i === 3 ? .4 : .15)),
+        () => [392, 523, 659, 784, 1047].forEach((f, i) => play(f, i * .07, i === 4 ? .45 : .12, 'triangle', .13)),
+        () => { [784, 988, 1175].forEach((f, i) => play(f, i * .1, .15)); play(1568, .32, .45, 'sine', .1); }
+      ])();
+    }
     else if (kind === 'bad') { play(220, 0, .25, 'triangle', .1); }
-    else if (kind === 'win') { [523, 659, 784, 1047, 1319].forEach((f, i) => play(f, i * .1, .35)); }
+    else if (kind === 'win') {
+      pick([
+        () => [523, 659, 784, 1047, 1319].forEach((f, i) => play(f, i * .1, .35)),
+        () => { [392, 523, 659, 784].forEach((f, i) => play(f, i * .12, .3, 'triangle', .13)); [1047, 1319, 1568].forEach(f => play(f, .55, .6, 'sine', .07)); },
+        () => [659, 784, 880, 1047, 880, 1047, 1319].forEach((f, i) => play(f, i * .08, i === 6 ? .5 : .12))
+      ])();
+    }
+    else if (kind === 'ach') { [880, 1175, 1568].forEach((f, i) => play(f, i * .12, .3, 'triangle', .1)); }
+    else if (kind === 'tick') { play(1400, 0, .05, 'square', .03); }
   } catch (e) {}
 }
 function hapticImpact(style) {
@@ -552,7 +902,34 @@ function hapticImpact(style) {
 
 function toast(msg) { const t = $('#toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 1600); }
 
+// Баннер «Новое достижение» (по очереди, если их несколько)
+const achQueue = [];
+let achShowing = false;
+function showAch(a) { achQueue.push(a); if (!achShowing) nextAch(); }
+function nextAch() {
+  const a = achQueue.shift();
+  if (!a) { achShowing = false; return; }
+  achShowing = true;
+  const el = $('#achBanner');
+  el.innerHTML = `<span class="ai">${a.i}</span><div><small>${T().achNew}</small><b>${esc(achText(a)[0])}</b></div>`;
+  el.classList.add('show');
+  confetti(40); sfx('ach'); hapticImpact('medium');
+  setTimeout(() => { el.classList.remove('show'); setTimeout(nextAch, 400); }, 2600);
+}
+function checkAch(g) {
+  const got = [];
+  ACH.forEach(a => {
+    if (stats.ach[a.id]) return;
+    let ok = false;
+    try { ok = a.t(stats, g); } catch (e) {}
+    if (ok) { stats.ach[a.id] = Date.now(); got.push(a); showAch(a); }
+  });
+  if (g && got.length) g.newAch.push(...got);
+  return got;
+}
+
 function go(id) {
+  if (id !== 'game') stopTimer();
   document.querySelectorAll('.screen').forEach(s => s.classList.toggle('active', s.id === id));
   if (id === 'home') renderHome();
   $('.wrap').classList.toggle('wide', id === 'ref');
@@ -565,10 +942,19 @@ function go(id) {
 }
 
 // ===== ГЛАВНЫЙ ЭКРАН =====
+function rankCard() {
+  const t = T(), i = rankIdx(stats.xp), next = RANKS[i + 1];
+  const pct = next ? Math.round((stats.xp - RANKS[i][0]) / (next[0] - RANKS[i][0]) * 100) : 100;
+  return `<div class="rank">
+      <div class="rank-top"><div><b>${rankName(i)}</b><em>${rankDesc(i)}</em></div><span>${stats.xp.toLocaleString('ru-RU')} XP</span></div>
+      <div class="bar"><i style="width:${pct}%"></i></div>
+      <small>${next ? t.rankNext(settings.lang === 'ru' ? next[2] : next[3], next[0] - stats.xp) : t.rankMax}</small>
+    </div>`;
+}
 function renderHome() {
   const t = T(), d = stats.daily[todayKey()];
   const acc = stats.answered ? Math.round(stats.correct / stats.answered * 100) + '%' : '—';
-  const best = stats.best[bestKey()];
+  const achN = ACH.filter(a => stats.ach[a.id]).length;
   $('#home').innerHTML = `
     <header>
       <div><h1>🌍 ${t.title}</h1><div class="sub">${t.sub}</div></div>
@@ -580,24 +966,16 @@ function renderHome() {
         </div>
       </div>
     </header>
+    ${rankCard()}
     <button class="daily" data-act="daily"><b>${t.daily}</b><span>${d != null ? t.dailyDone(d) : t.dailyDesc}</span></button>
-    <div class="card">
-      <div class="label">${t.mode}</div>
-      <div class="seg">${['c2cap', 'cap2c'].map(m => `<button class="chip ${settings.mode === m ? 'on' : ''}" data-act="set" data-k="mode" data-v="${m}">${t[m]}</button>`).join('')}</div>
-      <div class="label">${t.region}</div>
-      <div class="chips">${REGIONS.map(r => {
-        const on = r === 'world' ? isWorld() : (!isWorld() && settings.regions.includes(r));
-        return `<button class="chip ${on ? 'on' : ''}" data-act="reg" data-v="${r}">${on && r !== 'world' ? '✓ ' : ''}${t[r]} <small>${inRegion(r).length}</small></button>`;
-      }).join('')}</div>
-      <div class="label">${t.len}</div>
-      <div class="chips">${LENS.map(n => `<button class="chip ${String(settings.len) === String(n) ? 'on' : ''}" data-act="set" data-k="len" data-v="${n}">${n === 'all' ? `${t.all} <small>${selPool().length}</small>` : n}</button>`).join('')}</div>
-      <div class="best-line">${t.best}: ${best != null ? best : '—'}</div>
-    </div>
-    <button class="btn" data-act="start">▶ ${t.start}</button>
+    <button class="daily countries" data-act="countries"><b>${t.countriesBtn}</b><span>${t.countriesBtnSub(COUNTRIES.length)}</span></button>
+    <button class="daily res" data-act="resorts"><b>${t.resortsBtn}</b><span>${t.resortsBtnSub}</span></button>
+    <button class="daily kids" data-act="kids"><b>${t.kidsBtn}</b><span>${t.kidsBtnSub}</span></button>
     <div class="row">
       <button class="btn sec" data-act="errors" ${mistakes.length ? '' : 'disabled'}>${t.errors(mistakes.length)}</button>
       <button class="btn sec" data-act="ref">📖 ${t.ref}</button>
     </div>
+    <button class="btn sec" data-act="ach">${t.achBtn(achN, ACH.length)}</button>
     <div class="card stats">
       <div><b>${stats.played}</b><span>${t.played}</span></div>
       <div><b>${acc}</b><span>${t.acc}</span></div>
@@ -605,8 +983,45 @@ function renderHome() {
     </div>`;
 }
 
+// ===== РАЗДЕЛ «СТРАНЫ И СТОЛИЦЫ» =====
+function renderCountries() {
+  const t = T(), best = stats.best[bestKey()];
+  $('#countries').innerHTML = `
+    <header><button class="back" data-act="home">‹ ${t.back}</button><div style="flex:1"><h1>🌍 ${t.countriesTitle}</h1><div class="sub">${t.countriesSub(COUNTRIES.length)}</div></div></header>
+    <div class="card">
+      <div class="label">${t.mode}</div>
+      <div class="seg seg3">${MODES.map(m => `<button class="chip ${settings.mode === m ? 'on' : ''}" data-act="set" data-k="mode" data-v="${m}">${m === 'shape' ? '🗺️ ' : ''}${t[m]}</button>`).join('')}</div>
+      <div class="label">${t.type}</div>
+      <div class="seg seg3">${TYPES.map(m => `<button class="chip ${settings.type === m ? 'on' : ''}" data-act="set" data-k="type" data-v="${m}">${t[m]}</button>`).join('')}</div>
+      <div class="type-hint">${t.typeHint[settings.type]}</div>
+      <div class="label">${t.region}</div>
+      <div class="chips">${REGIONS.map(r => {
+        const on = r === 'world' ? isWorld() : (!isWorld() && settings.regions.includes(r));
+        return `<button class="chip ${on ? 'on' : ''}" data-act="reg" data-v="${r}">${on && r !== 'world' ? '✓ ' : ''}${t[r]} <small>${inRegion(r).length}</small></button>`;
+      }).join('')}</div>
+      ${settings.type === 'blitz' ? '' : `<div class="label">${t.len}</div>
+      <div class="chips">${LENS.map(n => `<button class="chip ${String(settings.len) === String(n) ? 'on' : ''}" data-act="set" data-k="len" data-v="${n}">${n === 'all' ? `${t.all} <small>${selPool().length}</small>` : n}</button>`).join('')}</div>`}
+      <div class="best-line">${t.best}: ${best != null ? best : '—'}</div>
+    </div>
+    <button class="btn" data-act="start">▶ ${t.start}</button>
+`;
+}
+
+// ===== ЭКРАН ДОСТИЖЕНИЙ =====
+function renderAch() {
+  const t = T(), n = ACH.filter(a => stats.ach[a.id]).length;
+  $('#ach').innerHTML = `
+    <header><button class="back" data-act="home">‹ ${t.back}</button><div style="flex:1"><h1>🏅 ${t.ach}</h1><div class="sub">${n} / ${ACH.length}</div></div></header>
+    ${rankCard()}
+    <div class="ach-grid">${ACH.map(a => {
+      const on = !!stats.ach[a.id], [title, desc] = achText(a);
+      return `<div class="badge-card ${on ? 'on' : ''}"><div class="bi">${on ? a.i : '🔒'}</div><b>${esc(title)}</b><small>${esc(desc)}</small></div>`;
+    }).join('')}</div>
+    <button class="btn sec" data-act="home">${t.home}</button>`;
+}
+
 // ===== ИГРА =====
-let game = null;
+let game = null, timerId = null;
 
 function buildQuestions(pool, rnd) {
   return pool.map(c => {
@@ -615,108 +1030,235 @@ function buildQuestions(pool, rnd) {
     return { c, opts: shuffle([c, ...cand.slice(0, 3)], rnd).map(o => o.id) };
   });
 }
+function stopTimer() { if (timerId) { clearInterval(timerId); timerId = null; } }
+function endGame() { stopTimer(); if (game) game.over = true; game = null; }
 
-function startGame(kind) {
-  let rnd = Math.random, pool, mode = settings.mode;
+async function startGame(kind) {
+  const t = T();
+  let rnd = Math.random, mode = settings.mode, type = settings.type, base;
+  if (kind === 'daily') { mode = 'c2cap'; type = 'normal'; }
+  if (kind === 'errors') type = 'normal';
+
+  if (mode === 'shape') {
+    go('game');
+    $('#game').innerHTML = `<div class="loading">${t.loadingShapes}</div>`;
+    try { await loadGeo(); } catch (e) { toast(t.shapesFail); go('home'); return; }
+    if (!$('#game').classList.contains('active')) return; // ушли, пока грузилось
+  }
+
   if (kind === 'daily') {
     rnd = mulberry32(parseInt(todayKey().replace(/-/g, ''), 10));
-    pool = shuffle(COUNTRIES, rnd).slice(0, 10);
-    mode = 'c2cap';
+    base = balanced(COUNTRIES, rnd).slice(0, 10);
   } else if (kind === 'errors') {
-    pool = shuffle(mistakes.map(id => BY_ID[id]).filter(Boolean)).slice(0, 20);
+    base = shuffle(mistakes.map(id => BY_ID[id]).filter(Boolean)).slice(0, 20);
   } else {
-    pool = shuffle(selPool());
-    if (settings.len !== 'all') pool = pool.slice(0, settings.len);
+    base = balanced(selPool());
   }
-  if (!pool.length) return;
-  game = { kind, mode, key: bestKey(), qs: buildQuestions(pool, rnd), i: 0, score: 0, streak: 0, maxStreak: 0, wrong: [], hintUsed: false, locked: false };
+  if (mode === 'shape') base = base.filter(c => shapeOK(c.id));
+  let pool = base;
+  if (kind === 'normal' && type !== 'blitz' && settings.len !== 'all') pool = base.slice(0, settings.len);
+  if (!pool.length) { go('home'); return; }
+
+  game = {
+    kind, mode, type, key: bestKey(), base, qs: buildQuestions(pool, rnd),
+    i: 0, asked: 0, score: 0, streak: 0, maxStreak: 0, wrong: [], hintUsed: false, locked: false,
+    xp: 0, rank0: rankIdx(stats.xp), newAch: [], over: false
+  };
   go('game');
+  game.t0 = Date.now();
+  if (type === 'blitz') {
+    game.deadline = Date.now() + 60000;
+    timerId = setInterval(tickBlitz, 100);
+  } else {
+    timerId = setInterval(tickClock, 500);
+  }
   renderQuestion();
+}
+
+function tickBlitz() {
+  if (!game || game.over) return stopTimer();
+  const left = Math.max(0, game.deadline - Date.now());
+  const tt = $('#timerTxt'), tb = $('#timerBar');
+  if (tt) tt.textContent = '⏱ ' + Math.ceil(left / 1000);
+  if (tb) { tb.style.width = (left / 600) + '%'; tb.classList.toggle('low', left < 10000); }
+  if (left <= 0) { praise(T().timeUp, 'mega'); finish(); }
+}
+
+function tickClock() {
+  if (!game || game.over) return stopTimer();
+  const el = $('#clockTxt');
+  if (el) el.textContent = '⏱ ' + fmtTime(Date.now() - game.t0);
 }
 
 function gameTitle() {
   const t = T();
-  return game.kind === 'daily' ? t.dailyTitle : game.kind === 'errors' ? t.errorsTitle : regTitle();
+  if (game.kind === 'daily') return t.dailyTitle;
+  if (game.kind === 'errors') return t.errorsTitle;
+  const pre = game.type === 'blitz' ? '⚡ ' : game.type === 'hardcore' ? '💀 ' : '';
+  return pre + regTitle();
 }
+const askWhat = () => game.mode === 'c2cap' ? 'c' : 'n'; // что нужно назвать: столицу или страну
 
 function renderQuestion() {
   const t = T(), q = game.qs[game.i], c = q.c, n = game.qs.length;
   const label = o => game.mode === 'c2cap' ? cp(o) : nm(o);
-  const qHtml = game.mode === 'c2cap'
-    ? `${flag(c.id, 'big')}<small>${t.qc2cap}</small><h2>${esc(nm(c))}</h2>`
-    : `<div class="fl big">🏛️</div><small>${t.qcap2c}</small><h2>${esc(cp(c))}</h2>`;
+  let qHtml;
+  if (game.mode === 'c2cap') qHtml = `${flag(c.id, 'big')}<small>${t.qc2cap} ${tierTag(c)}</small><h2>${esc(nm(c))}</h2>`;
+  else if (game.mode === 'cap2c') qHtml = `<div class="fl big">🏛️</div><small>${t.qcap2c} ${tierTag(c)}</small><h2>${esc(cp(c))}</h2>`;
+  else qHtml = `${shapeSVG(c.id)}<small>${t.qshape} ${tierTag(c)}</small>`;
+
+  const blitz = game.type === 'blitz', hard = game.type === 'hardcore';
+  const left = blitz ? Math.max(0, game.deadline - Date.now()) : 0;
+  const topRight = blitz ? `<b id="timerTxt">⏱ ${Math.ceil(left / 1000)}</b>` : `${game.i + 1} / ${n} · <span id="clockTxt">⏱ ${fmtTime(Date.now() - game.t0)}</span>`;
+  const bar = blitz
+    ? `<div class="bar"><i id="timerBar" class="${left < 10000 ? 'low' : ''}" style="width:${left / 600}%;transition:none"></i></div>`
+    : `<div class="bar"><i style="width:${game.i / n * 100}%"></i></div>`;
+
+  const answers = hard
+    ? `<form class="hard" id="hardForm" autocomplete="off">
+         <input id="hardIn" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="${t.typeAnswer}">
+         <button class="btn" type="submit">${t.answerBtn}</button>
+       </form>
+       <div class="hard-hint" id="hardHint"></div>`
+    : `<div class="opts">${q.opts.map(id => `<button class="opt" data-act="opt" data-id="${id}">${esc(label(BY_ID[id]))}</button>`).join('')}</div>`;
+
+  const hintBtn = hard
+    ? `<button class="link" data-act="hint" ${game.hintUsed ? 'disabled' : ''}>${t.hintBtn}</button>`
+    : `<button class="link" data-act="hint" ${game.hintUsed ? 'disabled' : ''}>💡 50/50</button>`;
+
   $('#game').innerHTML = `
-    <div class="top"><span>${gameTitle()}</span><span>${game.i + 1} / ${n}</span></div>
-    <div class="bar"><i style="width:${game.i / n * 100}%"></i></div>
-    <div class="top"><span>✅ ${game.score}</span><span>${game.streak >= 3 ? '🔥' : '⚡'} ${t.streak}: ${game.streak}</span></div>
+    <div class="top"><span>${gameTitle()}</span><span>${topRight}</span></div>
+    ${bar}
+    <div class="top"><span>✅ ${game.score} · ⭐ ${game.xp} XP</span><span>${game.streak >= 3 ? '🔥' : '⚡'} ${t.streak}: ${game.streak}</span></div>
     <div class="q">${qHtml}</div>
-    <div class="opts">${q.opts.map(id => `<button class="opt" data-act="opt" data-id="${id}">${esc(label(BY_ID[id]))}</button>`).join('')}</div>
+    ${answers}
     <div class="reveal" id="reveal"></div>
     <div class="tools">
       <button class="link" data-act="quit">✕ ${t.quit}</button>
-      <button class="link" data-act="hint" ${game.hintUsed ? 'disabled' : ''}>💡 50/50</button>
+      ${hard ? `<button class="link" data-act="skip">${t.dontKnow}</button>` : ''}
+      ${hintBtn}
     </div>`;
   game.locked = false;
+  if (hard) {
+    $('#hardForm').addEventListener('submit', e => { e.preventDefault(); answerTyped($('#hardIn').value); });
+    setTimeout(() => { const i = $('#hardIn'); if (i) i.focus(); }, 50);
+  }
 }
 
-function answer(id) {
-  if (game.locked) return;
-  game.locked = true;
-  const t = T(), q = game.qs[game.i], ok = id === q.c.id;
-  document.querySelectorAll('.opt').forEach(b => {
-    b.disabled = true;
-    if (b.dataset.id === q.c.id) b.classList.add('ok');
-    else if (b.dataset.id === id) b.classList.add('bad');
-  });
+// Общая обработка ответа: ok — верно ли, close — засчитано с опечаткой
+function resolve(ok, close) {
+  const t = T(), q = game.qs[game.i];
+  let gain = 0;
+  game.asked++;
   stats.answered++;
   if (ok) {
     game.score++; game.streak++; stats.correct++;
     game.maxStreak = Math.max(game.maxStreak, game.streak);
+    stats.bestStreak = Math.max(stats.bestStreak, game.streak);
     mistakes = mistakes.filter(x => x !== q.c.id);
+    if (!stats.known.includes(q.c.id)) stats.known.push(q.c.id);
+    if (game.mode === 'shape') stats.shapeOk++;
+    gain = Math.round((game.type === 'hardcore' ? 20 : game.type === 'blitz' ? 5 : 10) * mult(q.c)); // опыт = база × сложность (в блице половина)
+    game.xp += gain; stats.xp += gain;
     const milestone = game.streak === 3 || (game.streak >= 5 && game.streak % 5 === 0);
     if (milestone) {
-      praise(t.streakMsg(game.streak), true);
+      praise(t.streakMsg(game.streak), 'mega');
       confetti(45); sfx('mega'); hapticImpact('heavy');
     } else {
-      praise(t.praise[Math.floor(Math.random() * t.praise.length)]);
-      confetti(14); sfx('ok'); haptic('success');
+      praise(close ? t.almost : t.praise[Math.floor(Math.random() * t.praise.length)]);
+      confetti(game.type === 'blitz' ? 6 : 14); sfx('ok'); haptic('success');
     }
   } else {
     game.streak = 0;
     game.wrong.push(q.c.id);
     if (!mistakes.includes(q.c.id)) mistakes.push(q.c.id);
     sfx('bad'); haptic('error');
+    if (game.type === 'blitz') { game.deadline -= 3000; praise(t.penalty, 'minus'); }
   }
-  $('#reveal').innerHTML = `${flag(q.c.id, 'sm')} <b>${esc(cp(q.c))}</b> — ${t.capOf} ${esc(nm(q.c))}`;
+  $('#reveal').innerHTML = `${flag(q.c.id, 'sm')} <b>${esc(cp(q.c))}</b> — ${t.capOf} ${esc(nm(q.c))}${gain ? ` <span class="gain">+${gain} XP</span>` : ''}`;
+  checkAch(game);
   saveAll();
-  setTimeout(nextQuestion, ok ? 900 : 1900);
+  const delay = game.type === 'blitz' ? (ok ? 350 : 1000) : (ok ? 900 : 1900);
+  setTimeout(nextQuestion, delay);
+}
+
+function answer(id) {
+  if (!game || game.locked) return;
+  game.locked = true;
+  const q = game.qs[game.i], ok = id === q.c.id;
+  document.querySelectorAll('.opt').forEach(b => {
+    b.disabled = true;
+    if (b.dataset.id === q.c.id) b.classList.add('ok');
+    else if (b.dataset.id === id) b.classList.add('bad');
+  });
+  resolve(ok, false);
+}
+
+function answerTyped(text) {
+  if (!game || game.locked) return;
+  if (!norm(text)) { const i = $('#hardIn'); if (i) i.focus(); return; }
+  game.locked = true;
+  const q = game.qs[game.i], res = checkTyped(text, q.c, askWhat());
+  const inp = $('#hardIn');
+  inp.readOnly = true;
+  inp.classList.add(res ? 'ok' : 'bad');
+  if (!res) inp.value = `${T().youTyped}: ${text}`;
+  resolve(!!res, res === 'close');
+}
+
+function skipTyped() {
+  if (!game || game.locked) return;
+  game.locked = true;
+  const inp = $('#hardIn');
+  if (inp) { inp.readOnly = true; inp.classList.add('bad'); }
+  resolve(false, false);
 }
 
 function useHint() {
-  if (game.hintUsed || game.locked) return;
+  if (!game || game.hintUsed || game.locked) return;
   // Сюда позже можно повесить показ рекламы (Adsgram) за подсказку
   game.hintUsed = true;
   const q = game.qs[game.i];
-  const wrong = shuffle(q.opts.filter(id => id !== q.c.id)).slice(0, 2);
-  document.querySelectorAll('.opt').forEach(b => { if (wrong.includes(b.dataset.id)) { b.classList.add('gone'); b.disabled = true; } });
+  if (game.type === 'hardcore') {
+    const ans = askWhat() === 'c' ? cp(q.c) : nm(q.c);
+    $('#hardHint').textContent = T().hintLetter(ans[0].toUpperCase(), ans.replace(/[\s\-—'’.,]/g, '').length);
+  } else {
+    const wrong = shuffle(q.opts.filter(id => id !== q.c.id)).slice(0, 2);
+    document.querySelectorAll('.opt').forEach(b => { if (wrong.includes(b.dataset.id)) { b.classList.add('gone'); b.disabled = true; } });
+  }
   document.querySelector('[data-act="hint"]').disabled = true;
 }
 
 function nextQuestion() {
-  if (!game) return;
+  if (!game || game.over) return;
   game.i++;
-  if (game.i >= game.qs.length) finish(); else renderQuestion();
+  if (game.i >= game.qs.length) {
+    if (game.type === 'blitz') game.qs = game.qs.concat(buildQuestions(balanced(game.base), Math.random)); // в блице вопросы не кончаются
+    else return finish();
+  }
+  renderQuestion();
 }
 
 function finish() {
-  const n = game.qs.length;
+  if (!game || game.over) return;
+  game.over = true;
+  stopTimer();
+  game.time = Date.now() - game.t0;
   stats.played++;
-  stats.bestStreak = Math.max(stats.bestStreak, game.maxStreak);
-  let record = false, best = null;
+  let record = false, best = null, fastRec = false;
+  if (game.type !== 'blitz' && !game.wrong.length && game.asked > 0) {
+    const tk = game.kind === 'daily' ? 'daily' : game.key;
+    const prevT = stats.bestTime[tk];
+    if (prevT == null || game.time < prevT) { fastRec = prevT != null; stats.bestTime[tk] = game.time; }
+    game.bestTime = stats.bestTime[tk];
+  } else if (game.type !== 'blitz') {
+    game.bestTime = stats.bestTime[game.kind === 'daily' ? 'daily' : game.key];
+  }
   if (game.kind === 'normal') {
     const prev = stats.best[game.key] || 0;
-    if (game.score > prev) { stats.best[game.key] = game.score; record = true; }
+    if (game.score > prev) { stats.best[game.key] = game.score; record = game.score > 0; }
     best = stats.best[game.key];
+    if (game.type === 'blitz') stats.blitzBest = Math.max(stats.blitzBest, game.score);
   }
   if (game.kind === 'daily') {
     const k = todayKey();
@@ -724,37 +1266,55 @@ function finish() {
     const keys = Object.keys(stats.daily).sort();
     while (keys.length > 30) delete stats.daily[keys.shift()];
   }
+  checkAch(game);
   saveAll();
-  renderResult(record, best);
+  const rankUp = rankIdx(stats.xp) > game.rank0;
+  renderResult(record, best, rankUp, fastRec);
   go('result');
-  if (record || game.score / n >= 0.7) {
-    setTimeout(() => { confetti(90); sfx('win'); haptic('success'); }, 250);
+  const total = game.type === 'blitz' ? Math.max(game.asked, 1) : game.qs.length;
+  if (record || rankUp || fastRec || game.score / total >= 0.7) {
+    setTimeout(() => { confetti(rankUp ? 140 : 90); sfx('win'); haptic('success'); }, 250);
   }
 }
 
-function renderResult(record, best) {
-  const t = T(), n = game.qs.length, pct = Math.round(game.score / n * 100);
-  const emoji = pct >= 90 ? '🏆' : pct >= 70 ? '🎉' : pct >= 40 ? '👍' : '📚';
-  const list = game.wrong.length
-    ? `<div class="label">${t.mist}</div>` + game.wrong.map(id => { const c = BY_ID[id]; return `<div class="item">${flag(id, 'sm')}<span>${esc(nm(c))}</span><span class="c">${esc(cp(c))}</span></div>`; }).join('')
+function renderResult(record, best, rankUp, fastRec) {
+  const t = T(), blitz = game.type === 'blitz';
+  const n = blitz ? game.asked : game.qs.length;
+  const pct = n ? Math.round(game.score / n * 100) : 0;
+  const emoji = blitz ? (game.score >= 25 ? '🌩️' : game.score >= 15 ? '⚡' : '⏱️') : pct >= 90 ? '🏆' : pct >= 70 ? '🎉' : pct >= 40 ? '👍' : '📚';
+  const uniqWrong = [...new Set(game.wrong)];
+  const list = uniqWrong.length
+    ? `<div class="label">${t.mist}</div>` + uniqWrong.map(id => { const c = BY_ID[id]; return `<div class="item">${flag(id, 'sm')}<span>${esc(nm(c))}</span><span class="c">${esc(cp(c))}</span></div>`; }).join('')
     : `<div style="text-align:center">${t.noMist}</div>`;
+  const achHtml = game.newAch.length
+    ? `<div class="card"><div class="label">${t.achGot}</div><div class="ach-row">${game.newAch.map(a => `<span title="${esc(achText(a)[1])}">${a.i} ${esc(achText(a)[0])}</span>`).join('')}</div></div>`
+    : '';
   $('#result').innerHTML = `
     <div class="top"><span>${gameTitle()}</span><span></span></div>
     <div class="emoji">${emoji}</div>
-    <div class="big-score">${game.score}/${n}</div>
-    <div class="pct">${pct}% · ${t.streak}: ${game.maxStreak}</div>
+    <div class="big-score">${blitz ? game.score : `${game.score}/${n}`}</div>
+    <div class="pct">${blitz ? `${t.answers}: ${n} · ${t.correctW}: ${game.score}` : `${pct}% · ${t.streak}: ${game.maxStreak}`}</div>
+    ${blitz ? '' : `<div class="pct">${t.timeLine(fmtTime(game.time), (game.time / 1000 / Math.max(game.asked, 1)).toFixed(1).replace('.', settings.lang === 'ru' ? ',' : '.'))}</div>`}
+    ${fastRec ? `<span class="badge">${t.newBestTime}</span>` : (!blitz && game.bestTime != null ? `<div class="pct">${t.bestTime}: ${fmtTime(game.bestTime)}</div>` : '')}
+    <div class="xp-line">⭐ ${t.gotXp(game.xp)}</div>
+    ${rankUp ? `<span class="badge">${t.newRank(rankName(rankIdx(stats.xp)))}</span>` : ''}
     ${record ? `<span class="badge">${t.newRecord}</span>` : best != null ? `<div class="pct">${t.best}: ${best}</div>` : ''}
     <button class="btn" data-act="share">📤 ${t.share}</button>
     <div class="row">
       <button class="btn sec" data-act="again">↻ ${t.again}</button>
-      <button class="btn sec" data-act="home">${t.home}</button>
+      ${game.kind === 'normal' ? `<button class="btn sec" data-act="countries">🌍 ${t.toCountries}</button>` : `<button class="btn sec" data-act="home">${t.home}</button>`}
     </div>
+    ${achHtml}
     <div class="card">${list}</div>`;
 }
 
 function share() {
   const t = T();
-  const text = game.kind === 'daily' ? t.shareDaily(game.score) : t.shareText(game.score, game.qs.length);
+  const tm = game.time ? t.shareTime(fmtTime(game.time)) : '';
+  const text = game.res ? t.shareRes(game.score, game.qs.length, tm)
+    : game.kind === 'daily' ? t.shareDaily(game.score, tm)
+    : game.type === 'blitz' ? t.shareBlitz(game.score)
+    : t.shareText(game.score, game.qs.length, tm);
   if (inTg) {
     tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(APP_LINK)}&text=${encodeURIComponent(text)}`);
   } else if (navigator.share) {
@@ -764,10 +1324,454 @@ function share() {
   }
 }
 
+// ===== КУРОРТЫ И ОСТРОВА =====
+// id|RU|EN|страна ISO|широта|долгота|направление|подгруппа (для правдоподобных вариантов)|тип: i = остров, s = горнолыжный
+const RES_RAW = `antalya|Анталья|Antalya|TR|36.89|30.71|tr|tr|
+alanya|Аланья|Alanya|TR|36.54|31.99|tr|tr|
+kemer|Кемер|Kemer|TR|36.60|30.56|tr|tr|
+side|Сиде|Side|TR|36.77|31.39|tr|tr|
+bodrum|Бодрум|Bodrum|TR|37.03|27.43|tr|tr|
+marmaris|Мармарис|Marmaris|TR|36.85|28.27|tr|tr|
+oludeniz|Олюдениз|Oludeniz|TR|36.55|29.12|tr|tr|
+hurghada|Хургада|Hurghada|EG|27.26|33.81|tr|tr|
+sharm|Шарм-эль-Шейх|Sharm El Sheikh|EG|27.92|34.33|tr|tr|
+marsaalam|Марса-Алам|Marsa Alam|EG|25.07|34.89|tr|tr|
+dahab|Дахаб|Dahab|EG|28.50|34.51|tr|tr|
+elgouna|Эль-Гуна|El Gouna|EG|27.39|33.68|tr|tr|
+marsamatruh|Марса-Матрух|Marsa Matruh|EG|31.35|27.24|tr|tr|
+dubai|Дубай|Dubai|AE|25.20|55.27|tr|tr|
+rak|Рас-эль-Хайма|Ras Al Khaimah|AE|25.79|55.94|tr|tr|
+aqaba|Акаба|Aqaba|JO|29.53|35.01|tr|tr|
+salalah|Салала|Salalah|OM|17.02|54.09|tr|tr|
+sousse|Сусс|Sousse|TN|35.83|10.64|tr|tr|
+monastir|Монастир|Monastir|TN|35.78|10.83|tr|tr|
+hammamet|Хаммамет|Hammamet|TN|36.40|10.62|tr|tr|
+djerba|Джерба|Djerba|TN|33.81|10.86|tr|tr|i
+agadir|Агадир|Agadir|MA|30.43|-9.60|tr|tr|
+essaouira|Эссуэйра|Essaouira|MA|31.51|-9.77|tr|tr|
+sochi|Сочи|Sochi|RU|43.59|39.72|eu|eu|
+anapa|Анапа|Anapa|RU|44.89|37.32|eu|eu|
+gelendzhik|Геленджик|Gelendzhik|RU|44.56|38.08|eu|eu|
+svetlogorsk|Светлогорск|Svetlogorsk|RU|54.94|20.15|eu|eu|
+jurmala|Юрмала|Jurmala|LV|56.97|23.77|eu|eu|
+batumi|Батуми|Batumi|GE|41.64|41.64|eu|eu|
+goldsands|Золотые Пески|Golden Sands|BG|43.28|28.04|eu|eu|
+budva|Будва|Budva|ME|42.29|18.84|eu|eu|
+dubrovnik|Дубровник|Dubrovnik|HR|42.65|18.09|eu|eu|
+saranda|Саранда|Saranda|AL|39.88|20.01|eu|eu|
+ayianapa|Айя-Напа|Ayia Napa|CY|34.99|34.00|eu|eu|
+paphos|Пафос|Paphos|CY|34.77|32.42|eu|eu|
+gozo|Гозо|Gozo|MT|36.04|14.24|eu|eu|i
+santorini|Санторини|Santorini|GR|36.39|25.46|eu|eu|i
+mykonos|Миконос|Mykonos|GR|37.45|25.33|eu|eu|i
+crete|Крит|Crete|GR|35.24|24.81|eu|eu|i
+rhodes|Родос|Rhodes|GR|36.43|28.22|eu|eu|i
+corfu|Корфу|Corfu|GR|39.62|19.92|eu|eu|i
+halkidiki|Халкидики|Halkidiki|GR|40.25|23.50|eu|eu|
+sardinia|Сардиния|Sardinia|IT|40.12|9.01|eu|eu|i
+sicily|Сицилия|Sicily|IT|37.60|14.02|eu|eu|i
+capri|Капри|Capri|IT|40.55|14.24|eu|eu|i
+amalfi|Амальфи|Amalfi|IT|40.63|14.60|eu|eu|
+rimini|Римини|Rimini|IT|44.06|12.57|eu|eu|
+nice|Ницца|Nice|FR|43.70|7.27|eu|eu|
+cannes|Канны|Cannes|FR|43.55|7.02|eu|eu|
+corsica|Корсика|Corsica|FR|42.04|9.01|eu|eu|i
+mallorca|Мальорка|Mallorca|ES|39.70|3.00|eu|eu|i
+ibiza|Ибица|Ibiza|ES|38.98|1.43|eu|eu|i
+costabrava|Коста-Брава|Costa Brava|ES|41.80|3.07|eu|eu|
+tenerife|Тенерифе|Tenerife|ES|28.29|-16.63|eu|eu|i
+madeira|Мадейра|Madeira|PT|32.76|-16.96|eu|eu|i
+algarve|Алгарве|Algarve|PT|37.02|-7.93|eu|eu|
+bali|Бали|Bali|ID|-8.41|115.19|asia|asia|i
+lombok|Ломбок|Lombok|ID|-8.65|116.32|asia|asia|i
+phuket|Пхукет|Phuket|TH|7.88|98.39|asia|asia|i
+samui|Самуи|Koh Samui|TH|9.51|100.01|asia|asia|i
+phangan|Панган|Koh Phangan|TH|9.74|100.03|asia|asia|i
+pattaya|Паттайя|Pattaya|TH|12.93|100.88|asia|asia|
+krabi|Краби|Krabi|TH|8.09|98.91|asia|asia|
+huahin|Хуахин|Hua Hin|TH|12.57|99.96|asia|asia|
+nhatrang|Нячанг|Nha Trang|VN|12.24|109.19|asia|asia|
+phuquoc|Фукуок|Phu Quoc|VN|10.23|103.96|asia|asia|i
+danang|Дананг|Da Nang|VN|16.05|108.22|asia|asia|
+muine|Муйне|Mui Ne|VN|10.93|108.29|asia|asia|
+sihanouk|Сиануквиль|Sihanoukville|KH|10.63|103.50|asia|asia|
+boracay|Боракай|Boracay|PH|11.97|121.92|asia|asia|i
+palawan|Палаван|Palawan|PH|9.83|118.74|asia|asia|i
+cebu|Себу|Cebu|PH|10.32|123.89|asia|asia|i
+langkawi|Лангкави|Langkawi|MY|6.35|99.80|asia|asia|i
+penang|Пенанг|Penang|MY|5.41|100.33|asia|asia|i
+goa|Гоа|Goa|IN|15.30|74.12|asia|asia|
+bentota|Бентота|Bentota|LK|6.42|80.00|asia|asia|
+hikkaduwa|Хиккадува|Hikkaduwa|LK|6.14|80.10|asia|asia|
+hainan|Хайнань|Hainan|CN|18.25|109.51|asia|asia|i
+jeju|Чеджу|Jeju|KR|33.49|126.53|asia|asia|i
+okinawa|Окинава|Okinawa|JP|26.33|127.80|asia|asia|i
+maafushi|Мафуши|Maafushi|MV|3.94|73.49|exo|ind|i
+praslin|Праслин|Praslin|SC|-4.33|55.74|exo|ind|i
+mahe|Маэ|Mahe|SC|-4.68|55.48|exo|ind|i
+ladigue|Ла-Диг|La Digue|SC|-4.36|55.84|exo|ind|i
+grandbaie|Гран-Бе|Grand Baie|MU|-20.01|57.58|exo|ind|
+flicenflac|Флик-ан-Флак|Flic en Flac|MU|-20.27|57.37|exo|ind|
+reunion|Реюньон|Reunion|FR|-21.12|55.53|exo|ind|i
+nosybe|Нуси-Бе|Nosy Be|MG|-13.33|48.27|exo|ind|i
+saintemarie|Иль-Сент-Мари|Ile Sainte-Marie|MG|-17.00|49.86|exo|ind|i
+zanzibar|Занзибар|Zanzibar|TZ|-6.16|39.20|exo|ind|i
+pemba|Пемба|Pemba|TZ|-5.03|39.78|exo|ind|i
+mafia|Мафия|Mafia Island|TZ|-7.85|39.78|exo|ind|i
+diani|Диани|Diani Beach|KE|-4.32|39.58|exo|ind|
+malindi|Малинди|Malindi|KE|-3.22|40.12|exo|ind|
+watamu|Ватаму|Watamu|KE|-3.35|40.02|exo|ind|
+lamu|Ламу|Lamu|KE|-2.27|40.90|exo|ind|i
+tofo|Тофу|Tofo|MZ|-23.85|35.55|exo|ind|
+bazaruto|Базаруто|Bazaruto|MZ|-21.65|35.47|exo|ind|i
+capetown|Кейптаун|Cape Town|ZA|-33.92|18.42|exo|afr|
+durban|Дурбан|Durban|ZA|-29.86|31.02|exo|afr|
+swakopmund|Свакопмунд|Swakopmund|NA|-22.68|14.53|exo|afr|
+sal|Сал|Sal|CV|16.75|-22.95|exo|afr|i
+boavista|Боа-Вишта|Boa Vista|CV|16.10|-22.82|exo|afr|i
+saly|Сали|Saly|SN|14.45|-17.01|exo|afr|
+assinie|Ассини|Assinie|CI|5.13|-3.28|exo|afr|
+capecoast|Кейп-Кост|Cape Coast|GH|5.10|-1.25|exo|afr|
+principe|Принсипи|Principe|ST|1.61|7.40|exo|afr|i
+cancun|Канкун|Cancun|MX|21.16|-86.85|exo|amer|
+playadelcarmen|Плайя-дель-Кармен|Playa del Carmen|MX|20.63|-87.07|exo|amer|
+tulum|Тулум|Tulum|MX|20.21|-87.47|exo|amer|
+loscabos|Лос-Кабос|Los Cabos|MX|22.89|-109.92|exo|amer|
+vallarta|Пуэрто-Вальярта|Puerto Vallarta|MX|20.65|-105.23|exo|amer|
+puntacana|Пунта-Кана|Punta Cana|DO|18.58|-68.40|exo|amer|
+samana|Самана|Samana|DO|19.21|-69.34|exo|amer|
+varadero|Варадеро|Varadero|CU|23.15|-81.25|exo|amer|
+cayococo|Кайо-Коко|Cayo Coco|CU|22.51|-78.43|exo|amer|i
+montego|Монтего-Бей|Montego Bay|JM|18.47|-77.92|exo|amer|
+negril|Негрил|Negril|JM|18.27|-78.35|exo|amer|
+paradise|Парадайз-Айленд|Paradise Island|BS|25.08|-77.32|exo|amer|i
+aruba|Аруба|Aruba|NL|12.52|-69.97|exo|amer|i
+bermuda|Бермуды|Bermuda|GB|32.30|-64.78|exo|amer|i
+tobago|Тобаго|Tobago|TT|11.23|-60.70|exo|amer|i
+miami|Майами|Miami|US|25.76|-80.19|exo|amer|
+keywest|Ки-Уэст|Key West|US|24.56|-81.78|exo|amer|i
+ambergris|Амбергрис-Кей|Ambergris Caye|BZ|17.92|-87.96|exo|amer|i
+roatan|Роатан|Roatan|HN|16.32|-86.53|exo|amer|i
+bocas|Бокас-дель-Торо|Bocas del Toro|PA|9.34|-82.24|exo|amer|i
+tamarindo|Тамариндо|Tamarindo|CR|10.30|-85.84|exo|amer|
+cartagena|Картахена|Cartagena|CO|10.39|-75.48|exo|amer|
+rio|Рио-де-Жанейро|Rio de Janeiro|BR|-22.97|-43.18|exo|amer|
+noronha|Фернанду-ди-Норонья|Fernando de Noronha|BR|-3.85|-32.42|exo|amer|i
+mardelplata|Мар-дель-Плата|Mar del Plata|AR|-38.00|-57.56|exo|amer|
+galapagos|Галапагосы|Galapagos|EC|-0.95|-90.97|exo|amer|i
+hawaii|Гавайи|Hawaii|US|21.28|-157.83|exo|oce|i
+maui|Мауи|Maui|US|20.80|-156.33|exo|oce|i
+borabora|Бора-Бора|Bora Bora|FR|-16.50|-151.74|exo|oce|i
+tahiti|Таити|Tahiti|FR|-17.65|-149.43|exo|oce|i
+newcaledonia|Новая Каледония|New Caledonia|FR|-22.27|166.45|exo|oce|i
+goldcoast|Голд-Кост|Gold Coast|AU|-28.02|153.40|exo|oce|
+byronbay|Байрон-Бей|Byron Bay|AU|-28.64|153.61|exo|oce|
+whitsunday|Уитсандей|Whitsundays|AU|-20.28|148.95|exo|oce|i
+denarau|Денарау|Denarau|FJ|-17.77|177.38|exo|oce|i
+courchevel|Куршевель|Courchevel|FR|45.41|6.63|eu|alps|s
+chamonix|Шамони|Chamonix|FR|45.92|6.87|eu|alps|s
+valthorens|Валь-Торанс|Val Thorens|FR|45.30|6.58|eu|alps|s
+zermatt|Церматт|Zermatt|CH|46.02|7.75|eu|alps|s
+stmoritz|Санкт-Мориц|St. Moritz|CH|46.50|9.84|eu|alps|s
+davos|Давос|Davos|CH|46.80|9.84|eu|alps|s
+kitzbuhel|Кицбюэль|Kitzbuhel|AT|47.45|12.39|eu|alps|s
+ischgl|Ишгль|Ischgl|AT|47.01|10.29|eu|alps|s
+solden|Зёльден|Solden|AT|46.97|11.01|eu|alps|s
+cortina|Кортина-д’Ампеццо|Cortina d'Ampezzo|IT|46.54|12.14|eu|alps|s
+livigno|Ливиньо|Livigno|IT|46.54|10.14|eu|alps|s
+soldeu|Сольдеу|Soldeu|AD|42.58|1.67|eu|mnt|s
+bansko|Банско|Bansko|BG|41.84|23.49|eu|mnt|s
+gudauri|Гудаури|Gudauri|GE|42.48|44.48|eu|mnt|s
+krasnayapolyana|Красная Поляна|Krasnaya Polyana|RU|43.68|40.20|eu|mnt|s
+sheregesh|Шерегеш|Sheregesh|RU|52.92|87.98|eu|mnt|s
+niseko|Нисеко|Niseko|JP|42.80|140.69|asia|mnt|s
+whistler|Уистлер|Whistler|CA|50.12|-122.95|exo|mnt|s
+aspen|Аспен|Aspen|US|39.19|-106.82|exo|mnt|s`;
+const RESORTS = RES_RAW.trim().split('\n').map(l => {
+  const [id, ru, en, c, la, lo, g, sub, k] = l.split('|');
+  return { id, ru, en, c, lat: +la, lng: +lo, g, sub, kind: k || '' };
+}).filter(r => BY_ID[r.c]);
+const RES_BY = Object.fromEntries(RESORTS.map(r => [r.id, r]));
+const RES_DIRS = ['all', 'tr', 'eu', 'asia', 'exo'];
+// Сложность курортов (опыт ×1 по умолчанию — самые известные)
+const RES_MED = new Set(('bodrum marmaris oludeniz marsaalam dahab elgouna rak aqaba sousse monastir hammamet djerba agadir essaouira ' +
+  'svetlogorsk jurmala batumi goldsands budva dubrovnik ayianapa paphos mykonos rhodes corfu halkidiki sardinia sicily capri amalfi rimini cannes corsica ibiza costabrava madeira algarve ' +
+  'lombok phangan krabi huahin phuquoc danang muine boracay langkawi hainan jeju okinawa hikkaduwa ' +
+  'mahe zanzibar capetown playadelcarmen tulum loscabos vallarta montego cartagena galapagos tahiti goldcoast ' +
+  'chamonix valthorens zermatt stmoritz davos kitzbuhel cortina bansko gudauri niseko whistler aspen').split(' '));
+const RES_HARD = new Set(('marsamatruh salalah saranda gozo sihanouk palawan cebu penang bentota ' +
+  'maafushi praslin ladigue grandbaie flicenflac reunion nosybe saintemarie pemba mafia diani malindi watamu lamu tofo bazaruto ' +
+  'durban swakopmund sal boavista saly assinie capecoast principe ' +
+  'samana cayococo negril paradise aruba bermuda tobago keywest ambergris roatan bocas tamarindo noronha mardelplata ' +
+  'maui borabora newcaledonia byronbay whitsunday denarau ischgl solden livigno soldeu').split(' '));
+const rmult = r => RES_HARD.has(r.id) ? 2 : RES_MED.has(r.id) ? 1.5 : 1;
+const rname = r => settings.lang === 'ru' ? r.ru : r.en;
+const rIcon = r => r.kind === 's' ? '⛷️' : r.kind === 'i' ? '🏝️' : '🏖️';
+const rTierTag = r => { const m = rmult(r); return `<span class="tier t${String(m).replace('.', '')}">${m === 2 ? '🔴' : m === 1.5 ? '🟡' : '🟢'} ×${m}</span>`; };
+const resPool = () => settings.rdir === 'all' ? RESORTS : RESORTS.filter(r => r.g === settings.rdir);
+const resKey = () => `res_${settings.rdir}_${settings.rlen}`;
+
+// --- меню раздела ---
+function renderResorts() {
+  const t = T(), best = stats.resBest[resKey()], bt = stats.resBestTime[resKey()];
+  $('#resorts').innerHTML = `
+    <header><button class="back" data-act="home">‹ ${t.back}</button><div style="flex:1"><h1>🏖 ${t.resorts}</h1><div class="sub">${t.resortsSub(RESORTS.length)}</div></div></header>
+    <div class="card">
+      <div class="type-hint" style="margin:0 0 12px">${t.r_where_hint}</div>
+      <div class="label">${t.dir}</div>
+      <div class="chips">${RES_DIRS.map(d => `<button class="chip ${settings.rdir === d ? 'on' : ''}" data-act="rset" data-k="rdir" data-v="${d}">${t['d_' + d]} <small>${d === 'all' ? RESORTS.length : RESORTS.filter(r => r.g === d).length}</small></button>`).join('')}</div>
+      <div class="label">${t.len}</div>
+      <div class="chips">${LENS.map(n => `<button class="chip ${String(settings.rlen) === String(n) ? 'on' : ''}" data-act="rset" data-k="rlen" data-v="${n}">${n === 'all' ? `${t.all} <small>${resPool().length}</small>` : n}</button>`).join('')}</div>
+      <div class="best-line">${t.best}: ${best != null ? best : '—'}${bt != null ? ` · ⏱ ${fmtTime(bt)}` : ''}</div>
+    </div>
+    <button class="btn" data-act="rstart">▶ ${t.start}</button>`;
+}
+
+// --- игра «Где этот курорт?» ---
+function buildResQuestions(pool) {
+  return pool.map(r => {
+    // неправильные варианты — страны соседних курортов (та же подгруппа → то же направление → любые)
+    const pick = f => shuffle([...new Set(RESORTS.filter(f).map(x => x.c))]);
+    const cand = [...new Set([
+      ...pick(x => x.sub === r.sub && x.c !== r.c),
+      ...pick(x => x.g === r.g && x.c !== r.c),
+      ...pick(x => x.c !== r.c)
+    ])].slice(0, 3);
+    return { r, opts: shuffle([r.c, ...cand]) };
+  });
+}
+
+function startResort() {
+  endGame();
+  let pool = settings.rlen === 'all' ? balancedRes(resPool()) : balancedRes(resPool()).slice(0, settings.rlen);
+  game = {
+    res: true, kind: 'res', type: 'normal', mode: 'where', key: resKey(), qs: buildResQuestions(pool),
+    i: 0, asked: 0, score: 0, streak: 0, maxStreak: 0, wrong: [], hintUsed: false, locked: false,
+    xp: 0, rank0: rankIdx(stats.xp), newAch: [], over: false, t0: Date.now()
+  };
+  go('game');
+  timerId = setInterval(tickClock, 500);
+  renderResQ();
+}
+// равномерно по подгруппам — чтобы «все направления» не были одним Египтом
+function balancedRes(list) {
+  const groups = {};
+  list.forEach(r => { (groups[r.sub] = groups[r.sub] || []).push(r); });
+  const queues = shuffle(Object.keys(groups)).map(k => shuffle(groups[k]));
+  const out = [];
+  while (queues.some(q => q.length)) shuffle(queues).forEach(q => { if (q.length) out.push(q.pop()); });
+  return out;
+}
+
+function renderResQ() {
+  const t = T(), q = game.qs[game.i], r = q.r, n = game.qs.length;
+  $('#game').innerHTML = `
+    <div class="top"><span>🏖 ${t['d_' + settings.rdir]}</span><span>${game.i + 1} / ${n} · <span id="clockTxt">⏱ ${fmtTime(Date.now() - game.t0)}</span></span></div>
+    <div class="bar"><i style="width:${game.i / n * 100}%"></i></div>
+    <div class="top"><span>✅ ${game.score} · ⭐ ${game.xp} XP</span><span>${game.streak >= 3 ? '🔥' : '⚡'} ${t.streak}: ${game.streak}</span></div>
+    <div class="q"><div class="fl big">${rIcon(r)}</div><small>${t.r_where_q} ${rTierTag(r)}</small><h2>${esc(rname(r))}</h2><div class="rtype">${r.kind === 's' ? t.skiResort : r.kind === 'i' ? t.island : t.resort}</div></div>
+    <div class="opts">${q.opts.map(id => `<button class="opt" data-act="ropt" data-id="${id}">${flag(id, 'sm')} ${esc(nm(BY_ID[id]))}</button>`).join('')}</div>
+    <div class="reveal" id="reveal"></div>
+    <div class="tools">
+      <button class="link" data-act="quit">✕ ${t.quit}</button>
+      <button class="link" data-act="rhint" ${game.hintUsed ? 'disabled' : ''}>💡 50/50</button>
+    </div>`;
+  game.locked = false;
+}
+
+function answerRes(id) {
+  if (!game || !game.res || game.locked) return;
+  game.locked = true;
+  const t = T(), q = game.qs[game.i], r = q.r, ok = id === r.c;
+  document.querySelectorAll('.opt').forEach(b => {
+    b.disabled = true;
+    if (b.dataset.id === r.c) b.classList.add('ok');
+    else if (b.dataset.id === id) b.classList.add('bad');
+  });
+  game.asked++; stats.answered++;
+  let gain = 0;
+  if (ok) {
+    game.score++; game.streak++; stats.correct++;
+    game.maxStreak = Math.max(game.maxStreak, game.streak);
+    stats.bestStreak = Math.max(stats.bestStreak, game.streak);
+    if (!stats.resKnown.includes(r.id)) stats.resKnown.push(r.id);
+    gain = Math.round(10 * rmult(r));
+    game.xp += gain; stats.xp += gain;
+    const milestone = game.streak === 3 || (game.streak >= 5 && game.streak % 5 === 0);
+    if (milestone) { praise(t.streakMsg(game.streak), 'mega'); confetti(45); sfx('mega'); hapticImpact('heavy'); }
+    else { praise(t.praise[Math.floor(Math.random() * t.praise.length)]); confetti(14); sfx('ok'); haptic('success'); }
+  } else {
+    game.streak = 0;
+    game.wrong.push(r.id);
+    sfx('bad'); haptic('error');
+  }
+  $('#reveal').innerHTML = `${flag(r.c, 'sm')} <b>${esc(rname(r))}</b> — ${esc(nm(BY_ID[r.c]))}${gain ? ` <span class="gain">+${gain} XP</span>` : ''}`;
+  checkAch(game);
+  saveAll();
+  setTimeout(nextResQ, ok ? 900 : 1900);
+}
+
+function useResHint() {
+  if (!game || !game.res || game.hintUsed || game.locked) return;
+  game.hintUsed = true;
+  const q = game.qs[game.i];
+  const wrong = shuffle(q.opts.filter(id => id !== q.r.c)).slice(0, 2);
+  document.querySelectorAll('.opt').forEach(b => { if (wrong.includes(b.dataset.id)) { b.classList.add('gone'); b.disabled = true; } });
+  document.querySelector('[data-act="rhint"]').disabled = true;
+}
+
+function nextResQ() {
+  if (!game || !game.res || game.over) return;
+  game.i++;
+  if (game.i >= game.qs.length) finishRes(); else renderResQ();
+}
+
+function finishRes() {
+  if (!game || game.over) return;
+  game.over = true;
+  stopTimer();
+  game.time = Date.now() - game.t0;
+  stats.played++;
+  const prev = stats.resBest[game.key] || 0;
+  let record = false, fastRec = false;
+  if (game.score > prev) { stats.resBest[game.key] = game.score; record = true; }
+  if (!game.wrong.length && game.asked > 0) {
+    const pt = stats.resBestTime[game.key];
+    if (pt == null || game.time < pt) { fastRec = pt != null; stats.resBestTime[game.key] = game.time; }
+  }
+  checkAch(game);
+  saveAll();
+  const rankUp = rankIdx(stats.xp) > game.rank0;
+  renderResResult(record, rankUp, fastRec);
+  go('result');
+  if (record || rankUp || fastRec || game.score / game.qs.length >= 0.7) setTimeout(() => { confetti(rankUp ? 140 : 90); sfx('win'); haptic('success'); }, 250);
+}
+
+function renderResResult(record, rankUp, fastRec) {
+  const t = T(), n = game.qs.length, pct = Math.round(game.score / n * 100);
+  const emoji = pct >= 90 ? '🏆' : pct >= 70 ? '🌴' : pct >= 40 ? '🏖️' : '🧳';
+  const uniq = [...new Set(game.wrong)];
+  const list = uniq.length
+    ? `<div class="label">${t.mist}</div>` + uniq.map(id => { const r = RES_BY[id]; return `<div class="item">${flag(r.c, 'sm')}<span>${esc(rname(r))}</span><span class="c">${esc(nm(BY_ID[r.c]))}</span></div>`; }).join('')
+    : `<div style="text-align:center">${t.noMist}</div>`;
+  const achHtml = game.newAch.length
+    ? `<div class="card"><div class="label">${t.achGot}</div><div class="ach-row">${game.newAch.map(a => `<span>${a.i} ${esc(achText(a)[0])}</span>`).join('')}</div></div>` : '';
+  const best = stats.resBest[game.key], bt = stats.resBestTime[game.key];
+  $('#result').innerHTML = `
+    <div class="top"><span>🏖 ${t.resorts} · ${t['d_' + settings.rdir]}</span><span></span></div>
+    <div class="emoji">${emoji}</div>
+    <div class="big-score">${game.score}/${n}</div>
+    <div class="pct">${t.timeLine(fmtTime(game.time), (game.time / 1000 / Math.max(game.asked, 1)).toFixed(1).replace('.', settings.lang === 'ru' ? ',' : '.'))}</div>
+    ${fastRec ? `<span class="badge">${t.newBestTime}</span>` : (bt != null ? `<div class="pct">${t.bestTime}: ${fmtTime(bt)}</div>` : '')}
+    <div class="xp-line">⭐ ${t.gotXp(game.xp)}</div>
+    ${rankUp ? `<span class="badge">${t.newRank(rankName(rankIdx(stats.xp)))}</span>` : ''}
+    ${record ? `<span class="badge">${t.newRecord}</span>` : `<div class="pct">${t.best}: ${best}</div>`}
+    <button class="btn" data-act="share">📤 ${t.share}</button>
+    <div class="row">
+      <button class="btn sec" data-act="again">↻ ${t.again}</button>
+      <button class="btn sec" data-act="resorts">🏖 ${t.resorts}</button>
+    </div>
+    ${achHtml}
+    <div class="card">${list}</div>`;
+}
+
+// ===== ДЕТСКИЙ РЕЖИМ (без опыта, таймера и рекордов) =====
+const KIDS_IDS = ('RU BY FR DE IT ES PT ENG IE NL PL GR FI NO SE DK LT EE ' +
+  'CN JP IN TR TH VN KZ KR KP EG ZA MA US CA MX BR AR CU CL AU NZ').split(' ');
+const KIDS_TRICKY = new Set('TR AU CA BR ZA MA KZ IN NZ'.split(' ')); // столица «не та, что все думают» — в столицах не спрашиваем
+const ENGLAND = { id: 'ENG', r: 'eu', en: { n: 'England', c: 'London' }, ru: { n: 'Англия', c: 'Лондон' } };
+const kidC = id => id === 'ENG' ? ENGLAND : BY_ID[id];
+const KIDS_FLAGS = KIDS_IDS.map(kidC).filter(Boolean);
+const KIDS_CAPS = KIDS_FLAGS.filter(c => !KIDS_TRICKY.has(c.id));
+function kidFlag(c, cls) {
+  const code = c.id === 'ENG' ? 'gb-eng' : c.id.toLowerCase();
+  const emo = c.id === 'ENG' ? '🏴' : emojiFlag(c.id);
+  return `<span class="fl ${cls}"><img src="https://flagcdn.com/w320/${code}.png" alt="" onerror="this.parentNode.textContent='${emo}'"></span>`;
+}
+let kgame = null;
+
+function renderKids() {
+  const t = T();
+  $('#kids').innerHTML = `
+    <header><button class="back" data-act="home">‹ ${t.back}</button><div style="flex:1"><h1>👶 ${t.kidsTitle}</h1><div class="sub">${t.kidsSub}</div></div></header>
+    <button class="daily kflag" data-act="kstart" data-v="flag"><b>${t.kFlags}</b><span>${t.kCount(KIDS_FLAGS.length)}</span></button>
+    <button class="daily kcap" data-act="kstart" data-v="cap"><b>${t.kCaps}</b><span>${t.kCount(KIDS_CAPS.length)}</span></button>
+    <div class="type-hint" style="text-align:center;margin-top:6px">${t.kidsNote}</div>`;
+}
+
+function startKids(mode) {
+  endGame();
+  const pool = mode === 'flag' ? KIDS_FLAGS : KIDS_CAPS;
+  const qs = shuffle(pool).slice(0, 10).map(c => ({
+    c, opts: shuffle([c, ...shuffle(pool.filter(x => x.id !== c.id)).slice(0, 2)]).map(x => x.id)
+  }));
+  kgame = { mode, qs, i: 0, score: 0, locked: false, over: false };
+  go('game');
+  renderKidsQ();
+}
+
+function renderKidsQ() {
+  const t = T(), q = kgame.qs[kgame.i], c = q.c, n = kgame.qs.length, L = settings.lang;
+  const label = id => kgame.mode === 'flag' ? kidC(id)[L].n : kidC(id)[L].c;
+  const qHtml = kgame.mode === 'flag'
+    ? `${kidFlag(c, 'kid')}<small>${t.kQFlag}</small>`
+    : `${kidFlag(c, 'kid')}<small>${t.kQCap}</small><h2>${esc(c[L].n)}</h2>`;
+  $('#game').innerHTML = `
+    <div class="top"><span>👶 ${kgame.mode === 'flag' ? t.kFlags : t.kCaps}</span><span>${kgame.i + 1} / ${n}</span></div>
+    <div class="bar"><i style="width:${kgame.i / n * 100}%"></i></div>
+    <div class="top"><span>⭐ ${kgame.score}</span><span></span></div>
+    <div class="q">${qHtml}</div>
+    <div class="opts kid">${q.opts.map(id => `<button class="opt" data-act="kopt" data-id="${id}">${esc(label(id))}</button>`).join('')}</div>
+    <div class="reveal" id="reveal"></div>
+    <div class="tools"><button class="link" data-act="kquit">✕ ${t.quit}</button><span></span></div>`;
+  kgame.locked = false;
+}
+
+function answerKids(id) {
+  if (!kgame || kgame.locked || kgame.over) return;
+  kgame.locked = true;
+  const t = T(), q = kgame.qs[kgame.i], ok = id === q.c.id, L = settings.lang;
+  document.querySelectorAll('.opt').forEach(b => {
+    b.disabled = true;
+    if (b.dataset.id === q.c.id) b.classList.add('ok');
+    else if (b.dataset.id === id) b.classList.add('soft'); // мягкая ошибка — без красного
+  });
+  if (ok) {
+    kgame.score++;
+    praise(t.kPraise[Math.floor(Math.random() * t.kPraise.length)]);
+    confetti(20); sfx('ok'); haptic('success');
+  } else {
+    const right = kgame.mode === 'flag' ? q.c[L].n : q.c[L].c;
+    $('#reveal').innerHTML = `${t.kAlmost} <b>${esc(right)}</b> ${kidFlag(q.c, 'sm')}`;
+  }
+  setTimeout(nextKidsQ, ok ? 1100 : 2300);
+}
+
+function nextKidsQ() {
+  if (!kgame || kgame.over) return;
+  kgame.i++;
+  if (kgame.i >= kgame.qs.length) finishKids(); else renderKidsQ();
+}
+
+function finishKids() {
+  kgame.over = true;
+  const t = T(), s = kgame.score, n = kgame.qs.length;
+  const stars = s >= n ? '⭐⭐⭐' : s >= 7 ? '⭐⭐' : '⭐';
+  $('#result').innerHTML = `
+    <div class="top"><span>👶 ${kgame.mode === 'flag' ? t.kFlags : t.kCaps}</span><span></span></div>
+    <div class="stars">${stars}</div>
+    <div class="big-score">${t.kDone(s, n)}</div>
+    <div class="pct">${s >= 7 ? t.kGreat : t.kTry}</div>
+    <button class="btn" data-act="kstart" data-v="${kgame.mode}">↻ ${t.kAgain}</button>
+    <button class="btn sec" data-act="kids">👶 ${t.kBack}</button>`;
+  go('result');
+  setTimeout(() => { confetti(s >= 7 ? 120 : 60); sfx('win'); haptic('success'); }, 250);
+}
+
 // ===== СПРАВОЧНИК + 3D-ГЛОБУС =====
 // Координаты столиц: ISO|широта|долгота
-const GEO_RAW = `AL|41.33|19.82 AD|42.51|1.52 AT|48.21|16.37 BY|53.90|27.57 BE|50.85|4.35 BA|43.86|18.41 BG|42.70|23.32 HR|45.81|15.98 CY|35.17|33.36 CZ|50.08|14.44 DK|55.68|12.57 EE|59.44|24.75 FI|60.17|24.94 FR|48.86|2.35 DE|52.52|13.40 GR|37.98|23.73 HU|47.50|19.04 IS|64.15|-21.94 IE|53.35|-6.26 IT|41.90|12.50 LV|56.95|24.11 LI|47.14|9.52 LT|54.69|25.28 LU|49.61|6.13 MT|35.90|14.51 MD|47.01|28.86 MC|43.73|7.42 ME|42.44|19.26 NL|52.37|4.90 MK|42.00|21.43 NO|59.91|10.75 PL|52.23|21.01 PT|38.72|-9.14 RO|44.43|26.10 RU|55.76|37.62 SM|43.94|12.45 RS|44.79|20.45 SK|48.15|17.11 SI|46.06|14.51 ES|40.42|-3.70 SE|59.33|18.07 CH|46.95|7.45 UA|50.45|30.52 GB|51.51|-0.13 VA|41.90|12.45
-AF|34.53|69.17 AM|40.18|44.51 AZ|40.41|49.87 BH|26.23|50.59 BD|23.81|90.41 BT|27.47|89.64 BN|4.90|114.94 KH|11.56|104.92 CN|39.90|116.41 GE|41.72|44.79 IN|28.61|77.21 ID|-6.21|106.85 IR|35.69|51.39 IQ|33.31|44.36 IL|31.77|35.21 JP|35.68|139.69 JO|31.95|35.93 KZ|51.17|71.45 KW|29.38|47.99 KG|42.87|74.59 LA|17.98|102.63 LB|33.89|35.50 MY|3.14|101.69 MV|4.18|73.51 MN|47.89|106.91 MM|19.76|96.08 NP|27.72|85.32 KP|39.04|125.76 OM|23.59|58.41 PK|33.68|73.05 PH|14.60|120.98 QA|25.29|51.53 SA|24.71|46.68 SG|1.35|103.82 KR|37.57|126.98 LK|6.89|79.90 SY|33.51|36.28 TJ|38.56|68.79 TH|13.76|100.50 TL|-8.56|125.57 TR|39.93|32.86 TM|37.96|58.33 AE|24.45|54.38 UZ|41.30|69.24 VN|21.03|105.85 YE|15.37|44.19
+const GEO_RAW = `AL|41.33|19.82 AD|42.51|1.52 AT|48.21|16.37 BY|53.90|27.57 BE|50.85|4.35 BA|43.86|18.41 BG|42.70|23.32 HR|45.81|15.98 CY|35.17|33.36 CZ|50.08|14.44 DK|55.68|12.57 EE|59.44|24.75 FI|60.17|24.94 FR|48.86|2.35 DE|52.52|13.40 GR|37.98|23.73 HU|47.50|19.04 IS|64.15|-21.94 IE|53.35|-6.26 IT|41.90|12.50 LV|56.95|24.11 LI|47.14|9.52 LT|54.69|25.28 LU|49.61|6.13 MT|35.90|14.51 MD|47.01|28.86 MC|43.73|7.42 ME|42.44|19.26 NL|52.37|4.90 MK|42.00|21.43 NO|59.91|10.75 PL|52.23|21.01 PT|38.72|-9.14 RO|44.43|26.10 RU|55.76|37.62 SM|43.94|12.45 RS|44.79|20.45 SK|48.15|17.11 SI|46.06|14.51 ES|40.42|-3.70 SE|59.33|18.07 CH|46.95|7.45 GB|51.51|-0.13 VA|41.90|12.45
+AF|34.53|69.17 AM|40.18|44.51 AZ|40.41|49.87 BH|26.23|50.59 BD|23.81|90.41 BT|27.47|89.64 BN|4.90|114.94 KH|11.56|104.92 CN|39.90|116.41 GE|41.72|44.79 IN|28.61|77.21 ID|-6.21|106.85 IR|35.69|51.39 IQ|33.31|44.36 JP|35.68|139.69 JO|31.95|35.93 KZ|51.17|71.45 KW|29.38|47.99 KG|42.87|74.59 LA|17.98|102.63 LB|33.89|35.50 MY|3.14|101.69 MV|4.18|73.51 MN|47.89|106.91 MM|19.76|96.08 NP|27.72|85.32 KP|39.04|125.76 OM|23.59|58.41 PK|33.68|73.05 PH|14.60|120.98 QA|25.29|51.53 SA|24.71|46.68 SG|1.35|103.82 KR|37.57|126.98 LK|6.89|79.90 SY|33.51|36.28 TJ|38.56|68.79 TH|13.76|100.50 TL|-8.56|125.57 TR|39.93|32.86 TM|37.96|58.33 AE|24.45|54.38 UZ|41.30|69.24 VN|21.03|105.85 YE|15.37|44.19
 DZ|36.75|3.06 AO|-8.84|13.23 BJ|6.50|2.60 BW|-24.65|25.91 BF|12.37|-1.52 BI|-3.43|29.93 CV|14.93|-23.51 CM|3.85|11.50 CF|4.39|18.56 TD|12.13|15.06 KM|-11.70|43.26 CG|-4.26|15.24 CD|-4.44|15.27 CI|6.83|-5.29 DJ|11.59|43.15 EG|30.04|31.24 GQ|3.75|8.78 ER|15.32|38.93 SZ|-26.31|31.14 ET|9.03|38.74 GA|0.42|9.47 GM|13.45|-16.58 GH|5.60|-0.19 GN|9.64|-13.58 GW|11.86|-15.60 KE|-1.29|36.82 LS|-29.31|27.48 LR|6.30|-10.80 LY|32.89|13.19 MG|-18.88|47.51 MW|-13.96|33.79 ML|12.64|-8.00 MR|18.08|-15.98 MU|-20.16|57.50 MA|34.02|-6.83 MZ|-25.97|32.57 NA|-22.56|17.08 NE|13.51|2.11 NG|9.08|7.40 RW|-1.94|30.06 ST|0.34|6.73 SN|14.72|-17.47 SC|-4.62|55.45 SL|8.48|-13.23 SO|2.05|45.32 ZA|-25.75|28.19 SS|4.85|31.58 SD|15.50|32.56 TZ|-6.16|35.75 TG|6.13|1.22 TN|36.81|10.18 UG|0.35|32.58 ZM|-15.39|28.32 ZW|-17.83|31.05
 AG|17.12|-61.85 BS|25.05|-77.35 BB|13.10|-59.62 BZ|17.25|-88.77 CA|45.42|-75.70 CR|9.93|-84.08 CU|23.11|-82.37 DM|15.30|-61.39 DO|18.49|-69.93 SV|13.69|-89.22 GD|12.06|-61.75 GT|14.63|-90.51 HT|18.59|-72.31 HN|14.07|-87.19 JM|18.02|-76.80 MX|19.43|-99.13 NI|12.11|-86.24 PA|8.98|-79.52 KN|17.30|-62.72 LC|14.01|-60.99 VC|13.16|-61.22 TT|10.66|-61.51 US|38.91|-77.04
 AR|-34.60|-58.38 BO|-19.04|-65.26 BR|-15.79|-47.88 CL|-33.45|-70.67 CO|4.71|-74.07 EC|-0.18|-78.47 GY|6.80|-58.16 PY|-25.26|-57.58 PE|-12.05|-77.04 SR|5.85|-55.20 UY|-34.90|-56.16 VE|10.48|-66.90
@@ -785,7 +1789,7 @@ const GEO_URLS = [
 const REGION_VIEW = {
   world: { lat: 25, lng: 30, altitude: 2.3 }, eu: { lat: 50, lng: 15, altitude: 1.3 },
   as: { lat: 30, lng: 90, altitude: 1.9 }, af: { lat: 3, lng: 20, altitude: 1.7 },
-  na: { lat: 28, lng: -90, altitude: 1.8 }, sa: { lat: -18, lng: -60, altitude: 1.6 },
+  na: { lat: 28, lng: -95, altitude: 1.8 }, cb: { lat: 16, lng: -70, altitude: 0.9 }, sa: { lat: -18, lng: -60, altitude: 1.6 },
   oc: { lat: -15, lng: 160, altitude: 1.9 }
 };
 
@@ -794,6 +1798,7 @@ let globe = null, globeLoading = false;
 const hasPoly = new Set();
 
 function loadScript(urls) {
+  if (window.Globe) return Promise.resolve(); // библиотека глобуса уже загружена
   return new Promise((res, rej) => {
     let i = 0;
     const next = () => {
@@ -813,7 +1818,67 @@ function isoOf(p) {
   const bad = v => !v || v === '-99' || v === -99;
   if (!bad(p.ISO_A2)) return p.ISO_A2;
   if (!bad(p.ISO_A2_EH)) return p.ISO_A2_EH;
+  if (!bad(p.WB_A2) && BY_ID[p.WB_A2]) return p.WB_A2;
   return ({ FRA: 'FR', NOR: 'NO' })[p.ADM0_A3] || null;
+}
+
+// Общая загрузка карты стран (для глобуса и для режима «Контур»)
+const FEAT = {};
+let geoPromise = null;
+function loadGeo() {
+  if (!geoPromise) {
+    geoPromise = fetchJSON(GEO_URLS).then(geo => {
+      geo.features.forEach(f => {
+        f.__id = isoOf(f.properties);
+        if (f.__id && BY_ID[f.__id] && !FEAT[f.__id]) { hasPoly.add(f.__id); FEAT[f.__id] = f; }
+      });
+      return geo;
+    }).catch(e => { geoPromise = null; throw e; });
+  }
+  return geoPromise;
+}
+
+// Силуэт страны в SVG (для режима «Контур»)
+const shapeCache = {};
+function shapeParts(id) {
+  if (shapeCache[id] !== undefined) return shapeCache[id];
+  const f = FEAT[id];
+  if (!f) return (shapeCache[id] = null);
+  const g = f.geometry;
+  const polys = g.type === 'Polygon' ? [g.coordinates] : g.coordinates;
+  let minL = Infinity, maxL = -Infinity;
+  polys.forEach(p => p.forEach(r => r.forEach(pt => { minL = Math.min(minL, pt[0]); maxL = Math.max(maxL, pt[0]); })));
+  const wrap = maxL - minL > 180; // страна пересекает 180-й меридиан (Россия, Фиджи)
+  const P = polys.map(p => p.map(r => r.map(([lo, la]) => [wrap && lo < 0 ? lo + 360 : lo, la])));
+  const info = P.map(p => {
+    const r = p[0]; let a = 0, cx = 0, cy = 0;
+    for (let i = 0; i < r.length; i++) { const [x1, y1] = r[i], [x2, y2] = r[(i + 1) % r.length]; a += x1 * y2 - x2 * y1; cx += x1; cy += y1; }
+    return { p, area: Math.abs(a) / 2, cx: cx / r.length, cy: cy / r.length };
+  });
+  const big = info.reduce((m, x) => x.area > m.area ? x : m);
+  // убираем далёкие мелкие владения (Аляска, Гвиана у Франции и т.п.)
+  const keep = info.filter(x => x.area >= big.area * 0.3 || Math.hypot(x.cx - big.cx, x.cy - big.cy) <= 30);
+  let pts = 0;
+  keep.forEach(x => x.p.forEach(r => { pts += r.length; }));
+  return (shapeCache[id] = { keep, pts });
+}
+const shapeOK = id => { const s = shapeParts(id); return !!(s && s.pts >= 10); };
+function shapeSVG(id) {
+  const s = shapeParts(id);
+  if (!s) return '';
+  let minLa = Infinity, maxLa = -Infinity;
+  s.keep.forEach(x => x.p.forEach(r => r.forEach(pt => { minLa = Math.min(minLa, pt[1]); maxLa = Math.max(maxLa, pt[1]); })));
+  const k = Math.cos((minLa + maxLa) / 2 * Math.PI / 180);
+  let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity, d = '';
+  s.keep.forEach(x => x.p.forEach(r => {
+    d += 'M' + r.map(([lo, la]) => {
+      const X = lo * k, Y = -la;
+      minX = Math.min(minX, X); maxX = Math.max(maxX, X); minY = Math.min(minY, Y); maxY = Math.max(maxY, Y);
+      return X.toFixed(3) + ' ' + Y.toFixed(3);
+    }).join('L') + 'Z';
+  }));
+  const w = maxX - minX, h = maxY - minY, pad = Math.max(w, h) * 0.06;
+  return `<svg class="shape" viewBox="${(minX - pad).toFixed(3)} ${(minY - pad).toFixed(3)} ${(w + 2 * pad).toFixed(3)} ${(h + 2 * pad).toFixed(3)}" preserveAspectRatio="xMidYMid meet"><path d="${d}" fill-rule="evenodd"/></svg>`;
 }
 function polyColor(f) {
   if (f.properties.ADM0_A3 === 'ATA') return 'rgba(236,243,250,0.95)'; // Антарктида — белый лёд
@@ -850,9 +1915,8 @@ async function initGlobe() {
   globeLoading = true;
   try {
     await loadScript(GLOBE_JS);
-    const geo = await fetchJSON(GEO_URLS);
+    const geo = await loadGeo();
     const feats = geo.features;
-    feats.forEach(f => { f.__id = isoOf(f.properties); if (f.__id && BY_ID[f.__id]) hasPoly.add(f.__id); });
     const box = $('#globeBox');
     globe = Globe()(box)
       .width(box.clientWidth || 360).height(box.clientHeight || 300)
@@ -917,7 +1981,7 @@ function renderRef() {
   const t = T();
   if (!refBuilt) {
     $('#ref').innerHTML = `
-      <header><h1 id="refTitle"></h1></header>
+      <header><button class="back" data-act="home" id="refBack"></button><h1 id="refTitle"></h1></header>
       <div class="ref-layout">
         <div class="ref-globe"><div class="globe-box" id="globeBox"><div class="globe-msg" id="globeMsg"></div></div></div>
         <div class="ref-side">
@@ -932,6 +1996,7 @@ function renderRef() {
     refBuilt = true;
   }
   $('#refTitle').textContent = '📖 ' + t.ref;
+  $('#refBack').textContent = '‹ ' + t.back;
   $('#refq').placeholder = t.search;
   const msg = $('#globeMsg'); if (msg && !globe) msg.textContent = t.globeLoading;
   renderRefChips(); renderSel(); fillRef(); updateGlobe();
@@ -975,9 +2040,10 @@ document.addEventListener('click', e => {
   if (!el || el.disabled) return;
   const a = el.dataset.act, v = el.dataset.v;
   if (a === 'lang') { settings.lang = v; document.documentElement.lang = v; saveAll(); renderHome(); }
-  else if (a === 'set') { settings[el.dataset.k] = (el.dataset.k === 'len' && v !== 'all') ? Number(v) : v; saveAll(); renderHome(); }
+  else if (a === 'set') { settings[el.dataset.k] = (el.dataset.k === 'len' && v !== 'all') ? Number(v) : v; saveAll(); renderCountries(); }
   else if (a === 'sound') { settings.sound = !settings.sound; saveAll(); renderHome(); sfx('ok'); }
-  else if (a === 'reg') { toggleRegion(v); saveAll(); renderHome(); }
+  else if (a === 'reg') { toggleRegion(v); saveAll(); renderCountries(); }
+  else if (a === 'countries') { endGame(); renderCountries(); go('countries'); }
   else if (a === 'start') startGame('normal');
   else if (a === 'daily') startGame('daily');
   else if (a === 'errors') startGame('errors');
@@ -986,8 +2052,20 @@ document.addEventListener('click', e => {
   else if (a === 'pick') pickCountry(el.dataset.id, 'tap');
   else if (a === 'opt') answer(el.dataset.id);
   else if (a === 'hint') useHint();
-  else if (a === 'quit' || a === 'home') { game = null; go('home'); }
-  else if (a === 'again') startGame(game.kind);
+  else if (a === 'skip') skipTyped();
+  else if (a === 'kids') { endGame(); kgame = null; renderKids(); go('kids'); }
+  else if (a === 'kstart') startKids(v);
+  else if (a === 'kopt') answerKids(el.dataset.id);
+  else if (a === 'kquit') { if (kgame) kgame.over = true; kgame = null; renderKids(); go('kids'); }
+  else if (a === 'resorts') { endGame(); renderResorts(); go('resorts'); }
+  else if (a === 'rset') { settings[el.dataset.k] = (el.dataset.k === 'rlen' && v !== 'all') ? Number(v) : v; saveAll(); renderResorts(); }
+  else if (a === 'rstart') startResort();
+  else if (a === 'ropt') answerRes(el.dataset.id);
+  else if (a === 'rhint') useResHint();
+  else if (a === 'ach') { renderAch(); go('ach'); }
+  else if (a === 'quit' && game && game.kind === 'normal') { endGame(); renderCountries(); go('countries'); }
+  else if (a === 'quit' || a === 'home') { endGame(); go('home'); }
+  else if (a === 'again') { if (game && game.res) { startResort(); } else { const k = game ? game.kind : 'normal'; endGame(); startGame(k); } }
   else if (a === 'share') share();
 });
 
