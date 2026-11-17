@@ -101,41 +101,30 @@ h1{font-size:24px;line-height:1.2}
 .cf.burst{top:45%;left:50%;width:9px;height:9px;border-radius:50%;animation:burst var(--d) ease-out forwards}
 @keyframes burst{0%{transform:translate(-50%,-50%) scale(1);opacity:1}100%{transform:translate(calc(-50% + var(--bx)),calc(-50% + var(--by))) scale(.4);opacity:0}}
 @keyframes fall{to{transform:translate(var(--x),105vh) rotate(var(--r))}}
-/* --- справочник: мобильная раскладка (глобус сверху, лента карточек снизу) --- */
-#ref.screen.active{display:flex;flex-direction:column;height:calc(var(--tg-viewport-stable-height,100vh) - 56px)}
+/* --- справочник: глобус закреплён сверху, под ним обычный список (телефон, браузер, Telegram на ПК) --- */
 #ref header{margin-bottom:4px}
 #ref h1{font-size:20px}
-.ref-layout{flex:1;display:flex;flex-direction:column;min-height:0}
-.ref-globe{flex:1;min-height:220px;margin:0 -16px 6px;position:relative}
+.ref-globe{position:sticky;top:0;z-index:5;height:min(42vh,360px);margin:0 -16px 8px;background:var(--bg)}
 .globe-box{position:absolute;inset:0;overflow:hidden;touch-action:none}
 .ref-side .sel-card{display:none}
-.ref-side .chips{flex-wrap:nowrap;overflow-x:auto;margin-bottom:8px;scrollbar-width:none}
-.ref-side .chips::-webkit-scrollbar{display:none}
-.ref-side .chip{flex-shrink:0}
+.ref-side .chips{margin-bottom:8px}
 .ref-side .search{padding:11px 14px;margin-bottom:8px}
-.tray{position:relative;display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;padding:4px calc(50% - 75px) 8px;margin:0 -16px;scrollbar-width:none}
-.tray::-webkit-scrollbar{display:none}
-.tcard{flex:0 0 150px;scroll-snap-align:center;background:var(--bg2);border-radius:14px;padding:12px 10px;text-align:center;cursor:pointer;border:2px solid transparent;transition:transform .15s,border-color .15s,background .15s}
-.tcard .fl{display:block}
-.tcard .fl img{margin:0 auto 6px}
-.tcard b{display:block;font-size:14px;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.tcard span{display:block;font-size:13px;color:var(--hint);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
-.tcard.sel{border-color:#ff8a00;transform:scale(1.05)}
-.tray-empty{color:var(--hint);padding:20px;text-align:center;width:100%}
-/* --- справочник: широкий экран (глобус слева, список справа) --- */
+.tray{display:flex;flex-direction:column;background:var(--bg2);border-radius:16px;padding:6px 10px}
+.tcard{display:flex;align-items:center;gap:10px;padding:10px 8px;border-radius:10px;cursor:pointer;user-select:none;-webkit-user-select:none;border-bottom:1px solid rgba(128,128,128,.12)}
+.tcard:last-child{border-bottom:0}
+.tcard:hover{background:rgba(128,128,128,.08)}
+.tcard .fl img{height:20px;width:30px}
+.tcard b{flex:1;font-size:15px;font-weight:600}
+.tcard span{font-size:14px;color:var(--hint);text-align:right}
+.tcard.sel{background:rgba(255,138,0,.16)}
+.tray-empty{color:var(--hint);padding:20px;text-align:center}
+/* --- широкий экран: глобус слева, список справа --- */
 @media (min-width:768px){
   .wrap.wide{max-width:1100px}
-  #ref.screen.active{display:block;height:auto}
   .ref-layout{display:grid;grid-template-columns:1.25fr 1fr;gap:20px;align-items:start}
-  .ref-globe{position:sticky;top:16px;height:calc(100vh - 90px);margin:0;min-height:0}
+  .ref-globe{top:16px;height:calc(100vh - 90px);margin:0}
   .ref-side .sel-card{display:flex}
-  .ref-side .chips{flex-wrap:wrap;overflow:visible}
-  .tray{flex-direction:column;overflow-x:hidden;overflow-y:auto;scroll-snap-type:none;margin:0;gap:0;padding:6px 10px;max-height:calc(100vh - 330px);background:var(--bg2);border-radius:16px}
-  .tcard{flex:none;display:flex;align-items:center;gap:10px;text-align:left;background:none;border-radius:10px;padding:8px}
-  .tcard .fl img{margin:0;height:20px;width:30px}
-  .tcard b{flex:1;font-size:15px}
-  .tcard span{margin:0;font-size:14px}
-  .tcard.sel{transform:none;background:rgba(255,138,0,.16)}
+  .tray{overflow-y:auto;max-height:calc(100vh - 330px)}
 }
 .globe-msg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--hint);font-size:14px;text-align:center;padding:20px}
 .sel-card{display:flex;align-items:center;gap:12px;background:var(--bg2);border-radius:14px;padding:12px;margin-bottom:12px;min-height:58px}
@@ -205,6 +194,24 @@ h1{font-size:24px;line-height:1.2}
 .opts.kid .opt{font-size:20px;padding:20px;text-align:center;border-radius:18px;font-weight:600}
 .opt.soft{opacity:.4}
 .stars{font-size:58px;text-align:center;margin:10px 0 4px;letter-spacing:4px}
+/* --- компьютер / браузер: игра в красивой «карточке» на фоне, ховеры, клавиатура --- */
+@media (min-width:768px){
+  body{background:
+    radial-gradient(900px 520px at 12% -8%, rgba(46,197,232,.28), transparent 70%),
+    radial-gradient(800px 480px at 105% 105%, rgba(118,75,162,.26), transparent 70%),
+    radial-gradient(600px 400px at 90% 10%, rgba(255,138,0,.14), transparent 70%),
+    var(--bg2)}
+  .wrap{background:var(--bg);margin:28px auto;border-radius:26px;box-shadow:0 24px 70px rgba(0,0,0,.14);padding:24px 26px 34px;min-height:calc(100vh - 56px);max-width:540px}
+  .wrap.wide{max-width:1120px}
+  .daily,.btn,.chip,.opt,.tcard,.back,.snd{transition:transform .15s,box-shadow .15s,filter .15s,background .15s}
+  .daily:hover{transform:translateY(-3px);box-shadow:0 10px 26px rgba(0,0,0,.18)}
+  .btn:hover:not(:disabled){filter:brightness(1.06);transform:translateY(-1px)}
+  .chip:hover{border-color:var(--accent)}
+  .opt:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,0,0,.1)}
+  .opt{position:relative}
+  .opts .opt::after{content:attr(data-key);position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:12px;color:var(--hint);border:1px solid rgba(128,128,128,.35);border-radius:6px;padding:1px 6px;opacity:.8}
+  .opts.kid .opt::after{display:none}
+}
 .toast{position:fixed;left:50%;bottom:30px;transform:translateX(-50%);background:rgba(0,0,0,.8);color:#fff;padding:10px 18px;border-radius:20px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none}
 .toast.show{opacity:1}
 </style>
@@ -1124,7 +1131,7 @@ function renderQuestion() {
          <button class="btn" type="submit">${t.answerBtn}</button>
        </form>
        <div class="hard-hint" id="hardHint"></div>`
-    : `<div class="opts">${q.opts.map(id => `<button class="opt" data-act="opt" data-id="${id}">${esc(label(BY_ID[id]))}</button>`).join('')}</div>`;
+    : `<div class="opts">${q.opts.map((id, k) => `<button class="opt" data-key="${k + 1}" data-act="opt" data-id="${id}">${esc(label(BY_ID[id]))}</button>`).join('')}</div>`;
 
   const hintBtn = hard
     ? `<button class="link" data-act="hint" ${game.hintUsed ? 'disabled' : ''}>${t.hintBtn}</button>`
@@ -1574,7 +1581,7 @@ function renderResQ() {
     <div class="bar"><i style="width:${game.i / n * 100}%"></i></div>
     <div class="top"><span>✅ ${game.score} · ⭐ ${game.xp} XP</span><span>${game.streak >= 3 ? '🔥' : '⚡'} ${t.streak}: ${game.streak}</span></div>
     <div class="q"><div class="fl big">${rIcon(r)}</div><small>${t.r_where_q} ${rTierTag(r)}</small><h2>${esc(rname(r))}</h2><div class="rtype">${r.kind === 's' ? t.skiResort : r.kind === 'i' ? t.island : t.resort}</div></div>
-    <div class="opts">${q.opts.map(id => `<button class="opt" data-act="ropt" data-id="${id}">${flag(id, 'sm')} ${esc(nm(BY_ID[id]))}</button>`).join('')}</div>
+    <div class="opts">${q.opts.map((id, k) => `<button class="opt" data-key="${k + 1}" data-act="ropt" data-id="${id}">${flag(id, 'sm')} ${esc(nm(BY_ID[id]))}</button>`).join('')}</div>
     <div class="reveal" id="reveal"></div>
     <div class="tools">
       <button class="link" data-act="quit">✕ ${t.quit}</button>
@@ -1682,11 +1689,10 @@ function renderResResult(record, rankUp, fastRec) {
 // ===== ДЕТСКИЙ РЕЖИМ (без опыта, таймера и рекордов) =====
 const KIDS_IDS = ('RU BY FR DE IT ES PT ENG IE NL PL GR FI NO SE DK LT EE ' +
   'CN JP IN TR TH VN KZ KR KP EG ZA MA US CA MX BR AR CU CL AU NZ').split(' ');
-const KIDS_TRICKY = new Set('TR AU CA BR ZA MA KZ IN NZ'.split(' ')); // столица «не та, что все думают» — в столицах не спрашиваем
 const ENGLAND = { id: 'ENG', r: 'eu', en: { n: 'England', c: 'London' }, ru: { n: 'Англия', c: 'Лондон' } };
 const kidC = id => id === 'ENG' ? ENGLAND : BY_ID[id];
 const KIDS_FLAGS = KIDS_IDS.map(kidC).filter(Boolean);
-const KIDS_CAPS = KIDS_FLAGS.filter(c => !KIDS_TRICKY.has(c.id));
+const KIDS_CAPS = KIDS_FLAGS; // все 39 стран и во флагах, и в столицах
 function kidFlag(c, cls) {
   const code = c.id === 'ENG' ? 'gb-eng' : c.id.toLowerCase();
   const emo = c.id === 'ENG' ? '🏴' : emojiFlag(c.id);
@@ -1725,7 +1731,7 @@ function renderKidsQ() {
     <div class="bar"><i style="width:${kgame.i / n * 100}%"></i></div>
     <div class="top"><span>⭐ ${kgame.score}</span><span></span></div>
     <div class="q">${qHtml}</div>
-    <div class="opts kid">${q.opts.map(id => `<button class="opt" data-act="kopt" data-id="${id}">${esc(label(id))}</button>`).join('')}</div>
+    <div class="opts kid">${q.opts.map((id, k) => `<button class="opt" data-key="${k + 1}" data-act="kopt" data-id="${id}">${esc(label(id))}</button>`).join('')}</div>
     <div class="reveal" id="reveal"></div>
     <div class="tools"><button class="link" data-act="kquit">✕ ${t.quit}</button><span></span></div>`;
   kgame.locked = false;
@@ -1960,25 +1966,19 @@ function resizeGlobe() {
 window.addEventListener('resize', resizeGlobe);
 if (tg && tg.onEvent) { try { tg.onEvent('viewportChanged', resizeGlobe); } catch (e) {} }
 
-const isHoriz = () => !window.matchMedia('(min-width:768px)').matches;
+const isWide = () => window.matchMedia('(min-width:768px)').matches;
 let trayT = null, trayMuteUntil = 0;
 const trayMute = ms => { trayMuteUntil = Date.now() + (ms || 500); };
 function centerCard(id, smooth) {
   const tray = $('#reflist'), el = tray.querySelector(`[data-id="${id}"]`);
   if (!el) return;
-  if (isHoriz()) tray.scrollTo({ left: el.offsetLeft - (tray.clientWidth - el.offsetWidth) / 2, behavior: smooth ? 'smooth' : 'auto' });
-  else el.scrollIntoView({ block: 'nearest', behavior: smooth ? 'smooth' : 'auto' });
-}
-// Карточка, остановившаяся по центру ленты, автоматически выбирается
-function onTrayScrollEnd() {
-  if (!isHoriz() || Date.now() < trayMuteUntil) return;
-  const tray = $('#reflist'), mid = tray.scrollLeft + tray.clientWidth / 2;
-  let best = null, bd = Infinity;
-  tray.querySelectorAll('.tcard').forEach(e => {
-    const d = Math.abs(e.offsetLeft + e.offsetWidth / 2 - mid);
-    if (d < bd) { bd = d; best = e; }
-  });
-  if (best) pickCountry(best.dataset.id, 'scroll');
+  if (isWide()) { el.scrollIntoView({ block: 'nearest', behavior: smooth ? 'smooth' : 'auto' }); return; }
+  // на узком экране листается вся страница, а глобус закреплён сверху — прокручиваем так, чтобы строка была под глобусом
+  const gh = $('.ref-globe').offsetHeight;
+  const r = el.getBoundingClientRect();
+  if (r.top < gh + 8 || r.bottom > window.innerHeight) {
+    window.scrollTo({ top: window.scrollY + r.top - gh - 60, behavior: smooth ? 'smooth' : 'auto' });
+  }
 }
 
 function renderRef() {
@@ -1996,7 +1996,6 @@ function renderRef() {
         </div>
       </div>`;
     $('#refq').addEventListener('input', e => { refQuery = e.target.value; fillRef(); });
-    $('#reflist').addEventListener('scroll', () => { clearTimeout(trayT); trayT = setTimeout(onTrayScrollEnd, 130); }, { passive: true });
     refBuilt = true;
   }
   $('#refTitle').textContent = '📖 ' + t.ref;
@@ -2022,12 +2021,10 @@ function fillRef() {
     .filter(c => !q || [c.en.n, c.en.c, c.ru.n, c.ru.c].some(s => s.toLowerCase().includes(q)))
     .sort((a, b) => nm(a).localeCompare(nm(b), settings.lang));
   const tray = $('#reflist');
-  trayMute(600);
   tray.innerHTML = items.length
     ? items.map(c => `<div class="tcard ${c.id === refSel ? 'sel' : ''}" data-act="pick" data-id="${c.id}">${flag(c.id, 'md')}<b>${esc(nm(c))}</b><span>${esc(cp(c))}</span></div>`).join('')
     : '<div class="tray-empty">—</div>';
-  tray.scrollLeft = 0; tray.scrollTop = 0;
-  if (refSel && items.some(c => c.id === refSel)) centerCard(refSel, false);
+  tray.scrollTop = 0;
 }
 function pickCountry(id, src) {
   if (id === refSel && src === 'scroll') return;
@@ -2035,7 +2032,7 @@ function pickCountry(id, src) {
   $('#reflist').querySelectorAll('.tcard').forEach(e => e.classList.toggle('sel', e.dataset.id === id));
   renderSel(); updateGlobe(); flyTo(id);
   try { if (tgv('6.1')) tg.HapticFeedback.selectionChanged(); } catch (e) {}
-  if (src !== 'scroll') { trayMute(700); centerCard(id, true); }
+  if (src === 'globe') centerCard(id, true); // тапнули на глобусе — подкручиваем список к стране
 }
 
 // ===== ОБРАБОТКА НАЖАТИЙ =====
@@ -2052,7 +2049,7 @@ document.addEventListener('click', e => {
   else if (a === 'daily') startGame('daily');
   else if (a === 'errors') startGame('errors');
   else if (a === 'ref') { renderRef(); go('ref'); }
-  else if (a === 'refreg') { refRegion = v; renderRefChips(); fillRef(); updateGlobe(); flyRegion(v); }
+  else if (a === 'refreg') { refRegion = v; refSel = null; renderRefChips(); renderSel(); fillRef(); updateGlobe(); flyRegion(v); }
   else if (a === 'pick') pickCountry(el.dataset.id, 'tap');
   else if (a === 'opt') answer(el.dataset.id);
   else if (a === 'hint') useHint();
@@ -2071,6 +2068,19 @@ document.addEventListener('click', e => {
   else if (a === 'quit' || a === 'home') { endGame(); go('home'); }
   else if (a === 'again') { if (game && game.res) { startResort(); } else { const k = game ? game.kind : 'normal'; endGame(); startGame(k); } }
   else if (a === 'share') share();
+});
+
+// Клавиатура на компьютере: 1–4 — выбрать вариант, Esc — назад
+document.addEventListener('keydown', e => {
+  if (e.target && e.target.tagName === 'INPUT') { if (e.key === 'Escape') e.target.blur(); return; }
+  const n = parseInt(e.key, 10);
+  if (n >= 1 && n <= 4 && $('#game').classList.contains('active')) {
+    const btn = document.querySelectorAll('#game .opt')[n - 1];
+    if (btn && !btn.disabled) { btn.click(); e.preventDefault(); }
+  } else if (e.key === 'Escape') {
+    const back = document.querySelector('.screen.active .back') || document.querySelector('.screen.active [data-act="quit"]') || document.querySelector('.screen.active [data-act="kquit"]');
+    if (back) back.click();
+  }
 });
 
 document.documentElement.lang = settings.lang;
