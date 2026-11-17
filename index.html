@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>Столицы мира · World Capitals</title>
+<title>Passport Quiz</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
 :root{
@@ -227,7 +227,7 @@ h1{font-size:24px;line-height:1.2}
 <script>
 // ===== НАСТРОЙКИ =====
 // Ссылка на твоего бота — подставь своё имя бота (используется в кнопке «Поделиться»)
-const APP_LINK = 'https://t.me/YOUR_BOT?startapp';
+const APP_LINK = 'https://t.me/passport_quiz_bot?startapp';
 
 // ===== ДАННЫЕ: ISO-код | регион | страна EN | столица EN | страна RU | столица RU =====
 const RAW = `AL|eu|Albania|Tirana|Албания|Тирана
@@ -435,7 +435,7 @@ const LENS = [10, 20, 'all'];
 // ===== ТЕКСТЫ =====
 const I18N = {
   ru: {
-    title: 'Столицы мира', sub: 'Угадай столицу любой страны',
+    title: 'Passport Quiz', sub: 'Викторина о странах и курортах мира',
     daily: '🔥 Ежедневный челлендж', dailyDesc: '10 вопросов — одинаковые для всех сегодня',
     dailyDone: s => `Сегодня: ${s}/10 ✓ · можно переиграть`,
     mode: 'Что угадываем', c2cap: 'Столицу по стране', cap2c: 'Страну по столице', shape: 'Страну по контуру',
@@ -451,9 +451,9 @@ const I18N = {
     newRecord: '🏆 Новый рекорд!', best: 'Рекорд', mist: 'Запомни', noMist: 'Ни одной ошибки! 🔥',
     again: 'Ещё раз', share: 'Позвать друзей', home: 'В меню',
     search: 'Страна или столица…', copied: 'Скопировано',
-    shareText: (s, t, tm) => `Я угадал ${s} из ${t}${tm || ''} в «Столицах мира» 🌍 Сможешь лучше?`,
-    shareBlitz: s => `${s} правильных за 60 секунд в блице «Столиц мира» ⚡ Побьёшь?`,
-    shareDaily: (s, tm) => `Ежедневный челлендж «Столицы мира»: ${s}/10${tm || ''} 🌍 Попробуй побить!`,
+    shareText: (s, t, tm) => `Я угадал ${s} из ${t}${tm || ''} в Passport Quiz 🌍 Сможешь лучше?`,
+    shareBlitz: s => `${s} правильных за 60 секунд в блице Passport Quiz ⚡ Побьёшь?`,
+    shareDaily: (s, tm) => `Ежедневный челлендж Passport Quiz: ${s}/10${tm || ''} 🌍 Попробуй побить!`,
     dailyTitle: 'Ежедневный челлендж', errorsTitle: 'Работа над ошибками',
     streakMsg: s => `🔥 Серия ${s}!`,
     globeHint: 'Нажми на страну на глобусе или в списке', globeLoading: '🌍 Загружаем глобус…',
@@ -471,7 +471,7 @@ const I18N = {
     r_where_q: 'В какой стране?',
     island: 'остров', resort: 'курорт', skiResort: 'горнолыжный курорт', dir: 'Направление',
     d_all: 'Все направления', d_tr: '🇹🇷 Турция, Египет и арабские страны', d_eu: '🇪🇺 Европа и Россия', d_asia: '🌏 Азия', d_exo: '🌴 Экзотика',
-    shareRes: (s, n, tm) => `Я угадал ${s} из ${n} курортов${tm || ''} в «Столицах мира» 🏖 Сможешь лучше?`,
+    shareRes: (s, n, tm) => `Я угадал ${s} из ${n} курортов${tm || ''} в Passport Quiz 🏖 Сможешь лучше?`,
     countriesBtn: '🌍 Страны и столицы', countriesBtnSub: n => `Столицы, контуры, блиц и хардкор — ${n} стран`,
     countriesTitle: 'Страны и столицы', countriesSub: n => `${n} стран мира`, toCountries: 'К странам',
     kidsBtn: '👶 Для детей', kidsBtnSub: 'Флаги и столицы известных стран — без очков и таймера',
@@ -487,7 +487,7 @@ const I18N = {
     newBestTime: '🏎️ Рекорд скорости!', shareTime: t => ` за ${t}`
   },
   en: {
-    title: 'World Capitals', sub: 'Guess the capital of every country',
+    title: 'Passport Quiz', sub: 'A quiz about countries and resorts',
     daily: '🔥 Daily challenge', dailyDesc: '10 questions — the same for everyone today',
     dailyDone: s => `Today: ${s}/10 ✓ · play again`,
     mode: 'What to guess', c2cap: 'Capital by country', cap2c: 'Country by capital', shape: 'Country by shape',
@@ -503,9 +503,9 @@ const I18N = {
     newRecord: '🏆 New record!', best: 'Best', mist: 'Remember these', noMist: 'No mistakes at all! 🔥',
     again: 'Play again', share: 'Challenge friends', home: 'Menu',
     search: 'Country or capital…', copied: 'Copied',
-    shareText: (s, t, tm) => `I got ${s} of ${t}${tm || ''} in World Capitals 🌍 Can you beat me?`,
-    shareBlitz: s => `${s} correct in 60 seconds in World Capitals blitz ⚡ Can you beat it?`,
-    shareDaily: (s, tm) => `World Capitals daily challenge: ${s}/10${tm || ''} 🌍 Can you beat it?`,
+    shareText: (s, t, tm) => `I got ${s} of ${t}${tm || ''} in Passport Quiz 🌍 Can you beat me?`,
+    shareBlitz: s => `${s} correct in 60 seconds in Passport Quiz blitz ⚡ Can you beat it?`,
+    shareDaily: (s, tm) => `Passport Quiz daily challenge: ${s}/10${tm || ''} 🌍 Can you beat it?`,
     dailyTitle: 'Daily challenge', errorsTitle: 'Practice mistakes',
     streakMsg: s => `🔥 ${s} in a row!`,
     globeHint: 'Tap a country on the globe or in the list', globeLoading: '🌍 Loading the globe…',
@@ -523,7 +523,7 @@ const I18N = {
     r_where_q: 'Which country?',
     island: 'island', resort: 'resort', skiResort: 'ski resort', dir: 'Destination',
     d_all: 'All destinations', d_tr: '🇹🇷 Turkey, Egypt & Arab countries', d_eu: '🇪🇺 Europe & Russia', d_asia: '🌏 Asia', d_exo: '🌴 Exotic',
-    shareRes: (s, n, tm) => `I got ${s} of ${n} resorts${tm || ''} in World Capitals 🏖 Can you beat me?`,
+    shareRes: (s, n, tm) => `I got ${s} of ${n} resorts${tm || ''} in Passport Quiz 🏖 Can you beat me?`,
     countriesBtn: '🌍 Countries & capitals', countriesBtnSub: n => `Capitals, shapes, blitz and hardcore — ${n} countries`,
     countriesTitle: 'Countries & capitals', countriesSub: n => `${n} countries of the world`, toCountries: 'Countries',
     kidsBtn: '👶 For kids', kidsBtnSub: 'Flags and capitals of famous countries — no points, no timer',
@@ -640,6 +640,10 @@ function fixSettings() {
   if (!MODES.includes(settings.mode)) settings.mode = 'c2cap';
   if (!TYPES.includes(settings.type)) settings.type = 'normal';
   if (settings.lang !== 'ru' && settings.lang !== 'en') settings.lang = detectLang();
+  try { // язык, выбранный в боте (?lang=ru|en), — если игрок сам не переключал язык в игре
+    const pl = new URLSearchParams(location.search).get('lang');
+    if ((pl === 'ru' || pl === 'en') && !settings.langManual) settings.lang = pl;
+  } catch (e) {}
   if (typeof settings.sound !== 'boolean') settings.sound = true;
   delete settings.rmode;
   if (!['all', 'tr', 'eu', 'asia', 'exo'].includes(settings.rdir)) settings.rdir = 'all';
@@ -2039,7 +2043,7 @@ document.addEventListener('click', e => {
   const el = e.target.closest('[data-act]');
   if (!el || el.disabled) return;
   const a = el.dataset.act, v = el.dataset.v;
-  if (a === 'lang') { settings.lang = v; document.documentElement.lang = v; saveAll(); renderHome(); }
+  if (a === 'lang') { settings.lang = v; settings.langManual = true; document.documentElement.lang = v; saveAll(); renderHome(); }
   else if (a === 'set') { settings[el.dataset.k] = (el.dataset.k === 'len' && v !== 'all') ? Number(v) : v; saveAll(); renderCountries(); }
   else if (a === 'sound') { settings.sound = !settings.sound; saveAll(); renderHome(); sfx('ok'); }
   else if (a === 'reg') { toggleRegion(v); saveAll(); renderCountries(); }
