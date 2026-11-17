@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Столицы мира · World Capitals</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+:root{
+  --bg: var(--tg-theme-bg-color,#ffffff);
+  --bg2: var(--tg-theme-secondary-bg-color,#f1f3f6);
+  --text: var(--tg-theme-text-color,#111418);
+  --hint: var(--tg-theme-hint-color,#8a8f98);
+  --accent: var(--tg-theme-button-color,#2f7cf6);
+  --accent-text: var(--tg-theme-button-text-color,#ffffff);
+  --ok:#22a55a; --bad:#e5484d;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg: var(--tg-theme-bg-color,#16181c);
+    --bg2: var(--tg-theme-secondary-bg-color,#23262c);
+    --text: var(--tg-theme-text-color,#f2f3f5);
+  }
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+button{font-family:inherit}
+.wrap{max-width:480px;margin:0 auto;padding:16px 16px 40px}
+.screen{display:none}.screen.active{display:block;animation:fade .2s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+header{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:16px}
+h1{font-size:24px;line-height:1.2}
+.sub{color:var(--hint);font-size:14px;margin-top:4px}
+.lang{display:flex;background:var(--bg2);border-radius:10px;padding:3px;flex-shrink:0}
+.lang button{border:0;background:none;color:var(--hint);font-weight:700;padding:6px 10px;border-radius:8px;font-size:13px;cursor:pointer}
+.lang button.on{background:var(--accent);color:var(--accent-text)}
+.card{background:var(--bg2);border-radius:16px;padding:14px;margin-bottom:12px}
+.daily{display:block;width:100%;text-align:left;border:0;border-radius:16px;padding:16px;margin-bottom:12px;cursor:pointer;color:#fff;background:linear-gradient(135deg,#ff8a00,#e52e71)}
+.daily b{font-size:17px;display:block;margin-bottom:4px}.daily span{font-size:13px;opacity:.92}
+.label{font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--hint);margin:2px 0 8px;font-weight:700}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.chip{border:1.5px solid transparent;background:var(--bg);color:var(--text);padding:8px 12px;border-radius:20px;font-size:14px;cursor:pointer}
+.chip small{color:var(--hint);font-size:11px;margin-left:2px}
+.chip.on{border-color:var(--accent);color:var(--accent);font-weight:600}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+.seg .chip{border-radius:12px;text-align:center;padding:11px 6px}
+.best-line{font-size:13px;color:var(--hint)}
+.btn{display:block;width:100%;border:0;border-radius:14px;padding:15px;font-size:16px;font-weight:600;cursor:pointer;background:var(--accent);color:var(--accent-text);margin-bottom:10px}
+.btn.sec{background:var(--bg2);color:var(--text)}
+.btn:disabled{opacity:.45;cursor:default}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center}
+.stats b{display:block;font-size:20px}.stats span{font-size:12px;color:var(--hint)}
+.top{display:flex;justify-content:space-between;align-items:center;font-size:14px;color:var(--hint);margin-bottom:8px}
+.bar{height:6px;background:var(--bg2);border-radius:3px;overflow:hidden;margin-bottom:12px}
+.bar i{display:block;height:100%;background:var(--accent);transition:width .3s}
+.q{text-align:center;margin:14px 0 22px}
+.q small{color:var(--hint);font-size:14px;display:block;margin-top:10px}
+.q h2{font-size:26px;margin-top:4px;line-height:1.25}
+.fl{display:inline-block;line-height:1}
+.fl img{display:block;border-radius:4px;object-fit:cover}
+.fl.big{font-size:72px}.fl.big img{height:84px;width:auto;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,.18)}
+.fl.sm{font-size:20px;vertical-align:middle}.fl.sm img{height:20px;width:30px}
+.opts{display:grid;gap:10px}
+.opt{border:0;background:var(--bg2);color:var(--text);padding:16px;border-radius:14px;font-size:17px;text-align:left;cursor:pointer;transition:transform .1s,background .15s}
+.opt:active{transform:scale(.98)}
+.opt.ok{background:var(--ok);color:#fff}
+.opt.bad{background:var(--bad);color:#fff;animation:shake .3s}
+.opt.gone{visibility:hidden}
+.opt:disabled{cursor:default}
+@keyframes shake{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.reveal{min-height:28px;text-align:center;margin-top:14px;font-size:15px;color:var(--hint)}
+.tools{display:flex;justify-content:space-between;margin-top:8px}
+.link{background:none;border:0;color:var(--accent);font-size:15px;font-weight:600;cursor:pointer;padding:8px}
+.link:disabled{color:var(--hint);opacity:.5;cursor:default}
+.big-score{font-size:60px;font-weight:800;text-align:center;line-height:1.1}
+.pct{text-align:center;color:var(--hint);margin:6px 0 10px}
+.badge{display:block;text-align:center;color:#ff8a00;font-weight:700;font-size:18px;margin-bottom:14px}
+.emoji{font-size:56px;text-align:center;margin-top:8px}
+.item{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(128,128,128,.15);font-size:15px}
+.item:last-child{border-bottom:0}
+.item .c{margin-left:auto;color:var(--hint);text-align:right}
+.search{width:100%;border:0;background:var(--bg2);color:var(--text);padding:13px 14px;border-radius:12px;font-size:16px;margin-bottom:12px;outline:none}
+.toast{position:fixed;left:50%;bottom:30px;transform:translateX(-50%);background:rgba(0,0,0,.8);color:#fff;padding:10px 18px;border-radius:20px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none}
+.toast.show{opacity:1}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <section id="home" class="screen active"></section>
+  <section id="game" class="screen"></section>
+  <section id="result" class="screen"></section>
+  <section id="ref" class="screen"></section>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== НАСТРОЙКИ =====
+// Ссылка на твоего бота — подставь своё имя бота (используется в кнопке «Поделиться»)
+const APP_LINK = 'https://t.me/YOUR_BOT?startapp';
+
+// ===== ДАННЫЕ: ISO-код | регион | страна EN | столица EN | страна RU | столица RU =====
+const RAW = `AL|eu|Albania|Tirana|Албания|Тирана
+AD|eu|Andorra|Andorra la Vella|Андорра|Андорра-ла-Велья
+AT|eu|Austria|Vienna|Австрия|Вена
+BY|eu|Belarus|Minsk|Беларусь|Минск
+BE|eu|Belgium|Brussels|Бельгия|Брюссель
+BA|eu|Bosnia and Herzegovina|Sarajevo|Босния и Герцеговина|Сараево
+BG|eu|Bulgaria|Sofia|Болгария|София
+HR|eu|Croatia|Zagreb|Хорватия|Загреб
+CY|eu|Cyprus|Nicosia|Кипр|Никосия
+CZ|eu|Czechia|Prague|Чехия|Прага
+DK|eu|Denmark|Copenhagen|Дания|Копенгаген
+EE|eu|Estonia|Tallinn|Эстония|Таллин
+FI|eu|Finland|Helsinki|Финляндия|Хельсинки
+FR|eu|France|Paris|Франция|Париж
+DE|eu|Germany|Berlin|Германия|Берлин
+GR|eu|Greece|Athens|Греция|Афины
+HU|eu|Hungary|Budapest|Венгрия|Будапешт
+IS|eu|Iceland|Reykjavik|Исландия|Рейкьявик
+IE|eu|Ireland|Dublin|Ирландия|Дублин
+IT|eu|Italy|Rome|Италия|Рим
+LV|eu|Latvia|Riga|Латвия|Рига
+LI|eu|Liechtenstein|Vaduz|Лихтенштейн|Вадуц
+LT|eu|Lithuania|Vilnius|Литва|Вильнюс
+LU|eu|Luxembourg|Luxembourg|Люксембург|Люксембург
+MT|eu|Malta|Valletta|Мальта|Валлетта
+MD|eu|Moldova|Chisinau|Молдова|Кишинёв
+MC|eu|Monaco|Monaco|Монако|Монако
+ME|eu|Montenegro|Podgorica|Черногория|Подгорица
+NL|eu|Netherlands|Amsterdam|Нидерланды|Амстердам
+MK|eu|North Macedonia|Skopje|Северная Македония|Скопье
+NO|eu|Norway|Oslo|Норвегия|Осло
+PL|eu|Poland|Warsaw|Польша|Варшава
+PT|eu|Portugal|Lisbon|Португалия|Лиссабон
+RO|eu|Romania|Bucharest|Румыния|Бухарест
+RU|eu|Russia|Moscow|Россия|Москва
+SM|eu|San Marino|San Marino|Сан-Марино|Сан-Марино
+RS|eu|Serbia|Belgrade|Сербия|Белград
+SK|eu|Slovakia|Bratislava|Словакия|Братислава
+SI|eu|Slovenia|Ljubljana|Словения|Любляна
+ES|eu|Spain|Madrid|Испания|Мадрид
+SE|eu|Sweden|Stockholm|Швеция|Стокгольм
+CH|eu|Switzerland|Bern|Швейцария|Берн
+UA|eu|Ukraine|Kyiv|Украина|Киев
+GB|eu|United Kingdom|London|Великобритания|Лондон
+VA|eu|Vatican City|Vatican City|Ватикан|Ватикан
+AF|as|Afghanistan|Kabul|Афганистан|Кабул
+AM|as|Armenia|Yerevan|Армения|Ереван
+AZ|as|Azerbaijan|Baku|Азербайджан|Баку
+BH|as|Bahrain|Manama|Бахрейн|Манама
+BD|as|Bangladesh|Dhaka|Бангладеш|Дакка
+BT|as|Bhutan|Thimphu|Бутан|Тхимпху
+BN|as|Brunei|Bandar Seri Begawan|Бруней|Бандар-Сери-Бегаван
+KH|as|Cambodia|Phnom Penh|Камбоджа|Пномпень
+CN|as|China|Beijing|Китай|Пекин
+GE|as|Georgia|Tbilisi|Грузия|Тбилиси
+IN|as|India|New Delhi|Индия|Нью-Дели
+ID|as|Indonesia|Jakarta|Индонезия|Джакарта
+IR|as|Iran|Tehran|Иран|Тегеран
+IQ|as|Iraq|Baghdad|Ирак|Багдад
+IL|as|Israel|Jerusalem|Израиль|Иерусалим
+JP|as|Japan|Tokyo|Япония|Токио
+JO|as|Jordan|Amman|Иордания|Амман
+KZ|as|Kazakhstan|Astana|Казахстан|Астана
+KW|as|Kuwait|Kuwait City|Кувейт|Эль-Кувейт
+KG|as|Kyrgyzstan|Bishkek|Киргизия|Бишкек
+LA|as|Laos|Vientiane|Лаос|Вьентьян
+LB|as|Lebanon|Beirut|Ливан|Бейрут
+MY|as|Malaysia|Kuala Lumpur|Малайзия|Куала-Лумпур
+MV|as|Maldives|Male|Мальдивы|Мале
+MN|as|Mongolia|Ulaanbaatar|Монголия|Улан-Батор
+MM|as|Myanmar|Naypyidaw|Мьянма|Нейпьидо
+NP|as|Nepal|Kathmandu|Непал|Катманду
+KP|as|North Korea|Pyongyang|КНДР|Пхеньян
+OM|as|Oman|Muscat|Оман|Маскат
+PK|as|Pakistan|Islamabad|Пакистан|Исламабад
+PH|as|Philippines|Manila|Филиппины|Манила
+QA|as|Qatar|Doha|Катар|Доха
+SA|as|Saudi Arabia|Riyadh|Саудовская Аравия|Эр-Рияд
+SG|as|Singapore|Singapore|Сингапур|Сингапур
+KR|as|South Korea|Seoul|Южная Корея|Сеул
+LK|as|Sri Lanka|Sri Jayawardenepura Kotte|Шри-Ланка|Шри-Джаяварденепура-Котте
+SY|as|Syria|Damascus|Сирия|Дамаск
+TJ|as|Tajikistan|Dushanbe|Таджикистан|Душанбе
+TH|as|Thailand|Bangkok|Таиланд|Бангкок
+TL|as|Timor-Leste|Dili|Восточный Тимор|Дили
+TR|as|Turkey|Ankara|Турция|Анкара
+TM|as|Turkmenistan|Ashgabat|Туркменистан|Ашхабад
+AE|as|United Arab Emirates|Abu Dhabi|ОАЭ|Абу-Даби
+UZ|as|Uzbekistan|Tashkent|Узбекистан|Ташкент
+VN|as|Vietnam|Hanoi|Вьетнам|Ханой
+YE|as|Yemen|Sanaa|Йемен|Сана
+DZ|af|Algeria|Algiers|Алжир|Алжир
+AO|af|Angola|Luanda|Ангола|Луанда
+BJ|af|Benin|Porto-Novo|Бенин|Порто-Ново
+BW|af|Botswana|Gaborone|Ботсвана|Габороне
+BF|af|Burkina Faso|Ouagadougou|Буркина-Фасо|Уагадугу
+BI|af|Burundi|Gitega|Бурунди|Гитега
+CV|af|Cabo Verde|Praia|Кабо-Верде|Прая
+CM|af|Cameroon|Yaounde|Камерун|Яунде
+CF|af|Central African Republic|Bangui|ЦАР|Банги
+TD|af|Chad|N'Djamena|Чад|Нджамена
+KM|af|Comoros|Moroni|Коморы|Морони
+CG|af|Republic of the Congo|Brazzaville|Республика Конго|Браззавиль
+CD|af|DR Congo|Kinshasa|ДР Конго|Киншаса
+CI|af|Cote d'Ivoire|Yamoussoukro|Кот-д’Ивуар|Ямусукро
+DJ|af|Djibouti|Djibouti|Джибути|Джибути
+EG|af|Egypt|Cairo|Египет|Каир
+GQ|af|Equatorial Guinea|Malabo|Экваториальная Гвинея|Малабо
+ER|af|Eritrea|Asmara|Эритрея|Асмэра
+SZ|af|Eswatini|Mbabane|Эсватини|Мбабане
+ET|af|Ethiopia|Addis Ababa|Эфиопия|Аддис-Абеба
+GA|af|Gabon|Libreville|Габон|Либревиль
+GM|af|Gambia|Banjul|Гамбия|Банжул
+GH|af|Ghana|Accra|Гана|Аккра
+GN|af|Guinea|Conakry|Гвинея|Конакри
+GW|af|Guinea-Bissau|Bissau|Гвинея-Бисау|Бисау
+KE|af|Kenya|Nairobi|Кения|Найроби
+LS|af|Lesotho|Maseru|Лесото|Масеру
+LR|af|Liberia|Monrovia|Либерия|Монровия
+LY|af|Libya|Tripoli|Ливия|Триполи
+MG|af|Madagascar|Antananarivo|Мадагаскар|Антананариву
+MW|af|Malawi|Lilongwe|Малави|Лилонгве
+ML|af|Mali|Bamako|Мали|Бамако
+MR|af|Mauritania|Nouakchott|Мавритания|Нуакшот
+MU|af|Mauritius|Port Louis|Маврикий|Порт-Луи
+MA|af|Morocco|Rabat|Марокко|Рабат
+MZ|af|Mozambique|Maputo|Мозамбик|Мапуту
+NA|af|Namibia|Windhoek|Намибия|Виндхук
+NE|af|Niger|Niamey|Нигер|Ниамей
+NG|af|Nigeria|Abuja|Нигерия|Абуджа
+RW|af|Rwanda|Kigali|Руанда|Кигали
+ST|af|Sao Tome and Principe|Sao Tome|Сан-Томе и Принсипи|Сан-Томе
+SN|af|Senegal|Dakar|Сенегал|Дакар
+SC|af|Seychelles|Victoria|Сейшелы|Виктория
+SL|af|Sierra Leone|Freetown|Сьерра-Леоне|Фритаун
+SO|af|Somalia|Mogadishu|Сомали|Могадишо
+ZA|af|South Africa|Pretoria|ЮАР|Претория
+SS|af|South Sudan|Juba|Южный Судан|Джуба
+SD|af|Sudan|Khartoum|Судан|Хартум
+TZ|af|Tanzania|Dodoma|Танзания|Додома
+TG|af|Togo|Lome|Того|Ломе
+TN|af|Tunisia|Tunis|Тунис|Тунис
+UG|af|Uganda|Kampala|Уганда|Кампала
+ZM|af|Zambia|Lusaka|Замбия|Лусака
+ZW|af|Zimbabwe|Harare|Зимбабве|Хараре
+AG|na|Antigua and Barbuda|Saint John's|Антигуа и Барбуда|Сент-Джонс
+BS|na|Bahamas|Nassau|Багамы|Нассау
+BB|na|Barbados|Bridgetown|Барбадос|Бриджтаун
+BZ|na|Belize|Belmopan|Белиз|Бельмопан
+CA|na|Canada|Ottawa|Канада|Оттава
+CR|na|Costa Rica|San Jose|Коста-Рика|Сан-Хосе
+CU|na|Cuba|Havana|Куба|Гавана
+DM|na|Dominica|Roseau|Доминика|Розо
+DO|na|Dominican Republic|Santo Domingo|Доминиканская Республика|Санто-Доминго
+SV|na|El Salvador|San Salvador|Сальвадор|Сан-Сальвадор
+GD|na|Grenada|St. George's|Гренада|Сент-Джорджес
+GT|na|Guatemala|Guatemala City|Гватемала|Гватемала
+HT|na|Haiti|Port-au-Prince|Гаити|Порт-о-Пренс
+HN|na|Honduras|Tegucigalpa|Гондурас|Тегусигальпа
+JM|na|Jamaica|Kingston|Ямайка|Кингстон
+MX|na|Mexico|Mexico City|Мексика|Мехико
+NI|na|Nicaragua|Managua|Никарагуа|Манагуа
+PA|na|Panama|Panama City|Панама|Панама
+KN|na|Saint Kitts and Nevis|Basseterre|Сент-Китс и Невис|Бастер
+LC|na|Saint Lucia|Castries|Сент-Люсия|Кастри
+VC|na|Saint Vincent and the Grenadines|Kingstown|Сент-Винсент и Гренадины|Кингстаун
+TT|na|Trinidad and Tobago|Port of Spain|Тринидад и Тобаго|Порт-оф-Спейн
+US|na|United States|Washington, D.C.|США|Вашингтон
+AR|sa|Argentina|Buenos Aires|Аргентина|Буэнос-Айрес
+BO|sa|Bolivia|Sucre|Боливия|Сукре
+BR|sa|Brazil|Brasilia|Бразилия|Бразилиа
+CL|sa|Chile|Santiago|Чили|Сантьяго
+CO|sa|Colombia|Bogota|Колумбия|Богота
+EC|sa|Ecuador|Quito|Эквадор|Кито
+GY|sa|Guyana|Georgetown|Гайана|Джорджтаун
+PY|sa|Paraguay|Asuncion|Парагвай|Асунсьон
+PE|sa|Peru|Lima|Перу|Лима
+SR|sa|Suriname|Paramaribo|Суринам|Парамарибо
+UY|sa|Uruguay|Montevideo|Уругвай|Монтевидео
+VE|sa|Venezuela|Caracas|Венесуэла|Каракас
+AU|oc|Australia|Canberra|Австралия|Канберра
+FJ|oc|Fiji|Suva|Фиджи|Сува
+KI|oc|Kiribati|South Tarawa|Кирибати|Южная Тарава
+MH|oc|Marshall Islands|Majuro|Маршалловы Острова|Маджуро
+FM|oc|Micronesia|Palikir|Микронезия|Паликир
+NR|oc|Nauru|Yaren|Науру|Ярен
+NZ|oc|New Zealand|Wellington|Новая Зеландия|Веллингтон
+PW|oc|Palau|Ngerulmud|Палау|Нгерулмуд
+PG|oc|Papua New Guinea|Port Moresby|Папуа — Новая Гвинея|Порт-Морсби
+WS|oc|Samoa|Apia|Самоа|Апиа
+SB|oc|Solomon Islands|Honiara|Соломоновы Острова|Хониара
+TO|oc|Tonga|Nuku'alofa|Тонга|Нукуалофа
+TV|oc|Tuvalu|Funafuti|Тувалу|Фунафути
+VU|oc|Vanuatu|Port Vila|Вануату|Порт-Вила`;
+
+const COUNTRIES = RAW.trim().split('\n').map(l => {
+  const [id, r, en, enc, ru, ruc] = l.split('|');
+  return { id, r, en: { n: en, c: enc }, ru: { n: ru, c: ruc } };
+});
+const BY_ID = Object.fromEntries(COUNTRIES.map(c => [c.id, c]));
+const REGIONS = ['world', 'eu', 'as', 'af', 'na', 'sa', 'oc'];
+
+// ===== ТЕКСТЫ =====
+const I18N = {
+  ru: {
+    title: 'Столицы мира', sub: 'Угадай столицу любой страны',
+    daily: '🔥 Ежедневный челлендж', dailyDesc: '10 вопросов — одинаковые для всех сегодня',
+    dailyDone: s => `Сегодня: ${s}/10 ✓ · можно переиграть`,
+    mode: 'Режим', c2cap: 'Столица по стране', cap2c: 'Страна по столице',
+    region: 'Регион', world: 'Весь мир', eu: 'Европа', as: 'Азия', af: 'Африка',
+    na: 'Сев. Америка', sa: 'Юж. Америка', oc: 'Океания',
+    len: 'Вопросов', all: 'Все', start: 'Начать',
+    errors: n => `🧠 Ошибки (${n})`, ref: 'Справочник',
+    played: 'Игр', acc: 'Точность', bestStreak: 'Лучшая серия',
+    qc2cap: 'Столица страны', qcap2c: 'Чья это столица?',
+    streak: 'Серия', quit: 'Выйти', capOf: 'столица',
+    newRecord: '🏆 Новый рекорд!', best: 'Рекорд', mist: 'Запомни', noMist: 'Ни одной ошибки! 🔥',
+    again: 'Ещё раз', share: 'Позвать друзей', home: 'В меню',
+    search: 'Страна или столица…', copied: 'Скопировано',
+    shareText: (s, t) => `Я угадал ${s} из ${t} столиц в «Столицах мира» 🌍 Сможешь лучше?`,
+    shareDaily: s => `Ежедневный челлендж «Столицы мира»: ${s}/10 🌍 Попробуй побить!`,
+    dailyTitle: 'Ежедневный челлендж', errorsTitle: 'Работа над ошибками'
+  },
+  en: {
+    title: 'World Capitals', sub: 'Guess the capital of every country',
+    daily: '🔥 Daily challenge', dailyDesc: '10 questions — the same for everyone today',
+    dailyDone: s => `Today: ${s}/10 ✓ · play again`,
+    mode: 'Mode', c2cap: 'Capital by country', cap2c: 'Country by capital',
+    region: 'Region', world: 'Whole world', eu: 'Europe', as: 'Asia', af: 'Africa',
+    na: 'N. America', sa: 'S. America', oc: 'Oceania',
+    len: 'Questions', all: 'All', start: 'Start',
+    errors: n => `🧠 Mistakes (${n})`, ref: 'Atlas',
+    played: 'Games', acc: 'Accuracy', bestStreak: 'Best streak',
+    qc2cap: 'Capital of', qcap2c: 'Which country is this the capital of?',
+    streak: 'Streak', quit: 'Quit', capOf: 'capital of',
+    newRecord: '🏆 New record!', best: 'Best', mist: 'Remember these', noMist: 'No mistakes at all! 🔥',
+    again: 'Play again', share: 'Challenge friends', home: 'Menu',
+    search: 'Country or capital…', copied: 'Copied',
+    shareText: (s, t) => `I guessed ${s} of ${t} capitals in World Capitals 🌍 Can you beat me?`,
+    shareDaily: s => `World Capitals daily challenge: ${s}/10 🌍 Can you beat it?`,
+    dailyTitle: 'Daily challenge', errorsTitle: 'Practice mistakes'
+  }
+};
+
+// ===== TELEGRAM =====
+const tg = window.Telegram && window.Telegram.WebApp;
+const tgv = v => !!(tg && tg.isVersionAtLeast && tg.isVersionAtLeast(v));
+const inTg = !!(tg && tg.initData);
+if (tg) {
+  tg.ready(); tg.expand();
+  if (tgv('7.7') && tg.disableVerticalSwipes) tg.disableVerticalSwipes();
+  if (tgv('6.1')) tg.BackButton.onClick(() => go('home'));
+}
+function haptic(type) {
+  try { if (tgv('6.1')) tg.HapticFeedback.notificationOccurred(type); } catch (e) {}
+}
+
+// ===== ХРАНИЛИЩЕ (localStorage + облако Telegram) =====
+const cloudOk = () => tgv('6.9') && tg.CloudStorage;
+const store = {
+  get(k, d) { try { const v = localStorage.getItem('cq_' + k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
+  set(k, v) {
+    const s = JSON.stringify(v);
+    try { localStorage.setItem('cq_' + k, s); } catch (e) {}
+    if (cloudOk()) { try { tg.CloudStorage.setItem('cq_' + k, s); } catch (e) {} }
+  }
+};
+function detectLang() {
+  const lc = ((tg && tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.language_code) || navigator.language || 'en').toLowerCase();
+  return /^(ru|uk|be|kk)/.test(lc) ? 'ru' : 'en';
+}
+let settings = store.get('settings', { lang: detectLang(), mode: 'c2cap', region: 'world', len: 10 });
+let stats = store.get('stats', { played: 0, answered: 0, correct: 0, bestStreak: 0, best: {}, daily: {} });
+let mistakes = store.get('mistakes', []);
+function saveAll() { store.set('settings', settings); store.set('stats', stats); store.set('mistakes', mistakes); }
+
+// Подтягиваем прогресс из облака Telegram (синхронизация между устройствами)
+if (cloudOk()) {
+  try {
+    tg.CloudStorage.getItems(['cq_settings', 'cq_stats', 'cq_mistakes'], (err, vals) => {
+      if (err || !vals) return;
+      try {
+        if (vals.cq_settings) settings = JSON.parse(vals.cq_settings);
+        if (vals.cq_stats) stats = JSON.parse(vals.cq_stats);
+        if (vals.cq_mistakes) mistakes = JSON.parse(vals.cq_mistakes);
+      } catch (e) {}
+      if (document.getElementById('home').classList.contains('active')) renderHome();
+    });
+  } catch (e) {}
+}
+
+// ===== УТИЛИТЫ =====
+const $ = s => document.querySelector(s);
+const T = () => I18N[settings.lang];
+const nm = c => c[settings.lang].n;
+const cp = c => c[settings.lang].c;
+const esc = s => String(s).replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
+const emojiFlag = id => String.fromCodePoint(...[...id].map(ch => 127397 + ch.charCodeAt(0)));
+function flag(id, cls) {
+  const size = cls === 'big' ? 'w320' : 'w80';
+  return `<span class="fl ${cls}"><img src="https://flagcdn.com/${size}/${id.toLowerCase()}.png" alt="" loading="lazy" onerror="this.parentNode.textContent='${emojiFlag(id)}'"></span>`;
+}
+function mulberry32(a) { return function () { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+function shuffle(arr, rnd = Math.random) { const a = arr.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+const todayKey = () => new Date().toISOString().slice(0, 10);
+const inRegion = r => r === 'world' ? COUNTRIES : COUNTRIES.filter(c => c.r === r);
+const bestKey = () => `${settings.mode}_${settings.region}_${settings.len}`;
+function toast(msg) { const t = $('#toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 1600); }
+
+function go(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.toggle('active', s.id === id));
+  if (id === 'home') renderHome();
+  if (tgv('6.1')) { id === 'home' ? tg.BackButton.hide() : tg.BackButton.show(); }
+  window.scrollTo(0, 0);
+}
+
+// ===== ГЛАВНЫЙ ЭКРАН =====
+function renderHome() {
+  const t = T(), d = stats.daily[todayKey()];
+  const acc = stats.answered ? Math.round(stats.correct / stats.answered * 100) + '%' : '—';
+  const best = stats.best[bestKey()];
+  $('#home').innerHTML = `
+    <header>
+      <div><h1>🌍 ${t.title}</h1><div class="sub">${t.sub}</div></div>
+      <div class="lang">
+        <button data-act="lang" data-v="ru" class="${settings.lang === 'ru' ? 'on' : ''}">RU</button>
+        <button data-act="lang" data-v="en" class="${settings.lang === 'en' ? 'on' : ''}">EN</button>
+      </div>
+    </header>
+    <button class="daily" data-act="daily"><b>${t.daily}</b><span>${d != null ? t.dailyDone(d) : t.dailyDesc}</span></button>
+    <div class="card">
+      <div class="label">${t.mode}</div>
+      <div class="seg">${['c2cap', 'cap2c'].map(m => `<button class="chip ${settings.mode === m ? 'on' : ''}" data-act="set" data-k="mode" data-v="${m}">${t[m]}</button>`).join('')}</div>
+      <div class="label">${t.region}</div>
+      <div class="chips">${REGIONS.map(r => `<button class="chip ${settings.region === r ? 'on' : ''}" data-act="set" data-k="region" data-v="${r}">${t[r]} <small>${inRegion(r).length}</small></button>`).join('')}</div>
+      <div class="label">${t.len}</div>
+      <div class="chips">${[10, 20, 'all'].map(n => `<button class="chip ${String(settings.len) === String(n) ? 'on' : ''}" data-act="set" data-k="len" data-v="${n}">${n === 'all' ? t.all : n}</button>`).join('')}</div>
+      <div class="best-line">${t.best}: ${best != null ? best : '—'}</div>
+    </div>
+    <button class="btn" data-act="start">▶ ${t.start}</button>
+    <div class="row">
+      <button class="btn sec" data-act="errors" ${mistakes.length ? '' : 'disabled'}>${t.errors(mistakes.length)}</button>
+      <button class="btn sec" data-act="ref">📖 ${t.ref}</button>
+    </div>
+    <div class="card stats">
+      <div><b>${stats.played}</b><span>${t.played}</span></div>
+      <div><b>${acc}</b><span>${t.acc}</span></div>
+      <div><b>${stats.bestStreak}</b><span>${t.bestStreak}</span></div>
+    </div>`;
+}
+
+// ===== ИГРА =====
+let game = null;
+
+function buildQuestions(pool, rnd) {
+  return pool.map(c => {
+    let cand = shuffle(COUNTRIES.filter(x => x.r === c.r && x.id !== c.id), rnd);
+    if (cand.length < 3) cand = cand.concat(shuffle(COUNTRIES.filter(x => x.r !== c.r), rnd));
+    return { c, opts: shuffle([c, ...cand.slice(0, 3)], rnd).map(o => o.id) };
+  });
+}
+
+function startGame(kind) {
+  let rnd = Math.random, pool, mode = settings.mode;
+  if (kind === 'daily') {
+    rnd = mulberry32(parseInt(todayKey().replace(/-/g, ''), 10));
+    pool = shuffle(COUNTRIES, rnd).slice(0, 10);
+    mode = 'c2cap';
+  } else if (kind === 'errors') {
+    pool = shuffle(mistakes.map(id => BY_ID[id]).filter(Boolean)).slice(0, 20);
+  } else {
+    pool = shuffle(inRegion(settings.region));
+    if (settings.len !== 'all') pool = pool.slice(0, settings.len);
+  }
+  if (!pool.length) return;
+  game = { kind, mode, key: bestKey(), qs: buildQuestions(pool, rnd), i: 0, score: 0, streak: 0, maxStreak: 0, wrong: [], hintUsed: false, locked: false };
+  go('game');
+  renderQuestion();
+}
+
+function gameTitle() {
+  const t = T();
+  return game.kind === 'daily' ? t.dailyTitle : game.kind === 'errors' ? t.errorsTitle : t[settings.region];
+}
+
+function renderQuestion() {
+  const t = T(), q = game.qs[game.i], c = q.c, n = game.qs.length;
+  const label = o => game.mode === 'c2cap' ? cp(o) : nm(o);
+  const qHtml = game.mode === 'c2cap'
+    ? `${flag(c.id, 'big')}<small>${t.qc2cap}</small><h2>${esc(nm(c))}</h2>`
+    : `<div class="fl big">🏛️</div><small>${t.qcap2c}</small><h2>${esc(cp(c))}</h2>`;
+  $('#game').innerHTML = `
+    <div class="top"><span>${gameTitle()}</span><span>${game.i + 1} / ${n}</span></div>
+    <div class="bar"><i style="width:${game.i / n * 100}%"></i></div>
+    <div class="top"><span>✅ ${game.score}</span><span>${game.streak >= 3 ? '🔥' : '⚡'} ${t.streak}: ${game.streak}</span></div>
+    <div class="q">${qHtml}</div>
+    <div class="opts">${q.opts.map(id => `<button class="opt" data-act="opt" data-id="${id}">${esc(label(BY_ID[id]))}</button>`).join('')}</div>
+    <div class="reveal" id="reveal"></div>
+    <div class="tools">
+      <button class="link" data-act="quit">✕ ${t.quit}</button>
+      <button class="link" data-act="hint" ${game.hintUsed ? 'disabled' : ''}>💡 50/50</button>
+    </div>`;
+  game.locked = false;
+}
+
+function answer(id) {
+  if (game.locked) return;
+  game.locked = true;
+  const t = T(), q = game.qs[game.i], ok = id === q.c.id;
+  document.querySelectorAll('.opt').forEach(b => {
+    b.disabled = true;
+    if (b.dataset.id === q.c.id) b.classList.add('ok');
+    else if (b.dataset.id === id) b.classList.add('bad');
+  });
+  stats.answered++;
+  if (ok) {
+    game.score++; game.streak++; stats.correct++;
+    game.maxStreak = Math.max(game.maxStreak, game.streak);
+    mistakes = mistakes.filter(x => x !== q.c.id);
+    haptic('success');
+  } else {
+    game.streak = 0;
+    game.wrong.push(q.c.id);
+    if (!mistakes.includes(q.c.id)) mistakes.push(q.c.id);
+    haptic('error');
+  }
+  $('#reveal').innerHTML = `${flag(q.c.id, 'sm')} <b>${esc(cp(q.c))}</b> — ${t.capOf} ${esc(nm(q.c))}`;
+  saveAll();
+  setTimeout(nextQuestion, ok ? 900 : 1900);
+}
+
+function useHint() {
+  if (game.hintUsed || game.locked) return;
+  // Сюда позже можно повесить показ рекламы (Adsgram) за подсказку
+  game.hintUsed = true;
+  const q = game.qs[game.i];
+  const wrong = shuffle(q.opts.filter(id => id !== q.c.id)).slice(0, 2);
+  document.querySelectorAll('.opt').forEach(b => { if (wrong.includes(b.dataset.id)) { b.classList.add('gone'); b.disabled = true; } });
+  document.querySelector('[data-act="hint"]').disabled = true;
+}
+
+function nextQuestion() {
+  if (!game) return;
+  game.i++;
+  if (game.i >= game.qs.length) finish(); else renderQuestion();
+}
+
+function finish() {
+  const n = game.qs.length;
+  stats.played++;
+  stats.bestStreak = Math.max(stats.bestStreak, game.maxStreak);
+  let record = false, best = null;
+  if (game.kind === 'normal') {
+    const prev = stats.best[game.key] || 0;
+    if (game.score > prev) { stats.best[game.key] = game.score; record = true; }
+    best = stats.best[game.key];
+  }
+  if (game.kind === 'daily') {
+    const k = todayKey();
+    if (stats.daily[k] == null) stats.daily[k] = game.score;
+    const keys = Object.keys(stats.daily).sort();
+    while (keys.length > 30) delete stats.daily[keys.shift()];
+  }
+  saveAll();
+  if (record) haptic('success');
+  renderResult(record, best);
+  go('result');
+}
+
+function renderResult(record, best) {
+  const t = T(), n = game.qs.length, pct = Math.round(game.score / n * 100);
+  const emoji = pct >= 90 ? '🏆' : pct >= 70 ? '🎉' : pct >= 40 ? '👍' : '📚';
+  const list = game.wrong.length
+    ? `<div class="label">${t.mist}</div>` + game.wrong.map(id => { const c = BY_ID[id]; return `<div class="item">${flag(id, 'sm')}<span>${esc(nm(c))}</span><span class="c">${esc(cp(c))}</span></div>`; }).join('')
+    : `<div style="text-align:center">${t.noMist}</div>`;
+  $('#result').innerHTML = `
+    <div class="top"><span>${gameTitle()}</span><span></span></div>
+    <div class="emoji">${emoji}</div>
+    <div class="big-score">${game.score}/${n}</div>
+    <div class="pct">${pct}% · ${t.streak}: ${game.maxStreak}</div>
+    ${record ? `<span class="badge">${t.newRecord}</span>` : best != null ? `<div class="pct">${t.best}: ${best}</div>` : ''}
+    <button class="btn" data-act="share">📤 ${t.share}</button>
+    <div class="row">
+      <button class="btn sec" data-act="again">↻ ${t.again}</button>
+      <button class="btn sec" data-act="home">${t.home}</button>
+    </div>
+    <div class="card">${list}</div>`;
+}
+
+function share() {
+  const t = T();
+  const text = game.kind === 'daily' ? t.shareDaily(game.score) : t.shareText(game.score, game.qs.length);
+  if (inTg) {
+    tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(APP_LINK)}&text=${encodeURIComponent(text)}`);
+  } else if (navigator.share) {
+    navigator.share({ text, url: APP_LINK }).catch(() => {});
+  } else {
+    try { navigator.clipboard.writeText(text + ' ' + APP_LINK); toast(t.copied); } catch (e) {}
+  }
+}
+
+// ===== СПРАВОЧНИК =====
+let refRegion = 'world', refQuery = '';
+function renderRef() {
+  const t = T();
+  $('#ref').innerHTML = `
+    <header><h1>📖 ${t.ref}</h1></header>
+    <input class="search" id="refq" placeholder="${t.search}" value="${esc(refQuery)}">
+    <div class="chips">${REGIONS.map(r => `<button class="chip ${refRegion === r ? 'on' : ''}" data-act="refreg" data-v="${r}">${t[r]}</button>`).join('')}</div>
+    <div class="card" id="reflist"></div>`;
+  $('#refq').addEventListener('input', e => { refQuery = e.target.value; fillRef(); });
+  fillRef();
+}
+function fillRef() {
+  const q = refQuery.trim().toLowerCase();
+  const items = inRegion(refRegion)
+    .filter(c => !q || [c.en.n, c.en.c, c.ru.n, c.ru.c].some(s => s.toLowerCase().includes(q)))
+    .sort((a, b) => nm(a).localeCompare(nm(b), settings.lang));
+  $('#reflist').innerHTML = items.length
+    ? items.map(c => `<div class="item">${flag(c.id, 'sm')}<span>${esc(nm(c))}</span><span class="c">${esc(cp(c))}</span></div>`).join('')
+    : '<div style="text-align:center;color:var(--hint)">—</div>';
+}
+
+// ===== ОБРАБОТКА НАЖАТИЙ =====
+document.addEventListener('click', e => {
+  const el = e.target.closest('[data-act]');
+  if (!el || el.disabled) return;
+  const a = el.dataset.act, v = el.dataset.v;
+  if (a === 'lang') { settings.lang = v; document.documentElement.lang = v; saveAll(); renderHome(); }
+  else if (a === 'set') { settings[el.dataset.k] = (el.dataset.k === 'len' && v !== 'all') ? Number(v) : v; saveAll(); renderHome(); }
+  else if (a === 'start') startGame('normal');
+  else if (a === 'daily') startGame('daily');
+  else if (a === 'errors') startGame('errors');
+  else if (a === 'ref') { renderRef(); go('ref'); }
+  else if (a === 'refreg') { refRegion = v; renderRef(); }
+  else if (a === 'opt') answer(el.dataset.id);
+  else if (a === 'hint') useHint();
+  else if (a === 'quit' || a === 'home') { game = null; go('home'); }
+  else if (a === 'again') startGame(game.kind);
+  else if (a === 'share') share();
+});
+
+document.documentElement.lang = settings.lang;
+renderHome();
+</script>
+</body>
+</html>
