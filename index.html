@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>Passport Quiz</title>
+<title>GeoQuiz</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
 :root{
@@ -183,6 +183,13 @@ h1{font-size:24px;line-height:1.2}
 .opt .fl.sm{margin-right:6px}
 .daily.countries{background:linear-gradient(135deg,#667eea,#764ba2)}
 #countries header{justify-content:flex-start;align-items:center}
+.daily.seas{background:linear-gradient(135deg,#1e3c72,#2a9df4)}
+.daily.ksea{background:linear-gradient(135deg,#36d1dc,#5b86e5);padding:22px 16px}
+.daily.ksea b{font-size:20px}
+.seg4{grid-template-columns:1fr 1fr}
+.seg4 .chip{font-size:14px;padding:10px 6px}
+.lives{letter-spacing:1px}
+#seas header{justify-content:flex-start;align-items:center}
 .daily.kids{background:linear-gradient(135deg,#a18cd1,#f78fb3)}
 .daily.kflag{background:linear-gradient(135deg,#ff9a44,#fc6076);padding:22px 16px}
 .daily.kcap{background:linear-gradient(135deg,#43cea2,#185a9d);padding:22px 16px}
@@ -226,6 +233,7 @@ h1{font-size:24px;line-height:1.2}
   <section id="resorts" class="screen"></section>
   <section id="kids" class="screen"></section>
   <section id="countries" class="screen"></section>
+  <section id="seas" class="screen"></section>
 </div>
 <div class="toast" id="toast"></div>
 <div class="praise" id="praise"></div>
@@ -442,12 +450,12 @@ const LENS = [10, 20, 'all'];
 // ===== ТЕКСТЫ =====
 const I18N = {
   ru: {
-    title: 'Passport Quiz', sub: 'Викторина о странах и курортах мира',
+    title: 'GeoQuiz', sub: 'Викторина о странах и курортах мира',
     daily: '🔥 Ежедневный челлендж', dailyDesc: '10 вопросов — одинаковые для всех сегодня',
     dailyDone: s => `Сегодня: ${s}/10 ✓ · можно переиграть`,
     mode: 'Что угадываем', c2cap: 'Столицу по стране', cap2c: 'Страну по столице', shape: 'Страну по контуру',
-    type: 'Тип игры', normal: 'Обычная', blitz: '⚡ Блиц 60 с', hardcore: '💀 Хардкор',
-    typeHint: { normal: '4 варианта ответа', blitz: 'Максимум ответов за 60 секунд, ошибка −3 с', hardcore: 'Без вариантов — печатаешь ответ сам, опыт ×2' },
+    type: 'Тип игры', normal: 'Обычная', blitz: '⚡ Блиц 60 с', hardcore: '💀 Хардкор', lives: '❤️ 3 жизни',
+    typeHint: { normal: '4 варианта ответа', blitz: 'Максимум ответов за 60 секунд, ошибка −3 с', hardcore: 'Без вариантов — печатаешь ответ сам, опыт ×2', lives: 'Вопросы без конца и 3 ❤️. Ошибка — минус жизнь, 10 подряд — жизнь назад (не больше трёх)' },
     region: 'Регионы — можно несколько', world: 'Весь мир', eu: 'Европа', as: 'Азия', af: 'Африка',
     na: 'Сев. Америка', cb: 'Карибы', sa: 'Юж. Америка', oc: 'Океания',
     len: 'Вопросов', all: 'До конца', start: 'Начать',
@@ -458,9 +466,9 @@ const I18N = {
     newRecord: '🏆 Новый рекорд!', best: 'Рекорд', mist: 'Запомни', noMist: 'Ни одной ошибки! 🔥',
     again: 'Ещё раз', share: 'Позвать друзей', home: 'В меню',
     search: 'Страна или столица…', copied: 'Скопировано',
-    shareText: (s, t, tm) => `Я угадал ${s} из ${t}${tm || ''} в Passport Quiz 🌍 Сможешь лучше?`,
-    shareBlitz: s => `${s} правильных за 60 секунд в блице Passport Quiz ⚡ Побьёшь?`,
-    shareDaily: (s, tm) => `Ежедневный челлендж Passport Quiz: ${s}/10${tm || ''} 🌍 Попробуй побить!`,
+    shareText: (s, t, tm) => `Я угадал ${s} из ${t}${tm || ''} в GeoQuiz 🌍 Сможешь лучше?`,
+    shareBlitz: s => `${s} правильных за 60 секунд в блице GeoQuiz ⚡ Побьёшь?`,
+    shareDaily: (s, tm) => `Ежедневный челлендж GeoQuiz: ${s}/10${tm || ''} 🌍 Попробуй побить!`,
     dailyTitle: 'Ежедневный челлендж', errorsTitle: 'Работа над ошибками',
     streakMsg: s => `🔥 Серия ${s}!`,
     globeHint: 'Нажми на страну на глобусе или в списке', globeLoading: '🌍 Загружаем глобус…',
@@ -478,8 +486,14 @@ const I18N = {
     r_where_q: 'В какой стране?',
     island: 'остров', resort: 'курорт', skiResort: 'горнолыжный курорт', dir: 'Направление',
     d_all: 'Все направления', d_tr: '🇹🇷 Турция, Египет и арабские страны', d_eu: '🇪🇺 Европа и Россия', d_asia: '🌏 Азия', d_exo: '🌴 Экзотика',
-    shareRes: (s, n, tm) => `Я угадал ${s} из ${n} курортов${tm || ''} в Passport Quiz 🏖 Сможешь лучше?`,
-    countriesBtn: '🌍 Страны и столицы', countriesBtnSub: n => `Столицы, контуры, блиц и хардкор — ${n} стран`,
+    shareRes: (s, n, tm) => `Я угадал ${s} из ${n} курортов${tm || ''} в GeoQuiz 🏖 Сможешь лучше?`,
+    seasBtn: '🌊 Моря и реки', seasBtnSub: 'На какой реке Прага? Что омывает Италию?', seasTitle: 'Моря и реки', seasSub: 'Реки городов, моря стран, заливы и океаны',
+    seasHint: 'Вопросы вперемешку: реки городов, моря у городов и стран — и наоборот', regionOne: 'Регион',
+    sr_world: 'Весь мир', sr_eu: 'Европа', sr_as: 'Азия', sr_af: 'Африка', sr_am: 'Америка', sr_oc: 'Океания',
+    sq_cr: 'На какой реке стоит', sq_rc: 'Какой город стоит на реке', sq_cs: 'У какого моря или залива стоит', sq_cw: 'Что омывает', sq_wc: 'Какую страну омывает',
+    lifeBack: '❤️ +1 жизнь!', noLives: '💔 Жизни кончились', shareSea: (s, n, tm) => `Я угадал ${s} из ${n} про моря и реки${tm || ''} в GeoQuiz 🌊 Сможешь лучше?`,
+    shareRun: s => `На 3 жизнях я угадал ${s} в GeoQuiz ❤️ Побьёшь?`, kSea: '🌊 Моря и океаны', kQSea: 'Что омывает',
+    countriesBtn: '🌍 Страны и столицы', countriesBtnSub: n => `Столицы, контуры, блиц и 3 жизни — ${n} стран`,
     countriesTitle: 'Страны и столицы', countriesSub: n => `${n} стран мира`, toCountries: 'К странам',
     kidsBtn: '👶 Для детей', kidsBtnSub: 'Флаги и столицы известных стран — без очков и таймера',
     kidsTitle: 'Для детей', kidsSub: 'Самые известные страны мира', kidsNote: 'Без очков, таймера и рекордов — просто играем и учимся 🙂',
@@ -494,12 +508,12 @@ const I18N = {
     newBestTime: '🏎️ Рекорд скорости!', shareTime: t => ` за ${t}`
   },
   en: {
-    title: 'Passport Quiz', sub: 'A quiz about countries and resorts',
+    title: 'GeoQuiz', sub: 'A quiz about countries and resorts',
     daily: '🔥 Daily challenge', dailyDesc: '10 questions — the same for everyone today',
     dailyDone: s => `Today: ${s}/10 ✓ · play again`,
     mode: 'What to guess', c2cap: 'Capital by country', cap2c: 'Country by capital', shape: 'Country by shape',
-    type: 'Game type', normal: 'Classic', blitz: '⚡ Blitz 60s', hardcore: '💀 Hardcore',
-    typeHint: { normal: '4 answer options', blitz: 'As many as you can in 60 s, mistake −3 s', hardcore: 'No options — type the answer yourself, XP ×2' },
+    type: 'Game type', normal: 'Classic', blitz: '⚡ Blitz 60s', hardcore: '💀 Hardcore', lives: '❤️ 3 lives',
+    typeHint: { normal: '4 answer options', blitz: 'As many as you can in 60 s, mistake −3 s', hardcore: 'No options — type the answer yourself, XP ×2', lives: 'Endless questions and 3 ❤️. A mistake costs a life, 10 in a row gives one back (max three)' },
     region: 'Regions — pick several', world: 'Whole world', eu: 'Europe', as: 'Asia', af: 'Africa',
     na: 'N. America', cb: 'Caribbean', sa: 'S. America', oc: 'Oceania',
     len: 'Questions', all: 'All of them', start: 'Start',
@@ -510,9 +524,9 @@ const I18N = {
     newRecord: '🏆 New record!', best: 'Best', mist: 'Remember these', noMist: 'No mistakes at all! 🔥',
     again: 'Play again', share: 'Challenge friends', home: 'Menu',
     search: 'Country or capital…', copied: 'Copied',
-    shareText: (s, t, tm) => `I got ${s} of ${t}${tm || ''} in Passport Quiz 🌍 Can you beat me?`,
-    shareBlitz: s => `${s} correct in 60 seconds in Passport Quiz blitz ⚡ Can you beat it?`,
-    shareDaily: (s, tm) => `Passport Quiz daily challenge: ${s}/10${tm || ''} 🌍 Can you beat it?`,
+    shareText: (s, t, tm) => `I got ${s} of ${t}${tm || ''} in GeoQuiz 🌍 Can you beat me?`,
+    shareBlitz: s => `${s} correct in 60 seconds in GeoQuiz blitz ⚡ Can you beat it?`,
+    shareDaily: (s, tm) => `GeoQuiz daily challenge: ${s}/10${tm || ''} 🌍 Can you beat it?`,
     dailyTitle: 'Daily challenge', errorsTitle: 'Practice mistakes',
     streakMsg: s => `🔥 ${s} in a row!`,
     globeHint: 'Tap a country on the globe or in the list', globeLoading: '🌍 Loading the globe…',
@@ -530,8 +544,14 @@ const I18N = {
     r_where_q: 'Which country?',
     island: 'island', resort: 'resort', skiResort: 'ski resort', dir: 'Destination',
     d_all: 'All destinations', d_tr: '🇹🇷 Turkey, Egypt & Arab countries', d_eu: '🇪🇺 Europe & Russia', d_asia: '🌏 Asia', d_exo: '🌴 Exotic',
-    shareRes: (s, n, tm) => `I got ${s} of ${n} resorts${tm || ''} in Passport Quiz 🏖 Can you beat me?`,
-    countriesBtn: '🌍 Countries & capitals', countriesBtnSub: n => `Capitals, shapes, blitz and hardcore — ${n} countries`,
+    shareRes: (s, n, tm) => `I got ${s} of ${n} resorts${tm || ''} in GeoQuiz 🏖 Can you beat me?`,
+    seasBtn: '🌊 Seas & rivers', seasBtnSub: 'Which river is Prague on? What washes Italy?', seasTitle: 'Seas & rivers', seasSub: 'City rivers, country seas, gulfs and oceans',
+    seasHint: 'Mixed questions: city rivers, seas by cities and countries — and the other way round', regionOne: 'Region',
+    sr_world: 'Whole world', sr_eu: 'Europe', sr_as: 'Asia', sr_af: 'Africa', sr_am: 'Americas', sr_oc: 'Oceania',
+    sq_cr: 'Which river is this city on', sq_rc: 'Which city stands on the river', sq_cs: 'Which sea or gulf is this city on', sq_cw: 'What washes the shores of', sq_wc: 'Which country does it wash',
+    lifeBack: '❤️ +1 life!', noLives: '💔 Out of lives', shareSea: (s, n, tm) => `I got ${s} of ${n} on seas & rivers${tm || ''} in GeoQuiz 🌊 Can you beat me?`,
+    shareRun: s => `I got ${s} on 3 lives in GeoQuiz ❤️ Can you beat it?`, kSea: '🌊 Seas & oceans', kQSea: 'What washes the shores of',
+    countriesBtn: '🌍 Countries & capitals', countriesBtnSub: n => `Capitals, shapes, blitz and 3 lives — ${n} countries`,
     countriesTitle: 'Countries & capitals', countriesSub: n => `${n} countries of the world`, toCountries: 'Countries',
     kidsBtn: '👶 For kids', kidsBtnSub: 'Flags and capitals of famous countries — no points, no timer',
     kidsTitle: 'For kids', kidsSub: 'The best-known countries of the world', kidsNote: 'No points, timer or records — just play and learn 🙂',
@@ -547,7 +567,7 @@ const I18N = {
   }
 };
 const MODES = ['c2cap', 'cap2c', 'shape'];
-const TYPES = ['normal', 'blitz', 'hardcore'];
+const TYPES = ['normal', 'blitz', 'lives']; // хардкор убран
 
 // ===== ЗВАНИЯ =====
 // [нужно XP, значок, название RU, название EN, описание RU, описание EN]
@@ -575,7 +595,7 @@ const ACH = [
   { id: 's10', i: '🔥', ru: ['Горячая серия', '10 правильных подряд'], en: ['Hot streak', '10 correct in a row'], t: s => s.bestStreak >= 10 },
   { id: 's20', i: '⚡', ru: ['Серия 20+', '20 правильных подряд'], en: ['20+ streak', '20 correct in a row'], t: s => s.bestStreak >= 20 },
   { id: 's50', i: '🚀', ru: ['Безупречный', '50 вопросов подряд без ошибки'], en: ['Flawless', '50 in a row without a mistake'], t: s => s.bestStreak >= 50 },
-  { id: 'perfect', i: '💯', ru: ['Идеальный раунд', 'Раунд от 10 вопросов без ошибок'], en: ['Perfect round', 'A 10+ question round with no mistakes'], t: (s, g) => !!(g && g.over && g.type !== 'blitz' && g.asked >= 10 && !g.wrong.length) },
+  { id: 'perfect', i: '💯', ru: ['Идеальный раунд', 'Раунд от 10 вопросов без ошибок'], en: ['Perfect round', 'A 10+ question round with no mistakes'], t: (s, g) => !!(g && g.over && g.type !== 'blitz' && g.type !== 'lives' && g.kind !== 'errors' && g.asked >= 10 && !g.wrong.length) },
   { id: 'k50', i: '🗺️', ru: ['50 стран', 'Угадал 50 разных стран'], en: ['50 countries', 'Guessed 50 different countries'], t: s => s.known.length >= 50 },
   { id: 'k100', i: '🌐', ru: ['100 стран', 'Угадал 100 разных стран'], en: ['100 countries', 'Guessed 100 different countries'], t: s => s.known.length >= 100 },
   { id: 'kall', i: '🏆', ru: ['Весь мир', `Угадал все страны мира (${COUNTRIES.length})`], en: ['Whole world', `Guessed all ${COUNTRIES.length} countries`], t: s => COUNTRIES.every(c => s.known.includes(c.id)) },
@@ -587,13 +607,15 @@ const ACH = [
   })),
   { id: 'blitz15', i: '⏱️', ru: ['Быстрые руки', '15+ правильных в блице'], en: ['Quick hands', '15+ correct in blitz'], t: s => s.blitzBest >= 15 },
   { id: 'blitz25', i: '🌩️', ru: ['Молния', '25+ правильных в блице'], en: ['Lightning', '25+ correct in blitz'], t: s => s.blitzBest >= 25 },
-  { id: 'hard10', i: '💀', ru: ['Хардкорщик', '10 правильных за раунд в хардкоре'], en: ['Hardcore', '10 correct in one hardcore round'], t: (s, g) => !!(g && g.type === 'hardcore' && g.score >= 10) },
   { id: 'shape10', i: '👁️', ru: ['Глаз-алмаз', 'Угадал 10 контуров'], en: ['Eagle eye', 'Guessed 10 shapes'], t: s => s.shapeOk >= 10 },
   { id: 'shape50', i: '🔭', ru: ['Картограф-самоучка', 'Угадал 50 контуров'], en: ['Self-taught mapmaker', 'Guessed 50 shapes'], t: s => s.shapeOk >= 50 },
-  { id: 'fast10', i: '🏎️', ru: ['Скорострел', '10 вопросов без ошибок быстрее 40 секунд'], en: ['Speedster', '10 questions with no mistakes in under 40 s'], t: (s, g) => !!(g && g.over && g.type !== 'blitz' && g.asked >= 10 && !g.wrong.length && g.time < 40000) },
+  { id: 'fast10', i: '🏎️', ru: ['Скорострел', '10 вопросов без ошибок быстрее 40 секунд'], en: ['Speedster', '10 questions with no mistakes in under 40 s'], t: (s, g) => !!(g && g.over && g.type !== 'blitz' && g.type !== 'lives' && g.kind !== 'errors' && g.asked >= 10 && !g.wrong.length && g.time < 40000) },
   { id: 'res10', i: '🏖️', ru: ['Пляжник', 'Угадал 10 разных курортов'], en: ['Beach lover', 'Guessed 10 different resorts'], t: s => s.resKnown.length >= 10 },
   { id: 'res40', i: '🌴', ru: ['Турагент', 'Угадал 40 разных курортов'], en: ['Travel agent', 'Guessed 40 different resorts'], t: s => s.resKnown.length >= 40 },
   { id: 'resall', i: '🛳️', ru: ['Кругосветка', 'Угадал все курорты и острова'], en: ['Round the world', 'Guessed every resort and island'], t: s => RESORTS.every(r => s.resKnown.includes(r.id)) },
+  { id: 'sea25', i: '🌊', ru: ['Морской волк', '25 правильных про моря и реки'], en: ['Old salt', '25 correct about seas & rivers'], t: s => s.seaOk >= 25 },
+  { id: 'sea100', i: '⚓', ru: ['Капитан', '100 правильных про моря и реки'], en: ['Captain', '100 correct about seas & rivers'], t: s => s.seaOk >= 100 },
+  { id: 'lives20', i: '❤️', ru: ['Живучий', '20 правильных за одну игру на 3 жизнях'], en: ['Survivor', '20 correct in one 3-lives game'], t: (s, g) => !!(g && g.type === 'lives' && g.score >= 20) },
   { id: 'daily7', i: '📅', ru: ['Неделя челленджей', 'Сыграл 7 ежедневных челленджей'], en: ['Challenge week', 'Played 7 daily challenges'], t: s => Object.keys(s.daily).length >= 7 },
   { id: 'c500', i: '🎓', ru: ['Полтысячи', '500 правильных ответов'], en: ['Five hundred', '500 correct answers'], t: s => s.correct >= 500 },
   { id: 'c1000', i: '👑', ru: ['Тысяча', '1000 правильных ответов'], en: ['One thousand', '1000 correct answers'], t: s => s.correct >= 1000 }
@@ -654,11 +676,15 @@ function fixSettings() {
   if (typeof settings.sound !== 'boolean') settings.sound = true;
   delete settings.rmode;
   if (!['all', 'tr', 'eu', 'asia', 'exo'].includes(settings.rdir)) settings.rdir = 'all';
+  if (!TYPES.includes(settings.rtype)) settings.rtype = 'normal';
+  if (!TYPES.includes(settings.stype)) settings.stype = 'normal';
+  if (!['world', 'eu', 'as', 'af', 'am', 'oc'].includes(settings.sreg)) settings.sreg = 'world';
+  if (!LENS.includes(settings.slen)) settings.slen = 10;
   if (!LENS.includes(settings.rlen)) settings.rlen = 10;
 }
 function fixStats() {
   if (!stats || typeof stats !== 'object') stats = {};
-  const d = { played: 0, answered: 0, correct: 0, bestStreak: 0, best: {}, daily: {}, xp: 0, known: [], ach: {}, blitzBest: 0, shapeOk: 0, bestTime: {}, resKnown: [], resBest: {}, resBestTime: {} };
+  const d = { played: 0, answered: 0, correct: 0, bestStreak: 0, best: {}, daily: {}, xp: 0, known: [], ach: {}, blitzBest: 0, shapeOk: 0, bestTime: {}, resKnown: [], resBest: {}, resBestTime: {}, genBest: {}, genBestTime: {}, seaOk: 0 };
   for (const k in d) if (stats[k] == null || typeof stats[k] !== typeof d[k]) stats[k] = d[k];
   if (!Array.isArray(stats.known)) stats.known = [];
   if (!Array.isArray(stats.resKnown)) stats.resKnown = [];
@@ -707,6 +733,7 @@ const regKey = () => isWorld() ? 'world' : settings.regions.slice().sort().join(
 const regTitle = () => isWorld() ? T().world : PARTS.filter(p => settings.regions.includes(p)).map(p => T()[p]).join(' + ');
 const bestKey = () => {
   if (settings.type === 'blitz') return `blitz_${settings.mode}_${regKey()}`;
+  if (settings.type === 'lives') return `lives_${settings.mode}_${regKey()}`;
   const base = `${settings.mode}_${regKey()}_${settings.len}`;          // старый формат — чтобы сохранить прежние рекорды
   return settings.type === 'hardcore' ? 'hard_' + base : base;
 };
@@ -837,7 +864,7 @@ function praise(text, kind) {
 }
 function confetti(n) {
   const colors = ['#ff8a00', '#e52e71', '#2f7cf6', '#22a55a', '#ffd400', '#8b5cf6'];
-  const emo = (game && game.res) ? ['🌴', '🏖️', '☀️', '🐚', '🍹'] : kgame ? ['⭐', '🎈', '🧸', '🦄', '🍭'] : ['🌍', '⭐', '✨', '🎉', '🗺️'];
+  const emo = (game && game.sec === 'res') ? ['🌴', '🏖️', '☀️', '🐚', '🍹'] : (game && game.sec === 'sea') ? ['🌊', '🐚', '⚓', '🐬', '🏞️'] : kgame ? ['⭐', '🎈', '🧸', '🦄', '🍭'] : ['🌍', '⭐', '✨', '🎉', '🗺️'];
   const style = Math.floor(Math.random() * 4); // 0 полоски, 1 кружки, 2 эмодзи-дождь, 3 взрыв из центра
   for (let i = 0; i < n; i++) {
     const d = document.createElement('i');
@@ -980,6 +1007,7 @@ function renderHome() {
     ${rankCard()}
     <button class="daily" data-act="daily"><b>${t.daily}</b><span>${d != null ? t.dailyDone(d) : t.dailyDesc}</span></button>
     <button class="daily countries" data-act="countries"><b>${t.countriesBtn}</b><span>${t.countriesBtnSub(COUNTRIES.length)}</span></button>
+    <button class="daily seas" data-act="seas"><b>${t.seasBtn}</b><span>${t.seasBtnSub}</span></button>
     <button class="daily res" data-act="resorts"><b>${t.resortsBtn}</b><span>${t.resortsBtnSub}</span></button>
     <button class="daily kids" data-act="kids"><b>${t.kidsBtn}</b><span>${t.kidsBtnSub}</span></button>
     <div class="row">
@@ -1010,7 +1038,7 @@ function renderCountries() {
         const on = r === 'world' ? isWorld() : (!isWorld() && settings.regions.includes(r));
         return `<button class="chip ${on ? 'on' : ''}" data-act="reg" data-v="${r}">${on && r !== 'world' ? '✓ ' : ''}${t[r]} <small>${inRegion(r).length}</small></button>`;
       }).join('')}</div>
-      ${settings.type === 'blitz' ? '' : `<div class="label">${t.len}</div>
+      ${endless(settings.type) ? '' : `<div class="label">${t.len}</div>
       <div class="chips">${LENS.map(n => `<button class="chip ${String(settings.len) === String(n) ? 'on' : ''}" data-act="set" data-k="len" data-v="${n}">${n === 'all' ? `${t.all} <small>${selPool().length}</small>` : n}</button>`).join('')}</div>`}
       <div class="best-line">${t.best}: ${best != null ? best : '—'}</div>
     </div>
@@ -1042,7 +1070,7 @@ function buildQuestions(pool, rnd) {
   });
 }
 function stopTimer() { if (timerId) { clearInterval(timerId); timerId = null; } }
-function endGame() { stopTimer(); if (game) game.over = true; game = null; }
+function endGame() { stopTimer(); if (game) game.over = true; game = null; kgame = null; }
 
 async function startGame(kind) {
   const t = T();
@@ -1067,13 +1095,13 @@ async function startGame(kind) {
   }
   if (mode === 'shape') base = base.filter(c => shapeOK(c.id));
   let pool = base;
-  if (kind === 'normal' && type !== 'blitz' && settings.len !== 'all') pool = base.slice(0, settings.len);
+  if (kind === 'normal' && !endless(type) && settings.len !== 'all') pool = base.slice(0, settings.len);
   if (!pool.length) { go('home'); return; }
 
   game = {
     kind, mode, type, key: bestKey(), base, qs: buildQuestions(pool, rnd),
     i: 0, asked: 0, score: 0, streak: 0, maxStreak: 0, wrong: [], hintUsed: false, locked: false,
-    xp: 0, rank0: rankIdx(stats.xp), newAch: [], over: false
+    xp: 0, rank0: rankIdx(stats.xp), newAch: [], over: false, lives: type === 'lives' ? 3 : 0
   };
   go('game');
   game.t0 = Date.now();
@@ -1092,7 +1120,7 @@ function tickBlitz() {
   const tt = $('#timerTxt'), tb = $('#timerBar');
   if (tt) tt.textContent = '⏱ ' + Math.ceil(left / 1000);
   if (tb) { tb.style.width = (left / 600) + '%'; tb.classList.toggle('low', left < 10000); }
-  if (left <= 0) { praise(T().timeUp, 'mega'); finish(); }
+  if (left <= 0) { praise(T().timeUp, 'mega'); game.gen ? finishGen() : finish(); }
 }
 
 function tickClock() {
@@ -1105,7 +1133,7 @@ function gameTitle() {
   const t = T();
   if (game.kind === 'daily') return t.dailyTitle;
   if (game.kind === 'errors') return t.errorsTitle;
-  const pre = game.type === 'blitz' ? '⚡ ' : game.type === 'hardcore' ? '💀 ' : '';
+  const pre = game.type === 'blitz' ? '⚡ ' : game.type === 'hardcore' ? '💀 ' : game.type === 'lives' ? '❤️ ' : '';
   return pre + regTitle();
 }
 const askWhat = () => game.mode === 'c2cap' ? 'c' : 'n'; // что нужно назвать: столицу или страну
@@ -1120,10 +1148,8 @@ function renderQuestion() {
 
   const blitz = game.type === 'blitz', hard = game.type === 'hardcore';
   const left = blitz ? Math.max(0, game.deadline - Date.now()) : 0;
-  const topRight = blitz ? `<b id="timerTxt">⏱ ${Math.ceil(left / 1000)}</b>` : `${game.i + 1} / ${n} · <span id="clockTxt">⏱ ${fmtTime(Date.now() - game.t0)}</span>`;
-  const bar = blitz
-    ? `<div class="bar"><i id="timerBar" class="${left < 10000 ? 'low' : ''}" style="width:${left / 600}%;transition:none"></i></div>`
-    : `<div class="bar"><i style="width:${game.i / n * 100}%"></i></div>`;
+  const topRight = genTopRight(n);
+  const bar = genBar(n);
 
   const answers = hard
     ? `<form class="hard" id="hardForm" autocomplete="off">
@@ -1169,10 +1195,13 @@ function resolve(ok, close) {
     mistakes = mistakes.filter(x => x !== q.c.id);
     if (!stats.known.includes(q.c.id)) stats.known.push(q.c.id);
     if (game.mode === 'shape') stats.shapeOk++;
-    gain = Math.round((game.type === 'hardcore' ? 20 : game.type === 'blitz' ? 5 : 10) * mult(q.c)); // опыт = база × сложность (в блице половина)
+    // опыт = база × сложность (в блице половина); в «Работе над ошибками» опыта нет
+    gain = game.kind === 'errors' ? 0 : Math.round((game.type === 'hardcore' ? 20 : game.type === 'blitz' ? 5 : 10) * mult(q.c));
     game.xp += gain; stats.xp += gain;
     const milestone = game.streak === 3 || (game.streak >= 5 && game.streak % 5 === 0);
-    if (milestone) {
+    if (game.type === 'lives' && game.streak % 10 === 0 && game.lives < 3) {
+      game.lives++; praise(t.lifeBack, 'mega'); confetti(40); sfx('mega'); hapticImpact('heavy');
+    } else if (milestone) {
       praise(t.streakMsg(game.streak), 'mega');
       confetti(45); sfx('mega'); hapticImpact('heavy');
     } else {
@@ -1185,10 +1214,13 @@ function resolve(ok, close) {
     if (!mistakes.includes(q.c.id)) mistakes.push(q.c.id);
     sfx('bad'); haptic('error');
     if (game.type === 'blitz') { game.deadline -= 3000; praise(t.penalty, 'minus'); }
+    if (game.type === 'lives') { game.lives--; praise(game.lives > 0 ? '💔' : t.noLives, 'minus'); }
   }
   $('#reveal').innerHTML = `${flag(q.c.id, 'sm')} <b>${esc(cp(q.c))}</b> — ${t.capOf} ${esc(nm(q.c))}${gain ? ` <span class="gain">+${gain} XP</span>` : ''}`;
+  if (game.type === 'lives') { const l = document.querySelector('#game .lives'); if (l) l.textContent = hearts(game.lives); }
   checkAch(game);
   saveAll();
+  if (game.type === 'lives' && game.lives <= 0) { stopTimer(); setTimeout(finish, 1700); return; }
   const delay = game.type === 'blitz' ? (ok ? 350 : 1000) : (ok ? 900 : 1900);
   setTimeout(nextQuestion, delay);
 }
@@ -1244,7 +1276,7 @@ function nextQuestion() {
   if (!game || game.over) return;
   game.i++;
   if (game.i >= game.qs.length) {
-    if (game.type === 'blitz') game.qs = game.qs.concat(buildQuestions(balanced(game.base), Math.random)); // в блице вопросы не кончаются
+    if (endless(game.type)) game.qs = game.qs.concat(buildQuestions(balanced(game.base), Math.random)); // в блице и на жизнях вопросы не кончаются
     else return finish();
   }
   renderQuestion();
@@ -1257,12 +1289,13 @@ function finish() {
   game.time = Date.now() - game.t0;
   stats.played++;
   let record = false, best = null, fastRec = false;
-  if (game.type !== 'blitz' && !game.wrong.length && game.asked > 0) {
+  if (game.kind === 'errors') { /* «Работа над ошибками»: без рекордов */ }
+  else if (!endless(game.type) && !game.wrong.length && game.asked > 0) {
     const tk = game.kind === 'daily' ? 'daily' : game.key;
     const prevT = stats.bestTime[tk];
     if (prevT == null || game.time < prevT) { fastRec = prevT != null; stats.bestTime[tk] = game.time; }
     game.bestTime = stats.bestTime[tk];
-  } else if (game.type !== 'blitz') {
+  } else if (!endless(game.type)) {
     game.bestTime = stats.bestTime[game.kind === 'daily' ? 'daily' : game.key];
   }
   if (game.kind === 'normal') {
@@ -1282,14 +1315,14 @@ function finish() {
   const rankUp = rankIdx(stats.xp) > game.rank0;
   renderResult(record, best, rankUp, fastRec);
   go('result');
-  const total = game.type === 'blitz' ? Math.max(game.asked, 1) : game.qs.length;
+  const total = endless(game.type) ? Math.max(game.asked, 1) : game.qs.length;
   if (record || rankUp || fastRec || game.score / total >= 0.7) {
     setTimeout(() => { confetti(rankUp ? 140 : 90); sfx('win'); haptic('success'); }, 250);
   }
 }
 
 function renderResult(record, best, rankUp, fastRec) {
-  const t = T(), blitz = game.type === 'blitz';
+  const t = T(), blitz = endless(game.type);
   const n = blitz ? game.asked : game.qs.length;
   const pct = n ? Math.round(game.score / n * 100) : 0;
   const emoji = blitz ? (game.score >= 25 ? '🌩️' : game.score >= 15 ? '⚡' : '⏱️') : pct >= 90 ? '🏆' : pct >= 70 ? '🎉' : pct >= 40 ? '👍' : '📚';
@@ -1322,7 +1355,11 @@ function renderResult(record, best, rankUp, fastRec) {
 function share() {
   const t = T();
   const tm = game.time ? t.shareTime(fmtTime(game.time)) : '';
-  const text = game.res ? t.shareRes(game.score, game.qs.length, tm)
+  const n = endless(game.type) ? game.asked : game.qs.length;
+  const text = game.type === 'lives' ? t.shareRun(game.score)
+    : game.type === 'blitz' ? t.shareBlitz(game.score)
+    : game.sec === 'res' ? t.shareRes(game.score, n, tm)
+    : game.sec === 'sea' ? t.shareSea(game.score, n, tm)
     : game.kind === 'daily' ? t.shareDaily(game.score, tm)
     : game.type === 'blitz' ? t.shareBlitz(game.score)
     : t.shareText(game.score, game.qs.length, tm);
@@ -1522,47 +1559,45 @@ const rTierTag = r => { const m = rmult(r); return `<span class="tier t${String(
 const resPool = () => settings.rdir === 'all' ? RESORTS : RESORTS.filter(r => r.g === settings.rdir);
 const resKey = () => `res_${settings.rdir}_${settings.rlen}`;
 
-// --- меню раздела ---
+// ===== ОБЩИЕ ШТУКИ ДЛЯ РАЗДЕЛОВ =====
+const tierBadge = m => `<span class="tier t${String(m).replace('.', '')}">${m >= 2 ? '🔴' : m >= 1.5 ? '🟡' : '🟢'} ×${m}</span>`;
+const hearts = n => '❤️'.repeat(Math.max(0, n)) + '🖤'.repeat(Math.max(0, 3 - n));
+const endless = type => type === 'blitz' || type === 'lives';
+const typeSeg = (k, cur) => `<div class="seg seg3">${TYPES.map(m => `<button class="chip ${cur === m ? 'on' : ''}" data-act="xset" data-k="${k}" data-v="${m}">${T()[m]}</button>`).join('')}</div>
+      <div class="type-hint">${T().typeHint[cur]}</div>`;
+const lenChips = (k, cur, total) => `<div class="label">${T().len}</div>
+      <div class="chips">${LENS.map(n => `<button class="chip ${String(cur) === String(n) ? 'on' : ''}" data-act="xset" data-k="${k}" data-v="${n}">${n === 'all' ? `${T().all} <small>${total}</small>` : n}</button>`).join('')}</div>`;
+// проверка ответа, напечатанного в хардкоре, против списка допустимых названий
+const STOPW = /(^|\s)(море|моря|океан|залив|река|реки|sea|ocean|gulf|bay|river|of|the)(?=\s|$)/gi;
+function checkNames(typed, names) {
+  const a = norm(String(typed).replace(STOPW, ' '));
+  if (!a) return false;
+  let res = false;
+  for (const nmx of names) {
+    const b = norm(String(nmx).replace(STOPW, ' '));
+    if (!b) continue;
+    if (a === b) return 'exact';
+    const tol = b.length <= 4 ? 0 : b.length <= 8 ? 1 : 2;
+    if (lev(a, b) <= tol) res = 'close';
+  }
+  return res;
+}
+
+// ===== КУРОРТЫ: меню и вопросы =====
 function renderResorts() {
-  const t = T(), best = stats.resBest[resKey()], bt = stats.resBestTime[resKey()];
+  const t = T(), k = genKey('res'), best = stats.genBest[k], bt = stats.genBestTime[k];
   $('#resorts').innerHTML = `
     <header><button class="back" data-act="home">‹ ${t.back}</button><div style="flex:1"><h1>🏖 ${t.resorts}</h1><div class="sub">${t.resortsSub(RESORTS.length)}</div></div></header>
     <div class="card">
       <div class="type-hint" style="margin:0 0 12px">${t.r_where_hint}</div>
+      <div class="label">${t.type}</div>
+      ${typeSeg('rtype', settings.rtype)}
       <div class="label">${t.dir}</div>
-      <div class="chips">${RES_DIRS.map(d => `<button class="chip ${settings.rdir === d ? 'on' : ''}" data-act="rset" data-k="rdir" data-v="${d}">${t['d_' + d]} <small>${d === 'all' ? RESORTS.length : RESORTS.filter(r => r.g === d).length}</small></button>`).join('')}</div>
-      <div class="label">${t.len}</div>
-      <div class="chips">${LENS.map(n => `<button class="chip ${String(settings.rlen) === String(n) ? 'on' : ''}" data-act="rset" data-k="rlen" data-v="${n}">${n === 'all' ? `${t.all} <small>${resPool().length}</small>` : n}</button>`).join('')}</div>
+      <div class="chips">${RES_DIRS.map(d => `<button class="chip ${settings.rdir === d ? 'on' : ''}" data-act="xset" data-k="rdir" data-v="${d}">${t['d_' + d]} <small>${d === 'all' ? RESORTS.length : RESORTS.filter(r => r.g === d).length}</small></button>`).join('')}</div>
+      ${endless(settings.rtype) ? '' : lenChips('rlen', settings.rlen, resPool().length)}
       <div class="best-line">${t.best}: ${best != null ? best : '—'}${bt != null ? ` · ⏱ ${fmtTime(bt)}` : ''}</div>
     </div>
-    <button class="btn" data-act="rstart">▶ ${t.start}</button>`;
-}
-
-// --- игра «Где этот курорт?» ---
-function buildResQuestions(pool) {
-  return pool.map(r => {
-    // неправильные варианты — страны соседних курортов (та же подгруппа → то же направление → любые)
-    const pick = f => shuffle([...new Set(RESORTS.filter(f).map(x => x.c))]);
-    const cand = [...new Set([
-      ...pick(x => x.sub === r.sub && x.c !== r.c),
-      ...pick(x => x.g === r.g && x.c !== r.c),
-      ...pick(x => x.c !== r.c)
-    ])].slice(0, 3);
-    return { r, opts: shuffle([r.c, ...cand]) };
-  });
-}
-
-function startResort() {
-  endGame();
-  let pool = settings.rlen === 'all' ? balancedRes(resPool()) : balancedRes(resPool()).slice(0, settings.rlen);
-  game = {
-    res: true, kind: 'res', type: 'normal', mode: 'where', key: resKey(), qs: buildResQuestions(pool),
-    i: 0, asked: 0, score: 0, streak: 0, maxStreak: 0, wrong: [], hintUsed: false, locked: false,
-    xp: 0, rank0: rankIdx(stats.xp), newAch: [], over: false, t0: Date.now()
-  };
-  go('game');
-  timerId = setInterval(tickClock, 500);
-  renderResQ();
+    <button class="btn" data-act="gstart" data-v="res">▶ ${t.start}</button>`;
 }
 // равномерно по подгруппам — чтобы «все направления» не были одним Египтом
 function balancedRes(list) {
@@ -1573,114 +1608,566 @@ function balancedRes(list) {
   while (queues.some(q => q.length)) shuffle(queues).forEach(q => { if (q.length) out.push(q.pop()); });
   return out;
 }
-
-function renderResQ() {
-  const t = T(), q = game.qs[game.i], r = q.r, n = game.qs.length;
-  $('#game').innerHTML = `
-    <div class="top"><span>🏖 ${t['d_' + settings.rdir]}</span><span>${game.i + 1} / ${n} · <span id="clockTxt">⏱ ${fmtTime(Date.now() - game.t0)}</span></span></div>
-    <div class="bar"><i style="width:${game.i / n * 100}%"></i></div>
-    <div class="top"><span>✅ ${game.score} · ⭐ ${game.xp} XP</span><span>${game.streak >= 3 ? '🔥' : '⚡'} ${t.streak}: ${game.streak}</span></div>
-    <div class="q"><div class="fl big">${rIcon(r)}</div><small>${t.r_where_q} ${rTierTag(r)}</small><h2>${esc(rname(r))}</h2><div class="rtype">${r.kind === 's' ? t.skiResort : r.kind === 'i' ? t.island : t.resort}</div></div>
-    <div class="opts">${q.opts.map((id, k) => `<button class="opt" data-key="${k + 1}" data-act="ropt" data-id="${id}">${flag(id, 'sm')} ${esc(nm(BY_ID[id]))}</button>`).join('')}</div>
-    <div class="reveal" id="reveal"></div>
-    <div class="tools">
-      <button class="link" data-act="quit">✕ ${t.quit}</button>
-      <button class="link" data-act="rhint" ${game.hintUsed ? 'disabled' : ''}>💡 50/50</button>
-    </div>`;
-  game.locked = false;
+function buildResQs() {
+  const t = T();
+  return balancedRes(resPool()).map(r => {
+    const pick = f => shuffle([...new Set(RESORTS.filter(f).map(x => x.c))]);
+    const cand = [...new Set([...pick(x => x.sub === r.sub && x.c !== r.c), ...pick(x => x.g === r.g && x.c !== r.c), ...pick(x => x.c !== r.c)])].slice(0, 3);
+    const c = BY_ID[r.c];
+    return {
+      key: 'r:' + r.id, m: rmult(r), right: r.c,
+      opts: shuffle([r.c, ...cand]).map(id => ({ id, html: `${flag(id, 'sm')} ${esc(nm(BY_ID[id]))}` })),
+      head: `<div class="fl big">${rIcon(r)}</div><small>${t.r_where_q} ${tierBadge(rmult(r))}</small><h2>${esc(rname(r))}</h2><div class="rtype">${r.kind === 's' ? t.skiResort : r.kind === 'i' ? t.island : t.resort}</div>`,
+      answer: nm(c), check: s => checkTyped(s, c, 'n'),
+      reveal: `${flag(r.c, 'sm')} <b>${esc(rname(r))}</b> — ${esc(nm(c))}`,
+      line: [flag(r.c, 'sm'), rname(r), nm(c)],
+      onOk: () => { if (!stats.resKnown.includes(r.id)) stats.resKnown.push(r.id); }
+    };
+  });
 }
 
-function answerRes(id) {
-  if (!game || !game.res || game.locked) return;
-  game.locked = true;
-  const t = T(), q = game.qs[game.i], r = q.r, ok = id === r.c;
-  document.querySelectorAll('.opt').forEach(b => {
-    b.disabled = true;
-    if (b.dataset.id === r.c) b.classList.add('ok');
-    else if (b.dataset.id === id) b.classList.add('bad');
+// ===== МОРЯ И РЕКИ: данные =====
+// Водоёмы: id|RU|EN|тип (o океан, s море, g залив)|родитель (часть чего)|сложность|страны на берегу
+const WATER_RAW = `pacific|Тихий океан|Pacific Ocean|o||1|US CA MX GT SV HN NI CR PA CO EC PE CL JP RU PH AU NZ PG FJ WS TO KI MH FM PW SB VU TV NR
+atlantic|Атлантический океан|Atlantic Ocean|o||1|US CA BR AR UY GY SR VE FR ES PT GB IE IS MA SN MR GM GN GW SL LR CI GH TG BJ NG CM GQ GA CG CD AO NA ZA CV ST BS BB
+indian|Индийский океан|Indian Ocean|o||1|ZA MZ TZ KE SO MG MU SC KM MV LK IN ID AU
+arctic|Северный Ледовитый океан|Arctic Ocean|o||1|RU CA US NO
+med|Средиземное море|Mediterranean Sea|s|atlantic|1|ES FR MC IT MT GR TR CY SY LB EG LY TN DZ MA AL
+black|Чёрное море|Black Sea|s|med|1|RU GE TR BG RO
+azov|Азовское море|Sea of Azov|s|black|1.5|RU
+caspian|Каспийское море|Caspian Sea|s||1|RU KZ TM IR AZ
+baltic|Балтийское море|Baltic Sea|s|atlantic|1|RU EE LV LT PL DE DK SE FI
+north|Северное море|North Sea|s|atlantic|1.5|GB NO DK DE NL BE FR
+norwegian|Норвежское море|Norwegian Sea|s|atlantic|2|NO
+barents|Баренцево море|Barents Sea|s|arctic|1.5|RU NO
+white|Белое море|White Sea|s|arctic|1.5|RU
+adriatic|Адриатическое море|Adriatic Sea|s|med|1.5|IT SI HR BA ME AL
+aegean|Эгейское море|Aegean Sea|s|med|1.5|GR TR
+tyrrhenian|Тирренское море|Tyrrhenian Sea|s|med|2|IT FR
+ionian|Ионическое море|Ionian Sea|s|med|2|IT GR AL
+irish|Ирландское море|Irish Sea|s|atlantic|2|GB IE
+marmara|Мраморное море|Sea of Marmara|s|med|1.5|TR
+biscay|Бискайский залив|Bay of Biscay|g|atlantic|1.5|FR ES
+finland|Финский залив|Gulf of Finland|g|baltic|1.5|FI RU EE
+bothnia|Ботнический залив|Gulf of Bothnia|g|baltic|2|FI SE
+red|Красное море|Red Sea|s|indian|1|EG SD ER SA YE JO DJ
+arabian|Аравийское море|Arabian Sea|s|indian|1.5|OM IN PK
+persian|Персидский залив|Persian Gulf|g|indian|1.5|IR IQ KW SA BH QA AE
+aden|Аденский залив|Gulf of Aden|g|indian|2|YE SO DJ
+bengal|Бенгальский залив|Bay of Bengal|g|indian|1.5|IN BD MM LK
+andaman|Андаманское море|Andaman Sea|s|indian|2|MM TH ID
+scs|Южно-Китайское море|South China Sea|s|pacific|1.5|CN VN PH MY BN SG ID
+ecs|Восточно-Китайское море|East China Sea|s|pacific|2|CN JP KR
+yellow|Жёлтое море|Yellow Sea|s|pacific|2|CN KP KR
+japan|Японское море|Sea of Japan|s|pacific|1|JP RU KR KP
+okhotsk|Охотское море|Sea of Okhotsk|s|pacific|1.5|RU JP
+bering|Берингово море|Bering Sea|s|pacific|1.5|RU US
+philippine|Филиппинское море|Philippine Sea|s|pacific|2|PH JP PW
+java|Яванское море|Java Sea|s|pacific|2|ID
+thailand|Сиамский залив|Gulf of Thailand|g|scs|2|TH KH VN MY
+caribbean|Карибское море|Caribbean Sea|s|atlantic|1|MX BZ HN NI CR PA CO VE CU JM HT DO TT GD VC LC DM AG KN
+mexico|Мексиканский залив|Gulf of Mexico|g|atlantic|1.5|US MX CU
+hudson|Гудзонов залив|Hudson Bay|g|arctic|2|CA
+coral|Коралловое море|Coral Sea|s|pacific|2|AU PG SB VU
+tasman|Тасманово море|Tasman Sea|s|pacific|2|AU NZ`;
+// Реки: id|RU|EN|сложность
+const RIVER_RAW = `moskva|Москва-река|Moskva|1
+neva|Нева|Neva|1
+volga|Волга|Volga|1
+don|Дон|Don|1
+seine|Сена|Seine|1
+thames|Темза|Thames|1
+tiber|Тибр|Tiber|1
+arno|Арно|Arno|1.5
+vltava|Влтава|Vltava|1.5
+spree|Шпрее|Spree|1.5
+rhine|Рейн|Rhine|1
+elbe|Эльба|Elbe|1.5
+danube|Дунай|Danube|1
+sava|Сава|Sava|1.5
+vistula|Висла|Vistula|1
+tagus|Тежу|Tagus|1.5
+manzanares|Мансанарес|Manzanares|1.5
+guadalquivir|Гвадалквивир|Guadalquivir|2
+douro|Дору|Douro|2
+daugava|Даугава|Daugava|1.5
+neris|Нерис|Neris|1.5
+svislach|Свислочь|Svislach|1.5
+aare|Ааре|Aare|1.5
+isar|Изар|Isar|1.5
+rhone|Рона|Rhone|1.5
+garonne|Гаронна|Garonne|1.5
+po|По|Po|1.5
+liffey|Лиффи|Liffey|1.5
+amstel|Амстел|Amstel|1.5
+dambovita|Дымбовица|Dambovita|2
+clyde|Клайд|Clyde|2
+tigris|Тигр|Tigris|1.5
+yangtze|Янцзы|Yangtze|1
+ganges|Ганг|Ganges|1
+yamuna|Ямуна|Yamuna|2
+chao|Чао-Прайя|Chao Phraya|1.5
+mekong|Меконг|Mekong|1.5
+redriver|Красная река|Red River|2
+han|Ханган|Han|1.5
+taedong|Тэдонган|Taedong|2
+kura|Кура|Kura|1.5
+hrazdan|Раздан|Hrazdan|2
+ishim|Ишим|Ishim|1.5
+tuul|Туул|Tuul|2
+buriganga|Буриганга|Buriganga|2
+irrawaddy|Иравади|Irrawaddy|2
+ravi|Рави|Ravi|2
+nile|Нил|Nile|1
+congo|Конго|Congo|1.5
+niger|Нигер|Niger|1.5
+hudsonr|Гудзон|Hudson|1
+potomac|Потомак|Potomac|1.5
+stlawrence|Святого Лаврентия|St. Lawrence|1.5
+ottawa|Оттава|Ottawa|1.5
+mississippi|Миссисипи|Mississippi|1
+ohio|Огайо|Ohio|1.5
+amazon|Амазонка|Amazon|1
+plata|Ла-Плата|Rio de la Plata|1.5
+paraguay|Парагвай|Paraguay|2
+brisbane|Брисбен|Brisbane|2
+swan|Суон|Swan|2`;
+// Города: id|RU|EN|страна|r: реки через запятую  ИЛИ  w: море/залив
+const CITY_RAW = `moscow|Москва|Moscow|RU|r:moskva
+spb|Санкт-Петербург|Saint Petersburg|RU|r:neva
+kazan|Казань|Kazan|RU|r:volga
+rostov|Ростов-на-Дону|Rostov-on-Don|RU|r:don
+paris|Париж|Paris|FR|r:seine
+london|Лондон|London|GB|r:thames
+rome|Рим|Rome|IT|r:tiber
+florence|Флоренция|Florence|IT|r:arno
+prague|Прага|Prague|CZ|r:vltava
+berlin|Берлин|Berlin|DE|r:spree
+cologne|Кёльн|Cologne|DE|r:rhine
+hamburg|Гамбург|Hamburg|DE|r:elbe
+dresden|Дрезден|Dresden|DE|r:elbe
+vienna|Вена|Vienna|AT|r:danube
+budapest|Будапешт|Budapest|HU|r:danube
+bratislava|Братислава|Bratislava|SK|r:danube
+belgrade|Белград|Belgrade|RS|r:danube,sava
+zagreb|Загреб|Zagreb|HR|r:sava
+warsaw|Варшава|Warsaw|PL|r:vistula
+krakow|Краков|Krakow|PL|r:vistula
+lisbon|Лиссабон|Lisbon|PT|r:tagus
+madrid|Мадрид|Madrid|ES|r:manzanares
+seville|Севилья|Seville|ES|r:guadalquivir
+porto|Порту|Porto|PT|r:douro
+riga|Рига|Riga|LV|r:daugava
+vilnius|Вильнюс|Vilnius|LT|r:neris
+minsk|Минск|Minsk|BY|r:svislach
+bern|Берн|Bern|CH|r:aare
+basel|Базель|Basel|CH|r:rhine
+munich|Мюнхен|Munich|DE|r:isar
+lyon|Лион|Lyon|FR|r:rhone
+bordeaux|Бордо|Bordeaux|FR|r:garonne
+turin|Турин|Turin|IT|r:po
+dublin|Дублин|Dublin|IE|r:liffey
+amsterdam|Амстердам|Amsterdam|NL|r:amstel
+bucharest|Бухарест|Bucharest|RO|r:dambovita
+glasgow|Глазго|Glasgow|GB|r:clyde
+baghdad|Багдад|Baghdad|IQ|r:tigris
+wuhan|Ухань|Wuhan|CN|r:yangtze
+chongqing|Чунцин|Chongqing|CN|r:yangtze
+varanasi|Варанаси|Varanasi|IN|r:ganges
+delhi|Дели|Delhi|IN|r:yamuna
+agra|Агра|Agra|IN|r:yamuna
+bangkok|Бангкок|Bangkok|TH|r:chao
+phnompenh|Пномпень|Phnom Penh|KH|r:mekong
+vientiane|Вьентьян|Vientiane|LA|r:mekong
+hanoi|Ханой|Hanoi|VN|r:redriver
+seoul|Сеул|Seoul|KR|r:han
+pyongyang|Пхеньян|Pyongyang|KP|r:taedong
+tbilisi|Тбилиси|Tbilisi|GE|r:kura
+yerevan|Ереван|Yerevan|AM|r:hrazdan
+astana|Астана|Astana|KZ|r:ishim
+ulaanbaatar|Улан-Батор|Ulaanbaatar|MN|r:tuul
+dhaka|Дакка|Dhaka|BD|r:buriganga
+mandalay|Мандалай|Mandalay|MM|r:irrawaddy
+lahore|Лахор|Lahore|PK|r:ravi
+cairo|Каир|Cairo|EG|r:nile
+khartoum|Хартум|Khartoum|SD|r:nile
+luxor|Луксор|Luxor|EG|r:nile
+kinshasa|Киншаса|Kinshasa|CD|r:congo
+brazzaville|Браззавиль|Brazzaville|CG|r:congo
+bamako|Бамако|Bamako|ML|r:niger
+niamey|Ниамей|Niamey|NE|r:niger
+newyork|Нью-Йорк|New York|US|r:hudsonr
+washington|Вашингтон|Washington|US|r:potomac
+montreal|Монреаль|Montreal|CA|r:stlawrence
+quebec|Квебек|Quebec|CA|r:stlawrence
+ottawac|Оттава|Ottawa|CA|r:ottawa
+neworleans|Новый Орлеан|New Orleans|US|r:mississippi
+stlouis|Сент-Луис|St. Louis|US|r:mississippi
+pittsburgh|Питтсбург|Pittsburgh|US|r:ohio
+manaus|Манаус|Manaus|BR|r:amazon
+buenosaires|Буэнос-Айрес|Buenos Aires|AR|r:plata
+montevideo|Монтевидео|Montevideo|UY|r:plata
+asuncion|Асунсьон|Asuncion|PY|r:paraguay
+brisbanec|Брисбен|Brisbane|AU|r:brisbane
+perth|Перт|Perth|AU|r:swan
+baku|Баку|Baku|AZ|w:caspian
+tallinn|Таллин|Tallinn|EE|w:finland
+helsinki|Хельсинки|Helsinki|FI|w:finland
+copenhagen|Копенгаген|Copenhagen|DK|w:baltic
+stockholm|Стокгольм|Stockholm|SE|w:baltic
+athens|Афины|Athens|GR|w:aegean
+istanbul|Стамбул|Istanbul|TR|w:marmara,black
+barcelona|Барселона|Barcelona|ES|w:med
+marseille|Марсель|Marseille|FR|w:med
+naples|Неаполь|Naples|IT|w:tyrrhenian
+venice|Венеция|Venice|IT|w:adriatic
+split|Сплит|Split|HR|w:adriatic
+alexandria|Александрия|Alexandria|EG|w:med
+sochic|Сочи|Sochi|RU|w:black
+varna|Варна|Varna|BG|w:black
+batumic|Батуми|Batumi|GE|w:black
+vladivostok|Владивосток|Vladivostok|RU|w:japan
+murmansk|Мурманск|Murmansk|RU|w:barents
+arkhangelsk|Архангельск|Arkhangelsk|RU|w:white
+dubaic|Дубай|Dubai|AE|w:persian
+doha|Доха|Doha|QA|w:persian
+mumbai|Мумбаи|Mumbai|IN|w:arabian
+karachi|Карачи|Karachi|PK|w:arabian
+jeddah|Джидда|Jeddah|SA|w:red
+manila|Манила|Manila|PH|w:scs
+havana|Гавана|Havana|CU|w:mexico
+miamic|Майами|Miami|US|w:atlantic
+riodejaneiro|Рио-де-Жанейро|Rio de Janeiro|BR|w:atlantic
+capetownc|Кейптаун|Cape Town|ZA|w:atlantic
+casablanca|Касабланка|Casablanca|MA|w:atlantic
+mombasa|Момбаса|Mombasa|KE|w:indian
+sanfrancisco|Сан-Франциско|San Francisco|US|w:pacific
+losangeles|Лос-Анджелес|Los Angeles|US|w:pacific
+sydney|Сидней|Sydney|AU|w:tasman`;
+
+const WATERS = WATER_RAW.trim().split('\n').map(l => {
+  const [id, ru, en, kind, parent, m, cs] = l.split('|');
+  return { id, ru, en, kind, parent: parent || null, m: +m, cs: cs.split(' ').filter(c => BY_ID[c]) };
+});
+const W = Object.fromEntries(WATERS.map(w => [w.id, w]));
+const RIVERS = RIVER_RAW.trim().split('\n').map(l => { const [id, ru, en, m] = l.split('|'); return { id, ru, en, m: +m }; });
+const RV = Object.fromEntries(RIVERS.map(r => [r.id, r]));
+const CITIES = CITY_RAW.trim().split('\n').map(l => {
+  const [id, ru, en, c, spec] = l.split('|');
+  const [k, list] = spec.split(':');
+  return { id, ru, en, c, rivers: k === 'r' ? list.split(',') : [], waters: k === 'w' ? list.split(',') : [] };
+}).filter(c => BY_ID[c.c]);
+const CT = Object.fromEntries(CITIES.map(c => [c.id, c]));
+const wName = w => settings.lang === 'ru' ? w.ru : w.en;
+const ctName = c => settings.lang === 'ru' ? c.ru : c.en;
+// предки водоёма (Адриатическое → Средиземное → Атлантический) и потомки
+const wAnc = id => { const out = []; let p = W[id] && W[id].parent; while (p) { out.push(p); p = W[p] && W[p].parent; } return out; };
+const wDesc = id => WATERS.filter(w => wAnc(w.id).includes(id)).map(w => w.id);
+// все водоёмы страны: на берегу + их «родители»
+const cWatersDirect = cid => WATERS.filter(w => w.cs.includes(cid)).map(w => w.id);
+const cWatersFull = cid => { const s = new Set(); cWatersDirect(cid).forEach(id => { s.add(id); wAnc(id).forEach(a => s.add(a)); }); return s; };
+// все страны водоёма: на его берегу + на берегу его частей
+const wCountriesFull = id => { const s = new Set(W[id].cs); wDesc(id).forEach(d => W[d].cs.forEach(c => s.add(c))); return s; };
+const regOf = cid => { const r = BY_ID[cid] && BY_ID[cid].r; return r === 'na' || r === 'cb' || r === 'sa' ? 'am' : r; };
+const SEA_REGS = ['world', 'eu', 'as', 'af', 'am', 'oc'];
+const riverCities = rid => CITIES.filter(c => c.rivers.includes(rid));
+const riverRegs = rid => new Set(riverCities(rid).map(c => regOf(c.c)));
+
+// ===== МОРЯ И РЕКИ: вопросы =====
+// 5 видов: город→река, река→город, приморский город→море, страна→что омывает, море→какую страну омывает
+function seaSeeds() {
+  const S = [];
+  CITIES.forEach(c => {
+    if (c.rivers.length) S.push({ kind: 'cr', c, regs: new Set([regOf(c.c)]) });
+    else S.push({ kind: 'cs', c, regs: new Set([regOf(c.c)]) });
   });
-  game.asked++; stats.answered++;
+  RIVERS.forEach(r => { if (riverCities(r.id).length) S.push({ kind: 'rc', r, regs: riverRegs(r.id) }); });
+  COUNTRIES.forEach(c => { if (cWatersDirect(c.id).length) S.push({ kind: 'cw', c, regs: new Set([regOf(c.id)]) }); });
+  WATERS.forEach(w => { if (w.cs.length) S.push({ kind: 'wc', w, regs: new Set(w.cs.map(regOf)) }); });
+  return S.filter(s => settings.sreg === 'world' || s.regs.has(settings.sreg));
+}
+const pick3 = (prefer, rest) => [...new Set([...shuffle(prefer), ...shuffle(rest)])].slice(0, 3);
+const wOpt = id => ({ id, html: esc(wName(W[id])) });
+const cOpt = id => ({ id, html: `${flag(id, 'sm')} ${esc(nm(BY_ID[id]))}` });
+const wNames = w => [w.ru, w.en];
+function seaQuestion(s) {
+  const t = T();
+  if (s.kind === 'cr') { // город → река
+    const c = s.c, right = c.rivers[0], r = RV[right], reg = regOf(c.c);
+    const bad = RIVERS.filter(x => !c.rivers.includes(x.id));
+    const d = pick3(bad.filter(x => riverRegs(x.id).has(reg)).map(x => x.id), bad.map(x => x.id));
+    return { key: 'cr:' + c.id, m: r.m, right, opts: shuffle([right, ...d]).map(id => ({ id, html: esc(settings.lang === 'ru' ? RV[id].ru : RV[id].en) })),
+      head: `<div class="fl big">🏞️</div><small>${t.sq_cr} ${tierBadge(r.m)}</small><h2>${esc(ctName(c))}</h2><div class="rtype">${flag(c.c, 'sm')} ${esc(nm(BY_ID[c.c]))}</div>`,
+      answer: settings.lang === 'ru' ? r.ru : r.en, check: x => checkNames(x, c.rivers.flatMap(id => [RV[id].ru, RV[id].en])),
+      reveal: `${flag(c.c, 'sm')} <b>${esc(ctName(c))}</b> — ${esc(settings.lang === 'ru' ? r.ru : r.en)}`, line: [flag(c.c, 'sm'), ctName(c), settings.lang === 'ru' ? r.ru : r.en] };
+  }
+  if (s.kind === 'rc') { // река → город
+    const r = s.r, on = riverCities(r.id), c = shuffle(on)[0];
+    const bad = CITIES.filter(x => x.rivers.length && !x.rivers.includes(r.id));
+    const reg = regOf(c.c);
+    // в вариантах не бывает двух городов на одной реке
+    const d = [], used = new Set(c.rivers);
+    for (const x of [...shuffle(bad.filter(x => regOf(x.c) === reg)), ...shuffle(bad)]) {
+      if (d.length >= 3) break;
+      if (d.includes(x.id) || x.rivers.some(v => used.has(v))) continue;
+      d.push(x.id); x.rivers.forEach(v => used.add(v));
+    }
+    const rn = settings.lang === 'ru' ? r.ru : r.en;
+    return { key: 'rc:' + r.id, m: r.m, right: c.id, opts: shuffle([c.id, ...d]).map(id => ({ id, html: `${flag(CT[id].c, 'sm')} ${esc(ctName(CT[id]))}` })),
+      head: `<div class="fl big">🏙️</div><small>${t.sq_rc} ${tierBadge(r.m)}</small><h2>${esc(rn)}</h2>`,
+      answer: ctName(c), check: x => checkNames(x, on.flatMap(z => [z.ru, z.en])),
+      reveal: `${flag(c.c, 'sm')} <b>${esc(ctName(c))}</b> — ${esc(rn)}`, line: ['🏞️', rn, ctName(c)] };
+  }
+  if (s.kind === 'cs') { // приморский город → море/залив
+    const c = s.c, right = c.waters[0], w = W[right];
+    const rel = new Set(); c.waters.forEach(id => { rel.add(id); wAnc(id).forEach(a => rel.add(a)); wDesc(id).forEach(a => rel.add(a)); });
+    const bad = WATERS.filter(x => !rel.has(x.id)).map(x => x.id);
+    const d = pick3(bad.filter(id => W[id].kind !== 'o'), bad);
+    return { key: 'cs:' + c.id, m: w.m, right, opts: shuffle([right, ...d]).map(wOpt),
+      head: `<div class="fl big">⚓</div><small>${t.sq_cs} ${tierBadge(w.m)}</small><h2>${esc(ctName(c))}</h2><div class="rtype">${flag(c.c, 'sm')} ${esc(nm(BY_ID[c.c]))}</div>`,
+      answer: wName(w), check: x => checkNames(x, c.waters.flatMap(id => wNames(W[id]))),
+      reveal: `${flag(c.c, 'sm')} <b>${esc(ctName(c))}</b> — ${esc(wName(w))}`, line: [flag(c.c, 'sm'), ctName(c), wName(w)] };
+  }
+  if (s.kind === 'cw') { // страна → что омывает
+    const c = s.c, direct = cWatersDirect(c.id), full = cWatersFull(c.id), right = shuffle(direct)[0], w = W[right];
+    const ban = new Set([...full, ...wDesc(right)]);
+    const bad = WATERS.filter(x => !ban.has(x.id)).map(x => x.id);
+    const d = pick3(bad, bad);
+    return { key: 'cw:' + c.id, m: Math.max(w.m, mult(c)), right, opts: shuffle([right, ...d]).map(wOpt),
+      head: `${flag(c.id, 'big')}<small>${t.sq_cw} ${tierBadge(Math.max(w.m, mult(c)))}</small><h2>${esc(nm(c))}</h2>`,
+      answer: wName(w), check: x => checkNames(x, direct.flatMap(id => wNames(W[id]))),
+      reveal: `${flag(c.id, 'sm')} <b>${esc(nm(c))}</b> — ${esc(wName(w))}`, line: [flag(c.id, 'sm'), nm(c), wName(w)] };
+  }
+  // море → какую страну омывает
+  const w = s.w, right = shuffle(w.cs)[0], full = wCountriesFull(w.id);
+  const coastal = COUNTRIES.filter(x => !full.has(x.id) && cWatersDirect(x.id).length);
+  const reg = regOf(right);
+  const d = pick3(coastal.filter(x => regOf(x.id) === reg).map(x => x.id), coastal.map(x => x.id));
+  const all = [...full];
+  return { key: 'wc:' + w.id, m: w.m, right, opts: shuffle([right, ...d]).map(cOpt),
+    head: `<div class="fl big">🌊</div><small>${t.sq_wc} ${tierBadge(w.m)}</small><h2>${esc(wName(w))}</h2>`,
+    answer: nm(BY_ID[right]), check: x => { let best = false; for (const id of all) { const r = checkTyped(x, BY_ID[id], 'n'); if (r === 'exact') return r; if (r) best = r; } return best; },
+    reveal: `🌊 <b>${esc(wName(w))}</b> — ${esc(nm(BY_ID[right]))} ${flag(right, 'sm')}`, line: ['🌊', wName(w), nm(BY_ID[right])] };
+}
+// равномерно по видам вопросов
+function buildSeaQs() {
+  const groups = {};
+  seaSeeds().forEach(s => { (groups[s.kind] = groups[s.kind] || []).push(s); });
+  const queues = shuffle(Object.keys(groups)).map(k => shuffle(groups[k]));
+  const out = [];
+  while (queues.some(q => q.length)) shuffle(queues).forEach(q => { if (q.length) out.push(q.pop()); });
+  return out.map(s => Object.assign(seaQuestion(s), { onOk: () => { stats.seaOk++; } }));
+}
+const seaCount = () => seaSeeds().length;
+
+function renderSeas() {
+  const t = T(), k = genKey('sea'), best = stats.genBest[k], bt = stats.genBestTime[k];
+  $('#seas').innerHTML = `
+    <header><button class="back" data-act="home">‹ ${t.back}</button><div style="flex:1"><h1>🌊 ${t.seasTitle}</h1><div class="sub">${t.seasSub}</div></div></header>
+    <div class="card">
+      <div class="type-hint" style="margin:0 0 12px">${t.seasHint}</div>
+      <div class="label">${t.type}</div>
+      ${typeSeg('stype', settings.stype)}
+      <div class="label">${t.regionOne}</div>
+      <div class="chips">${SEA_REGS.map(r => `<button class="chip ${settings.sreg === r ? 'on' : ''}" data-act="xset" data-k="sreg" data-v="${r}">${t['sr_' + r]}</button>`).join('')}</div>
+      ${endless(settings.stype) ? '' : lenChips('slen', settings.slen, seaCount())}
+      <div class="best-line">${t.best}: ${best != null ? best : '—'}${bt != null ? ` · ⏱ ${fmtTime(bt)}` : ''}</div>
+    </div>
+    <button class="btn" data-act="gstart" data-v="sea">▶ ${t.start}</button>`;
+}
+
+// ===== ОБЩИЙ ДВИЖОК (Курорты, Моря и реки) =====
+const GEN = {
+  res: { type: () => settings.rtype, len: () => settings.rlen, build: buildResQs, menu: 'resorts', title: () => `🏖 ${T()['d_' + settings.rdir]}`, name: () => T().resorts },
+  sea: { type: () => settings.stype, len: () => settings.slen, build: buildSeaQs, menu: 'seas', title: () => `🌊 ${T()['sr_' + settings.sreg]}`, name: () => T().seasTitle }
+};
+const genKey = sec => sec === 'res'
+  ? `res_${settings.rtype}_${settings.rdir}_${endless(settings.rtype) ? '' : settings.rlen}`
+  : `sea_${settings.stype}_${settings.sreg}_${endless(settings.stype) ? '' : settings.slen}`;
+
+function startGen(sec) {
+  endGame();
+  const cfg = GEN[sec], type = cfg.type();
+  let qs = cfg.build();
+  if (!endless(type) && cfg.len() !== 'all') qs = qs.slice(0, cfg.len());
+  if (!qs.length) return;
+  game = {
+    gen: true, sec, kind: 'gen', type, key: genKey(sec), qs, i: 0, asked: 0, score: 0, streak: 0, maxStreak: 0,
+    wrong: [], hintUsed: false, locked: false, xp: 0, rank0: rankIdx(stats.xp), newAch: [], over: false,
+    t0: Date.now(), lives: type === 'lives' ? 3 : 0
+  };
+  go('game');
+  if (type === 'blitz') { game.deadline = Date.now() + 60000; timerId = setInterval(tickBlitz, 100); }
+  else timerId = setInterval(tickClock, 500);
+  renderGenQ();
+}
+
+function genTopRight(n) {
+  if (game.type === 'blitz') return `<b id="timerTxt">⏱ ${Math.ceil(Math.max(0, game.deadline - Date.now()) / 1000)}</b>`;
+  const clock = `<span id="clockTxt">⏱ ${fmtTime(Date.now() - game.t0)}</span>`;
+  if (game.type === 'lives') return `<span class="lives">${hearts(game.lives)}</span> · ${clock}`;
+  return `${game.i + 1} / ${n} · ${clock}`;
+}
+function genBar(n) {
+  if (game.type === 'blitz') { const left = Math.max(0, game.deadline - Date.now()); return `<div class="bar"><i id="timerBar" class="${left < 10000 ? 'low' : ''}" style="width:${left / 600}%;transition:none"></i></div>`; }
+  if (game.type === 'lives') return `<div class="bar"><i style="width:${game.lives / 3 * 100}%;background:#e5484d"></i></div>`;
+  return `<div class="bar"><i style="width:${game.i / n * 100}%"></i></div>`;
+}
+function renderGenQ() {
+  const t = T(), q = game.qs[game.i], n = game.qs.length, hard = game.type === 'hardcore';
+  const pre = game.type === 'blitz' ? '⚡ ' : hard ? '💀 ' : game.type === 'lives' ? '❤️ ' : '';
+  const answers = hard
+    ? `<form class="hard" id="hardForm" autocomplete="off">
+         <input id="hardIn" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="${t.typeAnswer}">
+         <button class="btn" type="submit">${t.answerBtn}</button>
+       </form><div class="hard-hint" id="hardHint"></div>`
+    : `<div class="opts">${q.opts.map((o, k) => `<button class="opt" data-key="${k + 1}" data-act="gopt" data-id="${o.id}">${o.html}</button>`).join('')}</div>`;
+  $('#game').innerHTML = `
+    <div class="top"><span>${pre}${GEN[game.sec].title()}</span><span>${genTopRight(n)}</span></div>
+    ${genBar(n)}
+    <div class="top"><span>✅ ${game.score} · ⭐ ${game.xp} XP</span><span>${game.streak >= 3 ? '🔥' : '⚡'} ${t.streak}: ${game.streak}</span></div>
+    <div class="q">${q.head}</div>
+    ${answers}
+    <div class="reveal" id="reveal"></div>
+    <div class="tools">
+      <button class="link" data-act="gquit">✕ ${t.quit}</button>
+      ${hard ? `<button class="link" data-act="gskip">${t.dontKnow}</button>` : ''}
+      <button class="link" data-act="ghint" ${game.hintUsed ? 'disabled' : ''}>${hard ? t.hintBtn : '💡 50/50'}</button>
+    </div>`;
+  game.locked = false;
+  if (hard) {
+    $('#hardForm').addEventListener('submit', e => { e.preventDefault(); answerGenTyped($('#hardIn').value); });
+    setTimeout(() => { const i = $('#hardIn'); if (i) i.focus(); }, 50);
+  }
+}
+
+function resolveGen(ok, close) {
+  const t = T(), q = game.qs[game.i];
   let gain = 0;
+  game.asked++; stats.answered++;
   if (ok) {
     game.score++; game.streak++; stats.correct++;
     game.maxStreak = Math.max(game.maxStreak, game.streak);
     stats.bestStreak = Math.max(stats.bestStreak, game.streak);
-    if (!stats.resKnown.includes(r.id)) stats.resKnown.push(r.id);
-    gain = Math.round(10 * rmult(r));
+    if (q.onOk) q.onOk();
+    gain = Math.round((game.type === 'hardcore' ? 20 : game.type === 'blitz' ? 5 : 10) * q.m);
     game.xp += gain; stats.xp += gain;
-    const milestone = game.streak === 3 || (game.streak >= 5 && game.streak % 5 === 0);
-    if (milestone) { praise(t.streakMsg(game.streak), 'mega'); confetti(45); sfx('mega'); hapticImpact('heavy'); }
-    else { praise(t.praise[Math.floor(Math.random() * t.praise.length)]); confetti(14); sfx('ok'); haptic('success'); }
+    if (game.type === 'lives' && game.streak % 10 === 0 && game.lives < 3) { // 10 подряд — жизнь назад (не больше трёх)
+      game.lives++; praise(t.lifeBack, 'mega'); confetti(40); sfx('mega'); hapticImpact('heavy');
+    } else if (game.streak === 3 || (game.streak >= 5 && game.streak % 5 === 0)) {
+      praise(t.streakMsg(game.streak), 'mega'); confetti(45); sfx('mega'); hapticImpact('heavy');
+    } else {
+      praise(close ? t.almost : t.praise[Math.floor(Math.random() * t.praise.length)]);
+      confetti(game.type === 'blitz' ? 6 : 14); sfx('ok'); haptic('success');
+    }
   } else {
     game.streak = 0;
-    game.wrong.push(r.id);
+    game.wrong.push(q);
     sfx('bad'); haptic('error');
+    if (game.type === 'blitz') { game.deadline -= 3000; praise(t.penalty, 'minus'); }
+    if (game.type === 'lives') { game.lives--; praise(game.lives > 0 ? '💔' : t.noLives, 'minus'); }
   }
-  $('#reveal').innerHTML = `${flag(r.c, 'sm')} <b>${esc(rname(r))}</b> — ${esc(nm(BY_ID[r.c]))}${gain ? ` <span class="gain">+${gain} XP</span>` : ''}`;
+  $('#reveal').innerHTML = `${q.reveal}${gain ? ` <span class="gain">+${gain} XP</span>` : ''}`;
+  if (game.type === 'lives') { const l = document.querySelector('#game .lives'); if (l) l.textContent = hearts(game.lives); }
   checkAch(game);
   saveAll();
-  setTimeout(nextResQ, ok ? 900 : 1900);
+  if (game.type === 'lives' && game.lives <= 0) { stopTimer(); setTimeout(finishGen, 1700); return; }
+  setTimeout(nextGenQ, game.type === 'blitz' ? (ok ? 350 : 1000) : (ok ? 900 : 1900));
 }
 
-function useResHint() {
-  if (!game || !game.res || game.hintUsed || game.locked) return;
+function answerGen(id) {
+  if (!game || !game.gen || game.locked) return;
+  game.locked = true;
+  const q = game.qs[game.i];
+  document.querySelectorAll('#game .opt').forEach(b => {
+    b.disabled = true;
+    if (b.dataset.id === q.right) b.classList.add('ok');
+    else if (b.dataset.id === id) b.classList.add('bad');
+  });
+  resolveGen(id === q.right, false);
+}
+function answerGenTyped(text) {
+  if (!game || !game.gen || game.locked) return;
+  if (!norm(text)) { const i = $('#hardIn'); if (i) i.focus(); return; }
+  game.locked = true;
+  const q = game.qs[game.i], res = q.check(text), inp = $('#hardIn');
+  inp.readOnly = true; inp.classList.add(res ? 'ok' : 'bad');
+  if (!res) inp.value = `${T().youTyped}: ${text}`;
+  resolveGen(!!res, res === 'close');
+}
+function skipGen() {
+  if (!game || !game.gen || game.locked) return;
+  game.locked = true;
+  const inp = $('#hardIn'); if (inp) { inp.readOnly = true; inp.classList.add('bad'); }
+  resolveGen(false, false);
+}
+function hintGen() {
+  if (!game || !game.gen || game.hintUsed || game.locked) return;
   game.hintUsed = true;
   const q = game.qs[game.i];
-  const wrong = shuffle(q.opts.filter(id => id !== q.r.c)).slice(0, 2);
-  document.querySelectorAll('.opt').forEach(b => { if (wrong.includes(b.dataset.id)) { b.classList.add('gone'); b.disabled = true; } });
-  document.querySelector('[data-act="rhint"]').disabled = true;
+  if (game.type === 'hardcore') {
+    $('#hardHint').textContent = T().hintLetter(q.answer[0].toUpperCase(), q.answer.replace(/[\s\-—'’.,]/g, '').length);
+  } else {
+    const wrong = shuffle(q.opts.map(o => o.id).filter(id => id !== q.right)).slice(0, 2);
+    document.querySelectorAll('#game .opt').forEach(b => { if (wrong.includes(b.dataset.id)) { b.classList.add('gone'); b.disabled = true; } });
+  }
+  document.querySelector('[data-act="ghint"]').disabled = true;
 }
-
-function nextResQ() {
-  if (!game || !game.res || game.over) return;
+function nextGenQ() {
+  if (!game || !game.gen || game.over) return;
   game.i++;
-  if (game.i >= game.qs.length) finishRes(); else renderResQ();
+  if (game.i >= game.qs.length) {
+    if (endless(game.type)) game.qs = game.qs.concat(GEN[game.sec].build()); // в блице и на жизнях вопросы не кончаются
+    else return finishGen();
+  }
+  renderGenQ();
 }
-
-function finishRes() {
-  if (!game || game.over) return;
+function finishGen() {
+  if (!game || !game.gen || game.over) return;
   game.over = true;
   stopTimer();
   game.time = Date.now() - game.t0;
   stats.played++;
-  const prev = stats.resBest[game.key] || 0;
+  const prev = stats.genBest[game.key] || 0;
   let record = false, fastRec = false;
-  if (game.score > prev) { stats.resBest[game.key] = game.score; record = true; }
-  if (!game.wrong.length && game.asked > 0) {
-    const pt = stats.resBestTime[game.key];
-    if (pt == null || game.time < pt) { fastRec = pt != null; stats.resBestTime[game.key] = game.time; }
+  if (game.score > prev) { stats.genBest[game.key] = game.score; record = true; }
+  if (!endless(game.type) && !game.wrong.length && game.asked > 0) {
+    const pt = stats.genBestTime[game.key];
+    if (pt == null || game.time < pt) { fastRec = pt != null; stats.genBestTime[game.key] = game.time; }
   }
+  if (game.type === 'blitz') stats.blitzBest = Math.max(stats.blitzBest, game.score);
   checkAch(game);
   saveAll();
   const rankUp = rankIdx(stats.xp) > game.rank0;
-  renderResResult(record, rankUp, fastRec);
+  renderGenResult(record, rankUp, fastRec);
   go('result');
-  if (record || rankUp || fastRec || game.score / game.qs.length >= 0.7) setTimeout(() => { confetti(rankUp ? 140 : 90); sfx('win'); haptic('success'); }, 250);
+  const total = endless(game.type) ? Math.max(game.asked, 1) : game.qs.length;
+  if (record || rankUp || fastRec || game.score / total >= 0.7) setTimeout(() => { confetti(rankUp ? 140 : 90); sfx('win'); haptic('success'); }, 250);
 }
-
-function renderResResult(record, rankUp, fastRec) {
-  const t = T(), n = game.qs.length, pct = Math.round(game.score / n * 100);
-  const emoji = pct >= 90 ? '🏆' : pct >= 70 ? '🌴' : pct >= 40 ? '🏖️' : '🧳';
-  const uniq = [...new Set(game.wrong)];
+function renderGenResult(record, rankUp, fastRec) {
+  const t = T(), end = endless(game.type), n = end ? game.asked : game.qs.length;
+  const pct = n ? Math.round(game.score / n * 100) : 0;
+  const emoji = end ? (game.score >= 25 ? '🏆' : game.score >= 12 ? '🔥' : '💪') : pct >= 90 ? '🏆' : pct >= 70 ? '🎉' : pct >= 40 ? '👍' : '📚';
+  const seen = new Set(), uniq = game.wrong.filter(q => !seen.has(q.key) && seen.add(q.key));
   const list = uniq.length
-    ? `<div class="label">${t.mist}</div>` + uniq.map(id => { const r = RES_BY[id]; return `<div class="item">${flag(r.c, 'sm')}<span>${esc(rname(r))}</span><span class="c">${esc(nm(BY_ID[r.c]))}</span></div>`; }).join('')
+    ? `<div class="label">${t.mist}</div>` + uniq.map(q => `<div class="item">${q.line[0]}<span>${esc(q.line[1])}</span><span class="c">${esc(q.line[2])}</span></div>`).join('')
     : `<div style="text-align:center">${t.noMist}</div>`;
   const achHtml = game.newAch.length
     ? `<div class="card"><div class="label">${t.achGot}</div><div class="ach-row">${game.newAch.map(a => `<span>${a.i} ${esc(achText(a)[0])}</span>`).join('')}</div></div>` : '';
-  const best = stats.resBest[game.key], bt = stats.resBestTime[game.key];
+  const best = stats.genBest[game.key], bt = stats.genBestTime[game.key];
   $('#result').innerHTML = `
-    <div class="top"><span>🏖 ${t.resorts} · ${t['d_' + settings.rdir]}</span><span></span></div>
+    <div class="top"><span>${GEN[game.sec].title()}</span><span></span></div>
     <div class="emoji">${emoji}</div>
-    <div class="big-score">${game.score}/${n}</div>
-    <div class="pct">${t.timeLine(fmtTime(game.time), (game.time / 1000 / Math.max(game.asked, 1)).toFixed(1).replace('.', settings.lang === 'ru' ? ',' : '.'))}</div>
-    ${fastRec ? `<span class="badge">${t.newBestTime}</span>` : (bt != null ? `<div class="pct">${t.bestTime}: ${fmtTime(bt)}</div>` : '')}
+    <div class="big-score">${end ? game.score : `${game.score}/${n}`}</div>
+    <div class="pct">${end ? `${t.answers}: ${n} · ${t.correctW}: ${game.score}` : t.timeLine(fmtTime(game.time), (game.time / 1000 / Math.max(game.asked, 1)).toFixed(1).replace('.', settings.lang === 'ru' ? ',' : '.'))}</div>
+    ${fastRec ? `<span class="badge">${t.newBestTime}</span>` : (!end && bt != null ? `<div class="pct">${t.bestTime}: ${fmtTime(bt)}</div>` : '')}
     <div class="xp-line">⭐ ${t.gotXp(game.xp)}</div>
     ${rankUp ? `<span class="badge">${t.newRank(rankName(rankIdx(stats.xp)))}</span>` : ''}
     ${record ? `<span class="badge">${t.newRecord}</span>` : `<div class="pct">${t.best}: ${best}</div>`}
     <button class="btn" data-act="share">📤 ${t.share}</button>
     <div class="row">
       <button class="btn sec" data-act="again">↻ ${t.again}</button>
-      <button class="btn sec" data-act="resorts">🏖 ${t.resorts}</button>
+      <button class="btn sec" data-act="${GEN[game.sec].menu}">${game.sec === 'res' ? '🏖' : '🌊'} ${GEN[game.sec].name()}</button>
     </div>
     ${achHtml}
     <div class="card">${list}</div>`;
@@ -1691,6 +2178,16 @@ const KIDS_IDS = ('RU BY FR DE IT ES PT ENG IE NL PL GR FI NO SE DK LT EE ' +
   'CN JP IN TR TH VN KZ KR KP EG ZA MA US CA MX BR AR CU CL AU NZ').split(' ');
 const ENGLAND = { id: 'ENG', r: 'eu', en: { n: 'England', c: 'London' }, ru: { n: 'Англия', c: 'Лондон' } };
 const kidC = id => id === 'ENG' ? ENGLAND : BY_ID[id];
+// Детские моря: 4 океана и 9 морей
+const KIDW = 'pacific atlantic indian arctic black med red baltic caribbean japan caspian barents white'.split(' ');
+function kidSea(c) {
+  const cid = c.id === 'ENG' ? 'GB' : c.id;
+  const full = cWatersFull(cid), direct = cWatersDirect(cid).filter(id => KIDW.includes(id));
+  const cand = direct.length ? direct : KIDW.filter(id => full.has(id));
+  if (!cand.length) return null;
+  const right = shuffle(cand)[0], ban = new Set([...full, ...wDesc(right)]);
+  return { right, opts: shuffle([right, ...shuffle(KIDW.filter(id => !ban.has(id))).slice(0, 3)]) };
+}
 const KIDS_FLAGS = KIDS_IDS.map(kidC).filter(Boolean);
 const KIDS_CAPS = KIDS_FLAGS; // все 39 стран и во флагах, и в столицах
 function kidFlag(c, cls) {
@@ -1706,15 +2203,19 @@ function renderKids() {
     <header><button class="back" data-act="home">‹ ${t.back}</button><div style="flex:1"><h1>👶 ${t.kidsTitle}</h1><div class="sub">${t.kidsSub}</div></div></header>
     <button class="daily kflag" data-act="kstart" data-v="flag"><b>${t.kFlags}</b><span>${t.kCount(KIDS_FLAGS.length)}</span></button>
     <button class="daily kcap" data-act="kstart" data-v="cap"><b>${t.kCaps}</b><span>${t.kCount(KIDS_CAPS.length)}</span></button>
+    <button class="daily ksea" data-act="kstart" data-v="sea"><b>${t.kSea}</b><span>${t.kCount(KIDS_FLAGS.filter(c => kidSea(c)).length)}</span></button>
     <div class="type-hint" style="text-align:center;margin-top:6px">${t.kidsNote}</div>`;
 }
 
 function startKids(mode) {
   endGame();
-  const pool = mode === 'flag' ? KIDS_FLAGS : KIDS_CAPS;
-  const qs = shuffle(pool).slice(0, 10).map(c => ({
-    c, opts: shuffle([c, ...shuffle(pool.filter(x => x.id !== c.id)).slice(0, 2)]).map(x => x.id)
-  }));
+  let qs;
+  if (mode === 'sea') {
+    qs = shuffle(KIDS_FLAGS.filter(c => kidSea(c))).slice(0, 10).map(c => Object.assign({ c }, kidSea(c)));
+  } else {
+    const pool = mode === 'flag' ? KIDS_FLAGS : KIDS_CAPS;
+    qs = shuffle(pool).slice(0, 10).map(c => ({ c, right: c.id, opts: shuffle([c, ...shuffle(pool.filter(x => x.id !== c.id)).slice(0, 3)]).map(x => x.id) }));
+  }
   kgame = { mode, qs, i: 0, score: 0, locked: false, over: false };
   go('game');
   renderKidsQ();
@@ -1722,12 +2223,12 @@ function startKids(mode) {
 
 function renderKidsQ() {
   const t = T(), q = kgame.qs[kgame.i], c = q.c, n = kgame.qs.length, L = settings.lang;
-  const label = id => kgame.mode === 'flag' ? kidC(id)[L].n : kidC(id)[L].c;
+  const label = id => kgame.mode === 'sea' ? wName(W[id]) : kgame.mode === 'flag' ? kidC(id)[L].n : kidC(id)[L].c;
   const qHtml = kgame.mode === 'flag'
     ? `${kidFlag(c, 'kid')}<small>${t.kQFlag}</small>`
-    : `${kidFlag(c, 'kid')}<small>${t.kQCap}</small><h2>${esc(c[L].n)}</h2>`;
+    : `${kidFlag(c, 'kid')}<small>${kgame.mode === 'sea' ? t.kQSea : t.kQCap}</small><h2>${esc(c[L].n)}</h2>`;
   $('#game').innerHTML = `
-    <div class="top"><span>👶 ${kgame.mode === 'flag' ? t.kFlags : t.kCaps}</span><span>${kgame.i + 1} / ${n}</span></div>
+    <div class="top"><span>👶 ${kgame.mode === 'flag' ? t.kFlags : kgame.mode === 'sea' ? t.kSea : t.kCaps}</span><span>${kgame.i + 1} / ${n}</span></div>
     <div class="bar"><i style="width:${kgame.i / n * 100}%"></i></div>
     <div class="top"><span>⭐ ${kgame.score}</span><span></span></div>
     <div class="q">${qHtml}</div>
@@ -1740,10 +2241,10 @@ function renderKidsQ() {
 function answerKids(id) {
   if (!kgame || kgame.locked || kgame.over) return;
   kgame.locked = true;
-  const t = T(), q = kgame.qs[kgame.i], ok = id === q.c.id, L = settings.lang;
+  const t = T(), q = kgame.qs[kgame.i], ok = id === q.right, L = settings.lang;
   document.querySelectorAll('.opt').forEach(b => {
     b.disabled = true;
-    if (b.dataset.id === q.c.id) b.classList.add('ok');
+    if (b.dataset.id === q.right) b.classList.add('ok');
     else if (b.dataset.id === id) b.classList.add('soft'); // мягкая ошибка — без красного
   });
   if (ok) {
@@ -1751,7 +2252,7 @@ function answerKids(id) {
     praise(t.kPraise[Math.floor(Math.random() * t.kPraise.length)]);
     confetti(20); sfx('ok'); haptic('success');
   } else {
-    const right = kgame.mode === 'flag' ? q.c[L].n : q.c[L].c;
+    const right = kgame.mode === 'sea' ? wName(W[q.right]) : kgame.mode === 'flag' ? q.c[L].n : q.c[L].c;
     $('#reveal').innerHTML = `${t.kAlmost} <b>${esc(right)}</b> ${kidFlag(q.c, 'sm')}`;
   }
   setTimeout(nextKidsQ, ok ? 1100 : 2300);
@@ -1768,7 +2269,7 @@ function finishKids() {
   const t = T(), s = kgame.score, n = kgame.qs.length;
   const stars = s >= n ? '⭐⭐⭐' : s >= 7 ? '⭐⭐' : '⭐';
   $('#result').innerHTML = `
-    <div class="top"><span>👶 ${kgame.mode === 'flag' ? t.kFlags : t.kCaps}</span><span></span></div>
+    <div class="top"><span>👶 ${kgame.mode === 'flag' ? t.kFlags : kgame.mode === 'sea' ? t.kSea : t.kCaps}</span><span></span></div>
     <div class="stars">${stars}</div>
     <div class="big-score">${t.kDone(s, n)}</div>
     <div class="pct">${s >= 7 ? t.kGreat : t.kTry}</div>
@@ -2059,14 +2560,22 @@ document.addEventListener('click', e => {
   else if (a === 'kopt') answerKids(el.dataset.id);
   else if (a === 'kquit') { if (kgame) kgame.over = true; kgame = null; renderKids(); go('kids'); }
   else if (a === 'resorts') { endGame(); renderResorts(); go('resorts'); }
-  else if (a === 'rset') { settings[el.dataset.k] = (el.dataset.k === 'rlen' && v !== 'all') ? Number(v) : v; saveAll(); renderResorts(); }
-  else if (a === 'rstart') startResort();
-  else if (a === 'ropt') answerRes(el.dataset.id);
-  else if (a === 'rhint') useResHint();
+  else if (a === 'xset') {
+    const k = el.dataset.k;
+    settings[k] = ((k === 'rlen' || k === 'slen') && v !== 'all') ? Number(v) : v;
+    saveAll();
+    if (k[0] === 'r') renderResorts(); else renderSeas();
+  }
+  else if (a === 'seas') { endGame(); renderSeas(); go('seas'); }
+  else if (a === 'gstart') startGen(v);
+  else if (a === 'gopt') answerGen(el.dataset.id);
+  else if (a === 'gskip') skipGen();
+  else if (a === 'ghint') hintGen();
+  else if (a === 'gquit') { const sec = game && game.sec; endGame(); if (sec === 'res') { renderResorts(); go('resorts'); } else { renderSeas(); go('seas'); } }
   else if (a === 'ach') { renderAch(); go('ach'); }
   else if (a === 'quit' && game && game.kind === 'normal') { endGame(); renderCountries(); go('countries'); }
   else if (a === 'quit' || a === 'home') { endGame(); go('home'); }
-  else if (a === 'again') { if (game && game.res) { startResort(); } else { const k = game ? game.kind : 'normal'; endGame(); startGame(k); } }
+  else if (a === 'again') { if (game && game.gen) { startGen(game.sec); } else { const k = game ? game.kind : 'normal'; endGame(); startGame(k); } }
   else if (a === 'share') share();
 });
 
