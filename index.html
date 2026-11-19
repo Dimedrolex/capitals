@@ -207,6 +207,18 @@ h1{font-size:24px;line-height:1.2}
 .lives{letter-spacing:1px}
 #seas header{justify-content:flex-start;align-items:center}
 .daily.kids{background:linear-gradient(135deg,#a18cd1,#f78fb3)}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.tile{border:0;border-radius:18px;padding:14px;min-height:118px;color:#fff;text-align:left;cursor:pointer;display:flex;flex-direction:column;font:inherit}
+.tile i{font-style:normal;font-size:32px;line-height:1;margin-bottom:auto}
+.tile b{font-size:16px;margin-top:10px}.tile span{font-size:12px;opacity:.9;margin-top:2px}
+.tile.countries{background:linear-gradient(135deg,#667eea,#764ba2)}
+.tile.seas{background:linear-gradient(135deg,#1e3c72,#2a9df4)}
+.tile.res{background:linear-gradient(135deg,#00b4db,#0083b0)}
+.tile.kids{background:linear-gradient(135deg,#a18cd1,#f78fb3)}
+.tile:active,.daily:active{transform:scale(.97)}
+.resume{display:flex;align-items:center;gap:10px;border-radius:16px;padding:12px 14px;margin-bottom:12px;background:linear-gradient(135deg,#f6d365,#fda085);color:#3a2300}
+.resume>div:first-child{flex:1;min-width:0}.resume b{display:block;font-size:15px}.resume span{font-size:12px;opacity:.85}
+.resume .rbtns{display:flex;gap:6px}.resume .btn{width:auto;margin:0;padding:10px 14px;font-size:14px}
 .daily.kflag{background:linear-gradient(135deg,#ff9a44,#fc6076);padding:22px 16px}
 .daily.kcap{background:linear-gradient(135deg,#43cea2,#185a9d);padding:22px 16px}
 .daily.kflag b,.daily.kcap b{font-size:20px}
@@ -227,7 +239,8 @@ h1{font-size:24px;line-height:1.2}
   .wrap{background:var(--bg);margin:28px auto;border-radius:26px;box-shadow:0 24px 70px rgba(0,0,0,.14);padding:24px 26px 34px;min-height:calc(100vh - 56px);max-width:540px}
   .wrap.wide{max-width:1120px}
   .daily,.btn,.chip,.opt,.tcard,.back,.snd{transition:transform .15s,box-shadow .15s,filter .15s,background .15s}
-  .daily:hover{transform:translateY(-3px);box-shadow:0 10px 26px rgba(0,0,0,.18)}
+  .daily:hover,.tile:hover{transform:translateY(-3px);box-shadow:0 10px 26px rgba(0,0,0,.18)}
+  .tile{transition:transform .15s,box-shadow .15s}
   .btn:hover:not(:disabled){filter:brightness(1.06);transform:translateY(-1px)}
   .chip:hover{border-color:var(--accent)}
   .opt:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,0,0,.1)}
@@ -520,6 +533,8 @@ const I18N = {
     countriesBtn: '🌍 Страны и столицы', countriesBtnSub: n => `Столицы, контуры, блиц и 3 жизни — ${n} стран`,
     countriesTitle: 'Страны и столицы', countriesSub: n => `${n} стран мира`, toCountries: 'К странам',
     kidsBtn: '👶 Для детей', kidsBtnSub: 'Флаги и столицы известных стран — без очков и таймера',
+    exResume: '🎓 Незаконченный экзамен', exGo: 'Продолжить',
+    tCountries: 'Страны', tCountriesSub: 'Столицы, контуры, блиц', tSeas: 'Моря и реки', tSeasSub: 'Реки, моря, заливы', tRes: 'Курорты', tResSub: 'Пляжи, острова, горы', tKids: 'Детям', tKidsSub: 'Флаги и столицы',
     kidsTitle: 'Для детей', kidsSub: 'Самые известные страны мира', kidsNote: 'Без очков, таймера и рекордов — просто играем и учимся 🙂',
     kFlags: '🚩 Угадай флаг', kCaps: '🏙 Угадай столицу', kCount: n => `${n} стран · 10 вопросов`,
     kQFlag: 'Какая это страна?', kQCap: 'Какая столица у страны',
@@ -582,6 +597,8 @@ const I18N = {
     countriesBtn: '🌍 Countries & capitals', countriesBtnSub: n => `Capitals, shapes, blitz and 3 lives — ${n} countries`,
     countriesTitle: 'Countries & capitals', countriesSub: n => `${n} countries of the world`, toCountries: 'Countries',
     kidsBtn: '👶 For kids', kidsBtnSub: 'Flags and capitals of famous countries — no points, no timer',
+    exResume: '🎓 Unfinished exam', exGo: 'Continue',
+    tCountries: 'Countries', tCountriesSub: 'Capitals, shapes, blitz', tSeas: 'Seas & rivers', tSeasSub: 'Rivers, seas, gulfs', tRes: 'Resorts', tResSub: 'Beaches, islands, ski', tKids: 'Kids', tKidsSub: 'Flags and capitals',
     kidsTitle: 'For kids', kidsSub: 'The best-known countries of the world', kidsNote: 'No points, timer or records — just play and learn 🙂',
     kFlags: '🚩 Guess the flag', kCaps: '🏙 Guess the capital', kCount: n => `${n} countries · 10 questions`,
     kQFlag: 'Which country is this?', kQCap: 'What is the capital of',
@@ -674,14 +691,50 @@ function haptic(type) {
 
 // ===== ХРАНИЛИЩЕ (localStorage + облако Telegram) =====
 const cloudOk = () => tgv('6.9') && tg.CloudStorage;
+// В облаке Telegram одно значение — максимум 4096 символов, поэтому режем на куски cq_<k>_0, cq_<k>_1… и пишем их число в cq_<k>_n
+const CHUNK = 3800, cloudTimers = {}, cloudLast = {};
+function cloudPut(k, s) {
+  if (!cloudOk() || cloudLast[k] === s) return;
+  cloudLast[k] = s;
+  try {
+    const n = Math.max(1, Math.ceil(s.length / CHUNK)), cs = tg.CloudStorage;
+    for (let i = 0; i < n; i++) cs.setItem(`cq_${k}_${i}`, s.slice(i * CHUNK, (i + 1) * CHUNK));
+    cs.setItem(`cq_${k}_n`, String(n));
+  } catch (e) {}
+}
 const store = {
   get(k, d) { try { const v = localStorage.getItem('cq_' + k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
-  set(k, v) {
+  set(k, v, local) {
     const s = JSON.stringify(v);
     try { localStorage.setItem('cq_' + k, s); } catch (e) {}
-    if (cloudOk()) { try { tg.CloudStorage.setItem('cq_' + k, s); } catch (e) {} }
-  }
+    if (local || !cloudOk()) return;
+    clearTimeout(cloudTimers[k]); // не дёргаем облако на каждый ответ — пишем через секунду тишины
+    cloudTimers[k] = setTimeout(() => cloudPut(k, s), 1000);
+  },
+  del(k) { try { localStorage.removeItem('cq_' + k); } catch (e) {} }
 };
+// Читаем значения из облака: новый формат (куски) или старый (одно значение)
+function cloudLoad(keys, cb) {
+  const cs = tg.CloudStorage;
+  cs.getItems(keys.flatMap(k => ['cq_' + k + '_n', 'cq_' + k]), (err, v) => {
+    if (err || !v) return; // облако не ответило — ничего не трогаем
+    const need = [];
+    keys.forEach(k => { const n = parseInt(v['cq_' + k + '_n'], 10) || 0; for (let i = 0; i < n; i++) need.push(`cq_${k}_${i}`); });
+    const done = parts => {
+      const out = {};
+      keys.forEach(k => {
+        const n = parseInt(v['cq_' + k + '_n'], 10) || 0;
+        let s = null;
+        if (n) { s = ''; for (let i = 0; i < n; i++) { const p = parts[`cq_${k}_${i}`]; if (p == null) { s = null; break; } s += p; } }
+        if (s == null && v['cq_' + k]) s = v['cq_' + k];
+        if (s) { try { out[k] = JSON.parse(s); } catch (e) {} }
+      });
+      cb(out);
+    };
+    if (!need.length) return done({});
+    cs.getItems(need, (e2, parts) => { if (!e2 && parts) done(parts); });
+  });
+}
 function detectLang() {
   const lc = ((tg && tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.language_code) || navigator.language || 'en').toLowerCase();
   return /^(ru|uk|be|kk)/.test(lc) ? 'ru' : 'en';
@@ -692,8 +745,9 @@ let mistakes = store.get('mistakes', []);
 // Приводим старые/кривые данные к текущему формату
 function fixSettings() {
   if (!settings || typeof settings !== 'object') settings = {};
+  const fresh = !Array.isArray(settings.regions) && settings.region == null; // новый игрок — по умолчанию Европа
   if (!Array.isArray(settings.regions)) {
-    settings.regions = (!settings.region || settings.region === 'world') ? PARTS.slice() : [settings.region];
+    settings.regions = fresh ? ['eu'] : (settings.region === 'world') ? PARTS.slice() : [settings.region];
   }
   settings.regions = [...new Set(settings.regions.map(r => GRP[r] || r))].filter(r => PARTS.includes(r)); // старые регионы → материки
   if (!settings.regions.length) settings.regions = PARTS.slice();
@@ -708,12 +762,12 @@ function fixSettings() {
   } catch (e) {}
   if (typeof settings.sound !== 'boolean') settings.sound = true;
   delete settings.rmode;
-  if (!Array.isArray(settings.rdirs)) settings.rdirs = (!settings.rdir || settings.rdir === 'all') ? RES_PARTS.slice() : [settings.rdir];
+  if (!Array.isArray(settings.rdirs)) settings.rdirs = fresh ? ['eu'] : (!settings.rdir || settings.rdir === 'all') ? RES_PARTS.slice() : [settings.rdir];
   settings.rdirs = settings.rdirs.filter(d => RES_PARTS.includes(d)); if (!settings.rdirs.length) settings.rdirs = RES_PARTS.slice();
   delete settings.rdir;
   if (!TYPES.includes(settings.rtype)) settings.rtype = 'exam';
   if (!TYPES.includes(settings.stype)) settings.stype = 'exam';
-  if (!Array.isArray(settings.sregs)) settings.sregs = (!settings.sreg || settings.sreg === 'world') ? SEA_PARTS.slice() : [settings.sreg];
+  if (!Array.isArray(settings.sregs)) settings.sregs = fresh ? ['eu'] : (!settings.sreg || settings.sreg === 'world') ? SEA_PARTS.slice() : [settings.sreg];
   settings.sregs = [...new Set(settings.sregs.map(r => r === 'af' || r === 'am' ? 'afam' : r))].filter(r => SEA_PARTS.includes(r));
   if (!settings.sregs.length) settings.sregs = SEA_PARTS.slice();
   delete settings.sreg;
@@ -733,18 +787,23 @@ function fixStats() {
 fixSettings(); fixStats();
 function saveAll() { store.set('settings', settings); store.set('stats', stats); store.set('mistakes', mistakes); }
 
-// Подтягиваем прогресс из облака Telegram (синхронизация между устройствами)
+// Подтягиваем прогресс из облака Telegram (синхронизация между устройствами).
+// Берём облако, только если там прогресс не меньше, чем на этом устройстве (старое облако могло не сохраниться из-за лимита 4 КБ)
 if (cloudOk()) {
   try {
-    tg.CloudStorage.getItems(['cq_settings', 'cq_stats', 'cq_mistakes'], (err, vals) => {
-      if (err || !vals) return;
-      try {
-        if (vals.cq_settings) settings = JSON.parse(vals.cq_settings);
-        if (vals.cq_stats) stats = JSON.parse(vals.cq_stats);
-        if (vals.cq_mistakes) mistakes = JSON.parse(vals.cq_mistakes);
-      } catch (e) {}
-      fixSettings(); fixStats();
-      if (document.getElementById('home').classList.contains('active')) renderHome();
+    cloudLoad(['settings', 'stats', 'mistakes'], c => {
+      const cs = c.stats, cloudAns = cs && typeof cs === 'object' ? (cs.answered || 0) : -1;
+      if (cloudAns >= (stats.answered || 0) && cloudAns > 0) {
+        if (c.settings) settings = c.settings;
+        stats = cs;
+        if (c.mistakes) mistakes = c.mistakes;
+        fixSettings(); fixStats();
+        try { if (document.getElementById('home').classList.contains('active')) renderHome(); } catch (e) {}
+      }
+      saveAll();
+      // сразу пишем облако в новом формате и только потом удаляем старые ключи
+      cloudPut('settings', JSON.stringify(settings)); cloudPut('stats', JSON.stringify(stats)); cloudPut('mistakes', JSON.stringify(mistakes));
+      try { tg.CloudStorage.removeItems(['cq_settings', 'cq_stats', 'cq_mistakes']); } catch (e) {}
     });
   } catch (e) {}
 }
@@ -1046,10 +1105,13 @@ function renderHome() {
     </header>
     ${rankCard()}
     <button class="daily" data-act="daily"><b>${t.daily}</b><span>${d != null ? t.dailyDone(d) : t.dailyDesc}</span></button>
-    <button class="daily countries" data-act="countries"><b>${t.countriesBtn}</b><span>${t.countriesBtnSub(COUNTRIES.length)}</span></button>
-    <button class="daily seas" data-act="seas"><b>${t.seasBtn}</b><span>${t.seasBtnSub}</span></button>
-    <button class="daily res" data-act="resorts"><b>${t.resortsBtn}</b><span>${t.resortsBtnSub}</span></button>
-    <button class="daily kids" data-act="kids"><b>${t.kidsBtn}</b><span>${t.kidsBtnSub}</span></button>
+    ${examResumeCard()}
+    <div class="tiles">
+      <button class="tile countries" data-act="countries"><i>🌍</i><b>${t.tCountries}</b><span>${t.tCountriesSub}</span></button>
+      <button class="tile seas" data-act="seas"><i>🌊</i><b>${t.tSeas}</b><span>${t.tSeasSub}</span></button>
+      <button class="tile res" data-act="resorts"><i>🏖</i><b>${t.tRes}</b><span>${t.tResSub}</span></button>
+      <button class="tile kids" data-act="kids"><i>🧸</i><b>${t.tKids}</b><span>${t.tKidsSub}</span></button>
+    </div>
     <div class="row">
       <button class="btn sec" data-act="errors" ${mistakes.length ? '' : 'disabled'}>${t.errors(mistakes.length)}</button>
       <button class="btn sec" data-act="ref">📖 ${t.ref}</button>
@@ -1107,6 +1169,52 @@ function buildQuestions(pool, rnd) {
     return { c, opts: shuffle([c, ...cand.slice(0, 3)], rnd).map(o => o.id) };
   });
 }
+// ===== АВТОСОХРАНЕНИЕ ЭКЗАМЕНА (только на этом устройстве) =====
+const EX_F = ['gen', 'sec', 'kind', 'mode', 'type', 'key', 'asked', 'score', 'streak', 'maxStreak', 'wrong', 'xp', 'limit', 'title', 'rank0', 'newAch'];
+function examSave() {
+  if (!game || game.type !== 'exam' || game.kind === 'errors') return;
+  if (game.wrong.length > game.limit || game.i + 1 >= game.qs.length) { store.del('exam'); return; }
+  const snap = { i: game.i + 1, n: game.qs.length, el: Date.now() - game.t0, lang: settings.lang };
+  EX_F.forEach(f => { snap[f] = game[f]; });
+  snap.qs = game.gen ? game.qs : game.qs.map(q => ({ c: q.c.id, opts: q.opts }));
+  if (!game.gen) snap.wrong = game.wrong.slice();
+  store.set('exam', snap, true);
+}
+function examSaved() {
+  const s = store.get('exam', null);
+  return s && Array.isArray(s.qs) && s.i < s.qs.length ? s : null;
+}
+async function examResume() {
+  const s = examSaved(); if (!s) return;
+  endGame();
+  if (!s.gen && s.mode === 'shape') {
+    go('game'); $('#game').innerHTML = `<div class="loading">${T().loadingShapes}</div>`;
+    try { await loadGeo(); } catch (e) { toast(T().shapesFail); go('home'); return; }
+  }
+  const g = { i: s.i, hintUsed: false, locked: false, over: false, lives: 0 };
+  EX_F.forEach(f => { g[f] = s[f]; });
+  if (s.gen) {
+    g.qs = s.qs.map(q => Object.assign(q, { onOk: s.sec === 'res'
+      ? () => { const id = String(q.key).slice(2); if (!stats.resKnown.includes(id)) stats.resKnown.push(id); }
+      : () => { stats.seaOk++; } }));
+  } else {
+    g.qs = s.qs.filter(q => BY_ID[q.c]).map(q => ({ c: BY_ID[q.c], opts: q.opts }));
+    g.base = g.qs.map(q => q.c);
+  }
+  if (!g.newAch) g.newAch = [];
+  game = g;
+  go('game');
+  game.t0 = Date.now() - (s.el || 0);
+  timerId = setInterval(tickClock, 500);
+  game.gen ? renderGenQ() : renderQuestion();
+}
+function examResumeCard() {
+  const s = examSaved(); if (!s) return '';
+  const t = T();
+  return `<div class="resume"><div><b>${t.exResume}</b><span>${esc(s.title || '')} · ${s.i}/${s.qs.length} · ${t.examErr(s.wrong.length, s.limit)}</span></div>
+    <div class="rbtns"><button class="btn" data-act="exres">▶ ${t.exGo}</button><button class="btn sec" data-act="exdrop">✕</button></div></div>`;
+}
+
 function stopTimer() { if (timerId) { clearInterval(timerId); timerId = null; } }
 function endGame() { stopTimer(); if (game) game.over = true; game = null; kgame = null; }
 
@@ -1258,10 +1366,10 @@ function resolve(ok, close) {
   $('#reveal').innerHTML = `${flag(q.c.id, 'sm')} <b>${esc(cp(q.c))}</b> — ${t.capOf} ${esc(nm(q.c))}${gain ? ` <span class="gain">+${gain} XP</span>` : ''}`;
   if (game.type === 'lives') { const l = document.querySelector('#game .lives'); if (l) l.textContent = hearts(game.lives); }
   checkAch(game);
-  saveAll();
+  saveAll(); examSave();
   if (game.type === 'lives' && game.lives <= 0) { stopTimer(); setTimeout(finish, 1700); return; }
   if (game.type === 'exam' && game.wrong.length > game.limit) { game.failed = true; stopTimer(); praise('❌', 'minus'); setTimeout(finish, 1700); return; }
-  const delay = game.type === 'blitz' ? (ok ? 350 : 1000) : (ok ? 900 : 1900);
+  const delay = game.type === 'blitz' ? (ok ? 350 : 2500) : (ok ? 900 : 1900);
   setTimeout(nextQuestion, delay);
 }
 
@@ -1324,6 +1432,7 @@ function nextQuestion() {
 
 function finish() {
   if (!game || game.over) return;
+  if (game.type === 'exam') store.del('exam');
   game.over = true;
   stopTimer();
   game.time = Date.now() - game.t0;
@@ -2170,10 +2279,10 @@ function resolveGen(ok, close) {
   if (game.type === 'lives') { const l = document.querySelector('#game .lives'); if (l) l.textContent = hearts(game.lives); }
   if (game.type === 'exam') { const e = document.querySelector('#game .errs'); if (e) e.textContent = t.examErr(game.wrong.length, game.limit); }
   checkAch(game);
-  saveAll();
+  saveAll(); examSave();
   if (game.type === 'lives' && game.lives <= 0) { stopTimer(); setTimeout(finishGen, 1700); return; }
   if (game.type === 'exam' && game.wrong.length > game.limit) { game.failed = true; stopTimer(); praise('❌', 'minus'); setTimeout(finishGen, 1700); return; }
-  setTimeout(nextGenQ, game.type === 'blitz' ? (ok ? 350 : 1000) : (ok ? 900 : 1900));
+  setTimeout(nextGenQ, game.type === 'blitz' ? (ok ? 350 : 2500) : (ok ? 900 : 1900));
 }
 
 function answerGen(id) {
@@ -2225,6 +2334,7 @@ function nextGenQ() {
 }
 function finishGen() {
   if (!game || !game.gen || game.over) return;
+  if (game.type === 'exam') store.del('exam');
   game.over = true;
   stopTimer();
   game.time = Date.now() - game.t0;
@@ -2680,6 +2790,8 @@ document.addEventListener('click', e => {
   else if (a === 'countries') { endGame(); renderCountries(); go('countries'); }
   else if (a === 'start') startGame('normal');
   else if (a === 'daily') startGame('daily');
+  else if (a === 'exres') examResume();
+  else if (a === 'exdrop') { store.del('exam'); renderHome(); }
   else if (a === 'errors') startGame('errors');
   else if (a === 'ref') { renderRef(); go('ref'); }
   else if (a === 'refreg') { refRegion = v; refSel = null; renderRefChips(); renderSel(); fillRef(); updateGlobe(); flyRegion(v); }
