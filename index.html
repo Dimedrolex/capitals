@@ -145,8 +145,12 @@ h1{font-size:24px;line-height:1.2}
 .rank .bar i{background:linear-gradient(90deg,#ffb100,#ff6a00)}
 .rank small{color:var(--hint);font-size:12px}
 .loading{text-align:center;color:var(--hint);padding:80px 20px;font-size:16px}
-.shape{display:block;width:240px;height:170px;margin:0 auto 4px}
-.shape path{fill:var(--accent);stroke:var(--accent);stroke-width:1.2px;vector-effect:non-scaling-stroke;stroke-linejoin:round}
+.shape.map{display:block;width:100%;max-width:420px;aspect-ratio:7/5;height:auto;margin:0 auto 6px;border-radius:16px;box-shadow:0 4px 16px rgba(0,0,0,.12)}
+.shape.map .sea{fill:#bfe3f7}
+.shape.map .land{fill:#e9e4d8;stroke:#ffffff;stroke-width:1px;vector-effect:non-scaling-stroke;stroke-linejoin:round}
+.shape.map .target{fill:#ff7a1a;stroke:#b84a00;stroke-width:1.5px;vector-effect:non-scaling-stroke;stroke-linejoin:round}
+.shape.map .mring{fill:none;stroke:#e5484d;stroke-width:2.5px;vector-effect:non-scaling-stroke}
+@media (prefers-color-scheme: dark){.shape.map .sea{fill:#1d3b55}.shape.map .land{fill:#4a5260;stroke:#2a3038}}
 .hard{display:grid;gap:10px}
 .hard input{width:100%;border:2px solid transparent;background:var(--bg2);color:var(--text);padding:16px;border-radius:14px;font-size:18px;outline:none}
 .hard input:focus{border-color:var(--accent)}
@@ -183,6 +187,18 @@ h1{font-size:24px;line-height:1.2}
 .opt .fl.sm{margin-right:6px}
 .daily.countries{background:linear-gradient(135deg,#667eea,#764ba2)}
 #countries header{justify-content:flex-start;align-items:center}
+.diploma{position:relative;margin:6px auto 12px;max-width:380px;text-align:center;padding:22px 18px 16px;border-radius:18px;
+  background:linear-gradient(135deg,#fff8e1,#ffe9b0);color:#5a3d00;border:3px double #c9962b;box-shadow:0 8px 26px rgba(201,150,43,.25)}
+.diploma small{display:block;letter-spacing:.2em;font-size:11px;font-weight:700;opacity:.75}
+.diploma b{display:block;font-size:24px;margin:6px 0 2px;font-family:Georgia,serif}
+.diploma span{display:block;font-size:15px}
+.dip-grade{margin:10px 0 6px;font-size:15px}
+.dip-grade em{font-style:normal;font-weight:800;font-size:30px;color:#b8541a;margin-left:6px}
+.dip-seal{position:absolute;right:12px;top:10px;font-size:30px;transform:rotate(12deg)}
+.exam-fail{text-align:center;margin:10px 0;padding:14px;border-radius:14px;background:rgba(229,72,77,.1)}
+.exam-fail b{display:block;color:var(--bad);font-size:20px}
+.exam-fail span{color:var(--hint);font-size:14px}
+.errs{font-weight:600}
 .daily.seas{background:linear-gradient(135deg,#1e3c72,#2a9df4)}
 .daily.ksea{background:linear-gradient(135deg,#36d1dc,#5b86e5);padding:22px 16px}
 .daily.ksea b{font-size:20px}
@@ -287,6 +303,7 @@ SI|eu|Slovenia|Ljubljana|Словения|Любляна
 ES|eu|Spain|Madrid|Испания|Мадрид
 SE|eu|Sweden|Stockholm|Швеция|Стокгольм
 CH|eu|Switzerland|Bern|Швейцария|Берн
+UA|eu|Ukraine|Kyiv|Украина|Киев
 GB|eu|United Kingdom|London|Великобритания|Лондон
 VA|eu|Vatican City|Vatican City|Ватикан|Ватикан
 AF|as|Afghanistan|Kabul|Афганистан|Кабул
@@ -303,6 +320,7 @@ IN|as|India|New Delhi|Индия|Нью-Дели
 ID|as|Indonesia|Jakarta|Индонезия|Джакарта
 IR|as|Iran|Tehran|Иран|Тегеран
 IQ|as|Iraq|Baghdad|Ирак|Багдад
+IL|as|Israel|Jerusalem|Израиль|Иерусалим
 JP|as|Japan|Tokyo|Япония|Токио
 JO|as|Jordan|Amman|Иордания|Амман
 KZ|as|Kazakhstan|Astana|Казахстан|Астана
@@ -443,8 +461,10 @@ const COUNTRIES = RAW.trim().split('\n').map(l => {
   return { id, r, en: { n: en, c: enc }, ru: { n: ru, c: ruc } };
 });
 const BY_ID = Object.fromEntries(COUNTRIES.map(c => [c.id, c]));
-const REGIONS = ['world', 'eu', 'as', 'af', 'na', 'cb', 'sa', 'oc'];
-const PARTS = ['eu', 'as', 'af', 'na', 'cb', 'sa', 'oc'];
+// Регионы игры: Европа · Азия и Океания · Африка · Америка (в данных страны помечены подробнее)
+const PARTS = ['eu', 'aso', 'af', 'am'];
+const REGIONS = ['world', ...PARTS];
+const GRP = { eu: 'eu', as: 'aso', oc: 'aso', af: 'af', na: 'am', cb: 'am', sa: 'am', aso: 'aso', am: 'am' };
 const LENS = [10, 20, 'all'];
 
 // ===== ТЕКСТЫ =====
@@ -453,15 +473,15 @@ const I18N = {
     title: 'GeoQuiz', sub: 'Викторина о странах и курортах мира',
     daily: '🔥 Ежедневный челлендж', dailyDesc: '10 вопросов — одинаковые для всех сегодня',
     dailyDone: s => `Сегодня: ${s}/10 ✓ · можно переиграть`,
-    mode: 'Что угадываем', c2cap: 'Столицу по стране', cap2c: 'Страну по столице', shape: 'Страну по контуру',
-    type: 'Тип игры', normal: 'Обычная', blitz: '⚡ Блиц 60 с', hardcore: '💀 Хардкор', lives: '❤️ 3 жизни',
-    typeHint: { normal: '4 варианта ответа', blitz: 'Максимум ответов за 60 секунд, ошибка −3 с', hardcore: 'Без вариантов — печатаешь ответ сам, опыт ×2', lives: 'Вопросы без конца и 3 ❤️. Ошибка — минус жизнь, 10 подряд — жизнь назад (не больше трёх)' },
+    mode: 'Что угадываем', c2cap: 'Столицу по стране', cap2c: 'Страну по столице', shape: 'Страну на карте',
+    type: 'Тип игры', exam: '🎓 Экзамен', normal: 'Обычная', blitz: '⚡ Блиц 60 с', hardcore: '💀 Хардкор', lives: '❤️ 3 жизни',
+    typeHint: { exam: 'Все вопросы раздела с лимитом ошибок. Сдал — диплом и бонус опыта', normal: '4 варианта ответа', blitz: 'Максимум ответов за 60 секунд', hardcore: 'Без вариантов — печатаешь ответ сам, опыт ×2', lives: 'Вопросы без конца и 3 ❤️. Ошибка — минус жизнь, 10 подряд — жизнь назад (не больше трёх)' },
     region: 'Регионы — можно несколько', world: 'Весь мир', eu: 'Европа', as: 'Азия', af: 'Африка',
-    na: 'Сев. Америка', cb: 'Карибы', sa: 'Юж. Америка', oc: 'Океания',
+    na: 'Сев. Америка', cb: 'Карибы', sa: 'Юж. Америка', oc: 'Океания', aso: 'Азия и Океания', am: 'Америка',
     len: 'Вопросов', all: 'До конца', start: 'Начать',
     errors: n => `🧠 Ошибки (${n})`, ref: 'Справочник', achBtn: (a, b) => `🏅 Достижения ${a}/${b}`,
     played: 'Игр', acc: 'Точность', bestStreak: 'Лучшая серия',
-    qc2cap: 'Столица страны', qcap2c: 'Чья это столица?', qshape: 'Чей это контур?',
+    qc2cap: 'Столица страны', qcap2c: 'Чья это столица?', qshape: 'Какая страна выделена на карте?',
     streak: 'Серия', quit: 'Выйти', capOf: 'столица',
     newRecord: '🏆 Новый рекорд!', best: 'Рекорд', mist: 'Запомни', noMist: 'Ни одной ошибки! 🔥',
     again: 'Ещё раз', share: 'Позвать друзей', home: 'В меню',
@@ -478,21 +498,25 @@ const I18N = {
     hintLetter: (l, n) => `Начинается на «${l}», букв: ${n}`, hintBtn: '💡 Первая буква',
     penalty: '−3 с', timeUp: '⏱ Время вышло!', answers: 'Ответов', correctW: 'правильно',
     youTyped: 'Ты написал', almost: 'Засчитано (почти точно) ✍️',
-    loadingShapes: '🗺️ Загружаем контуры стран…', shapesFail: 'Контуры не загрузились — проверь интернет',
+    loadingShapes: '🗺️ Загружаем карту…', shapesFail: 'Контуры не загрузились — проверь интернет',
     rankNext: (r, n) => `до «${r}» ещё ${n} XP`, rankMax: 'Высшее звание!', newRank: r => `🎉 Новое звание: ${r}!`,
     resorts: 'Курорты', resortsSub: n => `Морские, островные и горнолыжные — ${n} мест`,
     resortsBtn: '🏖 Курорты', resortsBtnSub: 'Где этот курорт? Бали, Хургада, Куршевель, Занзибар…',
     r_where_hint: 'Показываем курорт — выбери, в какой он стране',
     r_where_q: 'В какой стране?',
-    island: 'остров', resort: 'курорт', skiResort: 'горнолыжный курорт', dir: 'Направление',
-    d_all: 'Все направления', d_tr: '🇹🇷 Турция, Египет и арабские страны', d_eu: '🇪🇺 Европа и Россия', d_asia: '🌏 Азия', d_exo: '🌴 Экзотика',
+    island: 'остров', resort: 'курорт', skiResort: 'горнолыжный курорт', dir: 'Направление', dirMulti: 'Направления — можно несколько',
+    d_all: 'Все направления', d_tr: '🇹🇷 Турция, Египет и арабские страны', d_eu: '🇪🇺 Европа и Россия', d_aso: '🌏 Азия и Океания', d_afr: '🌴 Индийский океан и Африка', d_am: '🌎 Америка и Карибы',
     shareRes: (s, n, tm) => `Я угадал ${s} из ${n} курортов${tm || ''} в GeoQuiz 🏖 Сможешь лучше?`,
     seasBtn: '🌊 Моря и реки', seasBtnSub: 'На какой реке Прага? Что омывает Италию?', seasTitle: 'Моря и реки', seasSub: 'Реки городов, моря стран, заливы и океаны',
     seasHint: 'Вопросы вперемешку: реки городов, моря у городов и стран — и наоборот', regionOne: 'Регион',
-    sr_world: 'Весь мир', sr_eu: 'Европа', sr_as: 'Азия', sr_af: 'Африка', sr_am: 'Америка', sr_oc: 'Океания',
+    sr_world: 'Весь мир', sr_eu: 'Европа', sr_aso: 'Азия и Океания', sr_afam: 'Африка и Америка',
     sq_cr: 'На какой реке стоит', sq_rc: 'Какой город стоит на реке', sq_cs: 'У какого моря или залива стоит', sq_cw: 'Что омывает', sq_wc: 'Какую страну омывает',
     lifeBack: '❤️ +1 жизнь!', noLives: '💔 Жизни кончились', shareSea: (s, n, tm) => `Я угадал ${s} из ${n} про моря и реки${tm || ''} в GeoQuiz 🌊 Сможешь лучше?`,
     shareRun: s => `На 3 жизнях я угадал ${s} в GeoQuiz ❤️ Побьёшь?`, kSea: '🌊 Моря и океаны', kQSea: 'Что омывает',
+    examErr: (e, l) => `❌ ${e} из ${l}`, examLimit: l => `Можно ошибиться: ${l}`, examQs: n => `вопросов: ${n}`, dipTitle: 'ДИПЛОМ', dipPassed: r => `сдал(а) экзамен «${r}»`, dipGrade: 'Оценка',
+    examFail: 'Экзамен не сдан', examFailWhy: (l, a, n) => `Ошибок больше ${l} · пройдено ${a} из ${n}`, examRetry: 'Пересдать', examBonus: n => `🎓 +${n} XP за сдачу`, examHave: g => `🎓 Диплом на ${g} уже есть — бонус за оценку выше`,
+    dipMenu: g => `🎓 Диплом: ${g}`, dipNone: '🎓 Ещё не сдан', player: 'Игрок',
+    shareExam: (r, g) => `Сдал экзамен «${r}» на ${g} в GeoQuiz 🎓 А ты сдашь?`,
     countriesBtn: '🌍 Страны и столицы', countriesBtnSub: n => `Столицы, контуры, блиц и 3 жизни — ${n} стран`,
     countriesTitle: 'Страны и столицы', countriesSub: n => `${n} стран мира`, toCountries: 'К странам',
     kidsBtn: '👶 Для детей', kidsBtnSub: 'Флаги и столицы известных стран — без очков и таймера',
@@ -511,15 +535,15 @@ const I18N = {
     title: 'GeoQuiz', sub: 'A quiz about countries and resorts',
     daily: '🔥 Daily challenge', dailyDesc: '10 questions — the same for everyone today',
     dailyDone: s => `Today: ${s}/10 ✓ · play again`,
-    mode: 'What to guess', c2cap: 'Capital by country', cap2c: 'Country by capital', shape: 'Country by shape',
-    type: 'Game type', normal: 'Classic', blitz: '⚡ Blitz 60s', hardcore: '💀 Hardcore', lives: '❤️ 3 lives',
-    typeHint: { normal: '4 answer options', blitz: 'As many as you can in 60 s, mistake −3 s', hardcore: 'No options — type the answer yourself, XP ×2', lives: 'Endless questions and 3 ❤️. A mistake costs a life, 10 in a row gives one back (max three)' },
+    mode: 'What to guess', c2cap: 'Capital by country', cap2c: 'Country by capital', shape: 'Country on the map',
+    type: 'Game type', exam: '🎓 Exam', normal: 'Classic', blitz: '⚡ Blitz 60s', hardcore: '💀 Hardcore', lives: '❤️ 3 lives',
+    typeHint: { exam: 'Every question of the section with an error limit. Pass — get a diploma and bonus XP', normal: '4 answer options', blitz: 'As many as you can in 60 s', hardcore: 'No options — type the answer yourself, XP ×2', lives: 'Endless questions and 3 ❤️. A mistake costs a life, 10 in a row gives one back (max three)' },
     region: 'Regions — pick several', world: 'Whole world', eu: 'Europe', as: 'Asia', af: 'Africa',
-    na: 'N. America', cb: 'Caribbean', sa: 'S. America', oc: 'Oceania',
+    na: 'N. America', cb: 'Caribbean', sa: 'S. America', oc: 'Oceania', aso: 'Asia & Oceania', am: 'Americas',
     len: 'Questions', all: 'All of them', start: 'Start',
     errors: n => `🧠 Mistakes (${n})`, ref: 'Atlas', achBtn: (a, b) => `🏅 Achievements ${a}/${b}`,
     played: 'Games', acc: 'Accuracy', bestStreak: 'Best streak',
-    qc2cap: 'Capital of', qcap2c: 'Which country is this the capital of?', qshape: 'Whose shape is this?',
+    qc2cap: 'Capital of', qcap2c: 'Which country is this the capital of?', qshape: 'Which country is highlighted?',
     streak: 'Streak', quit: 'Quit', capOf: 'capital of',
     newRecord: '🏆 New record!', best: 'Best', mist: 'Remember these', noMist: 'No mistakes at all! 🔥',
     again: 'Play again', share: 'Challenge friends', home: 'Menu',
@@ -536,21 +560,25 @@ const I18N = {
     hintLetter: (l, n) => `Starts with “${l}”, ${n} letters`, hintBtn: '💡 First letter',
     penalty: '−3 s', timeUp: "⏱ Time's up!", answers: 'Answers', correctW: 'correct',
     youTyped: 'You typed', almost: 'Accepted (close enough) ✍️',
-    loadingShapes: '🗺️ Loading country shapes…', shapesFail: "Shapes didn't load — check your connection",
+    loadingShapes: '🗺️ Loading the map…', shapesFail: "Shapes didn't load — check your connection",
     rankNext: (r, n) => `${n} XP to “${r}”`, rankMax: 'Top rank!', newRank: r => `🎉 New rank: ${r}!`,
     resorts: 'Resorts', resortsSub: n => `Beach, island and ski resorts — ${n} places`,
     resortsBtn: '🏖 Resorts', resortsBtnSub: 'Where is it? Bali, Hurghada, Courchevel, Zanzibar…',
     r_where_hint: 'We show a resort — pick the country it is in',
     r_where_q: 'Which country?',
-    island: 'island', resort: 'resort', skiResort: 'ski resort', dir: 'Destination',
-    d_all: 'All destinations', d_tr: '🇹🇷 Turkey, Egypt & Arab countries', d_eu: '🇪🇺 Europe & Russia', d_asia: '🌏 Asia', d_exo: '🌴 Exotic',
+    island: 'island', resort: 'resort', skiResort: 'ski resort', dir: 'Destination', dirMulti: 'Destinations — pick several',
+    d_all: 'All destinations', d_tr: '🇹🇷 Turkey, Egypt & Arab countries', d_eu: '🇪🇺 Europe & Russia', d_aso: '🌏 Asia & Oceania', d_afr: '🌴 Indian Ocean & Africa', d_am: '🌎 Americas & Caribbean',
     shareRes: (s, n, tm) => `I got ${s} of ${n} resorts${tm || ''} in GeoQuiz 🏖 Can you beat me?`,
     seasBtn: '🌊 Seas & rivers', seasBtnSub: 'Which river is Prague on? What washes Italy?', seasTitle: 'Seas & rivers', seasSub: 'City rivers, country seas, gulfs and oceans',
     seasHint: 'Mixed questions: city rivers, seas by cities and countries — and the other way round', regionOne: 'Region',
-    sr_world: 'Whole world', sr_eu: 'Europe', sr_as: 'Asia', sr_af: 'Africa', sr_am: 'Americas', sr_oc: 'Oceania',
+    sr_world: 'Whole world', sr_eu: 'Europe', sr_aso: 'Asia & Oceania', sr_afam: 'Africa & Americas',
     sq_cr: 'Which river is this city on', sq_rc: 'Which city stands on the river', sq_cs: 'Which sea or gulf is this city on', sq_cw: 'What washes the shores of', sq_wc: 'Which country does it wash',
     lifeBack: '❤️ +1 life!', noLives: '💔 Out of lives', shareSea: (s, n, tm) => `I got ${s} of ${n} on seas & rivers${tm || ''} in GeoQuiz 🌊 Can you beat me?`,
     shareRun: s => `I got ${s} on 3 lives in GeoQuiz ❤️ Can you beat it?`, kSea: '🌊 Seas & oceans', kQSea: 'What washes the shores of',
+    examErr: (e, l) => `❌ ${e} of ${l}`, examLimit: l => `Mistakes allowed: ${l}`, examQs: n => `${n} questions`, dipTitle: 'DIPLOMA', dipPassed: r => `passed the “${r}” exam`, dipGrade: 'Grade',
+    examFail: 'Exam failed', examFailWhy: (l, a, n) => `More than ${l} mistakes · ${a} of ${n} done`, examRetry: 'Retake', examBonus: n => `🎓 +${n} XP for passing`, examHave: g => `🎓 You already have ${g} — bonus only for a higher grade`,
+    dipMenu: g => `🎓 Diploma: ${g}`, dipNone: '🎓 Not passed yet', player: 'Player',
+    shareExam: (r, g) => `I passed the “${r}” exam with ${g} in GeoQuiz 🎓 Can you?`,
     countriesBtn: '🌍 Countries & capitals', countriesBtnSub: n => `Capitals, shapes, blitz and 3 lives — ${n} countries`,
     countriesTitle: 'Countries & capitals', countriesSub: n => `${n} countries of the world`, toCountries: 'Countries',
     kidsBtn: '👶 For kids', kidsBtnSub: 'Flags and capitals of famous countries — no points, no timer',
@@ -567,7 +595,16 @@ const I18N = {
   }
 };
 const MODES = ['c2cap', 'cap2c', 'shape'];
-const TYPES = ['normal', 'blitz', 'lives']; // хардкор убран
+const SEA_PARTS = ['eu', 'aso', 'afam'];          // Моря и реки: Европа · Азия и Океания · Африка и Америка
+const RES_PARTS = ['tr', 'eu', 'aso', 'afr', 'am']; // Курорты: 5 направлений
+// выбор нескольких пунктов, как регионы в Странах: «всё» = все пункты
+function toggleIn(list, all, v) {
+  if (v === 'world' || v === 'all') return all.slice();
+  if (all.every(p => list.includes(p))) return [v];          // из «всего» тап = только этот пункт
+  if (list.includes(v)) { const r = list.filter(x => x !== v); return r.length ? r : all.slice(); }
+  return list.concat(v);
+}
+const TYPES = ['exam', 'blitz', 'lives']; // хардкор убран; обычная игра → экзамен
 
 // ===== ЗВАНИЯ =====
 // [нужно XP, значок, название RU, название EN, описание RU, описание EN]
@@ -589,7 +626,7 @@ const rankIdx = xp => { let i = 0; RANKS.forEach((r, k) => { if (xp >= r[0]) i =
 const rankName = i => `${RANKS[i][1]} ${settings.lang === 'ru' ? RANKS[i][2] : RANKS[i][3]}`;
 
 // ===== ДОСТИЖЕНИЯ =====
-const REG_ICON = { eu: '🏰', as: '🐉', af: '🦁', na: '🗽', cb: '🏝️', sa: '🦜', oc: '🦘' };
+const REG_ICON = { eu: '🏰', aso: '🐉', af: '🦁', am: '🗽' };
 const ACH = [
   { id: 'first', i: '👣', ru: ['Первый шаг', 'Первый правильный ответ'], en: ['First step', 'First correct answer'], t: s => s.correct >= 1 },
   { id: 's10', i: '🔥', ru: ['Горячая серия', '10 правильных подряд'], en: ['Hot streak', '10 correct in a row'], t: s => s.bestStreak >= 10 },
@@ -607,8 +644,8 @@ const ACH = [
   })),
   { id: 'blitz15', i: '⏱️', ru: ['Быстрые руки', '15+ правильных в блице'], en: ['Quick hands', '15+ correct in blitz'], t: s => s.blitzBest >= 15 },
   { id: 'blitz25', i: '🌩️', ru: ['Молния', '25+ правильных в блице'], en: ['Lightning', '25+ correct in blitz'], t: s => s.blitzBest >= 25 },
-  { id: 'shape10', i: '👁️', ru: ['Глаз-алмаз', 'Угадал 10 контуров'], en: ['Eagle eye', 'Guessed 10 shapes'], t: s => s.shapeOk >= 10 },
-  { id: 'shape50', i: '🔭', ru: ['Картограф-самоучка', 'Угадал 50 контуров'], en: ['Self-taught mapmaker', 'Guessed 50 shapes'], t: s => s.shapeOk >= 50 },
+  { id: 'shape10', i: '👁️', ru: ['Глаз-алмаз', 'Угадал 10 стран на карте'], en: ['Eagle eye', 'Guessed 10 countries on the map'], t: s => s.shapeOk >= 10 },
+  { id: 'shape50', i: '🔭', ru: ['Картограф-самоучка', 'Угадал 50 стран на карте'], en: ['Self-taught mapmaker', 'Guessed 50 countries on the map'], t: s => s.shapeOk >= 50 },
   { id: 'fast10', i: '🏎️', ru: ['Скорострел', '10 вопросов без ошибок быстрее 40 секунд'], en: ['Speedster', '10 questions with no mistakes in under 40 s'], t: (s, g) => !!(g && g.over && g.type !== 'blitz' && g.type !== 'lives' && g.kind !== 'errors' && g.asked >= 10 && !g.wrong.length && g.time < 40000) },
   { id: 'res10', i: '🏖️', ru: ['Пляжник', 'Угадал 10 разных курортов'], en: ['Beach lover', 'Guessed 10 different resorts'], t: s => s.resKnown.length >= 10 },
   { id: 'res40', i: '🌴', ru: ['Турагент', 'Угадал 40 разных курортов'], en: ['Travel agent', 'Guessed 40 different resorts'], t: s => s.resKnown.length >= 40 },
@@ -658,16 +695,12 @@ function fixSettings() {
   if (!Array.isArray(settings.regions)) {
     settings.regions = (!settings.region || settings.region === 'world') ? PARTS.slice() : [settings.region];
   }
-  settings.regions = settings.regions.filter(r => PARTS.includes(r));
+  settings.regions = [...new Set(settings.regions.map(r => GRP[r] || r))].filter(r => PARTS.includes(r)); // старые регионы → материки
   if (!settings.regions.length) settings.regions = PARTS.slice();
-  if (settings.v !== 2) { // v2: Карибы выделены из Сев. Америки в отдельный регион
-    if (settings.regions.includes('na') && !settings.regions.includes('cb')) settings.regions.push('cb');
-    settings.v = 2;
-  }
   delete settings.region;
   if (!LENS.includes(settings.len)) settings.len = 10;
   if (!MODES.includes(settings.mode)) settings.mode = 'c2cap';
-  if (!TYPES.includes(settings.type)) settings.type = 'normal';
+  if (!TYPES.includes(settings.type)) settings.type = 'exam';
   if (settings.lang !== 'ru' && settings.lang !== 'en') settings.lang = detectLang();
   try { // язык, выбранный в боте (?lang=ru|en), — если игрок сам не переключал язык в игре
     const pl = new URLSearchParams(location.search).get('lang');
@@ -675,16 +708,21 @@ function fixSettings() {
   } catch (e) {}
   if (typeof settings.sound !== 'boolean') settings.sound = true;
   delete settings.rmode;
-  if (!['all', 'tr', 'eu', 'asia', 'exo'].includes(settings.rdir)) settings.rdir = 'all';
-  if (!TYPES.includes(settings.rtype)) settings.rtype = 'normal';
-  if (!TYPES.includes(settings.stype)) settings.stype = 'normal';
-  if (!['world', 'eu', 'as', 'af', 'am', 'oc'].includes(settings.sreg)) settings.sreg = 'world';
+  if (!Array.isArray(settings.rdirs)) settings.rdirs = (!settings.rdir || settings.rdir === 'all') ? RES_PARTS.slice() : [settings.rdir];
+  settings.rdirs = settings.rdirs.filter(d => RES_PARTS.includes(d)); if (!settings.rdirs.length) settings.rdirs = RES_PARTS.slice();
+  delete settings.rdir;
+  if (!TYPES.includes(settings.rtype)) settings.rtype = 'exam';
+  if (!TYPES.includes(settings.stype)) settings.stype = 'exam';
+  if (!Array.isArray(settings.sregs)) settings.sregs = (!settings.sreg || settings.sreg === 'world') ? SEA_PARTS.slice() : [settings.sreg];
+  settings.sregs = [...new Set(settings.sregs.map(r => r === 'af' || r === 'am' ? 'afam' : r))].filter(r => SEA_PARTS.includes(r));
+  if (!settings.sregs.length) settings.sregs = SEA_PARTS.slice();
+  delete settings.sreg;
   if (!LENS.includes(settings.slen)) settings.slen = 10;
   if (!LENS.includes(settings.rlen)) settings.rlen = 10;
 }
 function fixStats() {
   if (!stats || typeof stats !== 'object') stats = {};
-  const d = { played: 0, answered: 0, correct: 0, bestStreak: 0, best: {}, daily: {}, xp: 0, known: [], ach: {}, blitzBest: 0, shapeOk: 0, bestTime: {}, resKnown: [], resBest: {}, resBestTime: {}, genBest: {}, genBestTime: {}, seaOk: 0 };
+  const d = { played: 0, answered: 0, correct: 0, bestStreak: 0, best: {}, daily: {}, xp: 0, known: [], ach: {}, blitzBest: 0, shapeOk: 0, bestTime: {}, resKnown: [], resBest: {}, resBestTime: {}, genBest: {}, genBestTime: {}, seaOk: 0, dip: {} };
   for (const k in d) if (stats[k] == null || typeof stats[k] !== typeof d[k]) stats[k] = d[k];
   if (!Array.isArray(stats.known)) stats.known = [];
   if (!Array.isArray(stats.resKnown)) stats.resKnown = [];
@@ -726,14 +764,15 @@ function mulberry32(a) { return function () { a |= 0; a = a + 0x6D2B79F5 | 0; le
 function shuffle(arr, rnd = Math.random) { const a = arr.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
 const fmtTime = ms => { const s = Math.round(ms / 1000); return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`; };
 const todayKey = () => new Date().toISOString().slice(0, 10);
-const inRegion = r => r === 'world' ? COUNTRIES : COUNTRIES.filter(c => c.r === r);
+const inRegion = r => r === 'world' ? COUNTRIES : COUNTRIES.filter(c => GRP[c.r] === r);
 const isWorld = () => PARTS.every(p => settings.regions.includes(p));
-const selPool = () => COUNTRIES.filter(c => settings.regions.includes(c.r));
+const selPool = () => COUNTRIES.filter(c => settings.regions.includes(GRP[c.r]));
 const regKey = () => isWorld() ? 'world' : settings.regions.slice().sort().join('+');
 const regTitle = () => isWorld() ? T().world : PARTS.filter(p => settings.regions.includes(p)).map(p => T()[p]).join(' + ');
 const bestKey = () => {
   if (settings.type === 'blitz') return `blitz_${settings.mode}_${regKey()}`;
   if (settings.type === 'lives') return `lives_${settings.mode}_${regKey()}`;
+  if (settings.type === 'exam') return `exam_${settings.mode}_${regKey()}`;
   const base = `${settings.mode}_${regKey()}_${settings.len}`;          // старый формат — чтобы сохранить прежние рекорды
   return settings.type === 'hardcore' ? 'hard_' + base : base;
 };
@@ -763,7 +802,7 @@ const tierTag = c => { const m = mult(c); return `<span class="tier t${String(m)
 // Равномерная выборка: регионы чередуются по кругу, чтобы «весь мир» не превращался в «одну Африку»
 function balanced(list, rnd = Math.random) {
   const groups = {};
-  list.forEach(c => { (groups[c.r] = groups[c.r] || []).push(c); });
+  list.forEach(c => { const g = GRP[c.r] || c.r; (groups[g] = groups[g] || []).push(c); });
   const queues = shuffle(Object.keys(groups), rnd).map(r => shuffle(groups[r], rnd));
   const out = [];
   while (queues.some(q => q.length)) {
@@ -806,6 +845,7 @@ const ALIASES = {
   'PG:n': ['Папуа Новая Гвинея', 'Папуа', 'Papua'],
   'DO:n': ['Доминикана'],
   'RU:n': ['Российская Федерация', 'РФ', 'Russian Federation'],
+  'UA:c': ['Kiev', 'Київ'],
   'MD:c': ['Kishinev'],
   'MN:c': ['Улаанбаатар', 'Ulan Bator'],
   'TM:c': ['Ашгабат', 'Ashkhabad'],
@@ -1038,9 +1078,7 @@ function renderCountries() {
         const on = r === 'world' ? isWorld() : (!isWorld() && settings.regions.includes(r));
         return `<button class="chip ${on ? 'on' : ''}" data-act="reg" data-v="${r}">${on && r !== 'world' ? '✓ ' : ''}${t[r]} <small>${inRegion(r).length}</small></button>`;
       }).join('')}</div>
-      ${endless(settings.type) ? '' : `<div class="label">${t.len}</div>
-      <div class="chips">${LENS.map(n => `<button class="chip ${String(settings.len) === String(n) ? 'on' : ''}" data-act="set" data-k="len" data-v="${n}">${n === 'all' ? `${t.all} <small>${selPool().length}</small>` : n}</button>`).join('')}</div>`}
-      <div class="best-line">${t.best}: ${best != null ? best : '—'}</div>
+      <div class="best-line">${settings.type === 'exam' ? `${t.examLimit(countriesLimit())} · ${dipLine(bestKey())}` : `${t.best}: ${best != null ? best : '—'}`}</div>
     </div>
     <button class="btn" data-act="start">▶ ${t.start}</button>
 `;
@@ -1095,13 +1133,14 @@ async function startGame(kind) {
   }
   if (mode === 'shape') base = base.filter(c => shapeOK(c.id));
   let pool = base;
-  if (kind === 'normal' && !endless(type) && settings.len !== 'all') pool = base.slice(0, settings.len);
+  // экзамен — все страны выбранных регионов
   if (!pool.length) { go('home'); return; }
 
   game = {
     kind, mode, type, key: bestKey(), base, qs: buildQuestions(pool, rnd),
     i: 0, asked: 0, score: 0, streak: 0, maxStreak: 0, wrong: [], hintUsed: false, locked: false,
-    xp: 0, rank0: rankIdx(stats.xp), newAch: [], over: false, lives: type === 'lives' ? 3 : 0
+    xp: 0, rank0: rankIdx(stats.xp), newAch: [], over: false, lives: type === 'lives' ? 3 : 0,
+    limit: type === 'exam' ? countriesLimit() : 0, title: regTitle()
   };
   go('game');
   game.t0 = Date.now();
@@ -1144,7 +1183,7 @@ function renderQuestion() {
   let qHtml;
   if (game.mode === 'c2cap') qHtml = `${flag(c.id, 'big')}<small>${t.qc2cap} ${tierTag(c)}</small><h2>${esc(nm(c))}</h2>`;
   else if (game.mode === 'cap2c') qHtml = `<div class="fl big">🏛️</div><small>${t.qcap2c} ${tierTag(c)}</small><h2>${esc(cp(c))}</h2>`;
-  else qHtml = `${shapeSVG(c.id)}<small>${t.qshape} ${tierTag(c)}</small>`;
+  else qHtml = `${mapSVG(c.id)}<small>${t.qshape} ${tierTag(c)}</small>`;
 
   const blitz = game.type === 'blitz', hard = game.type === 'hardcore';
   const left = blitz ? Math.max(0, game.deadline - Date.now()) : 0;
@@ -1213,14 +1252,15 @@ function resolve(ok, close) {
     game.wrong.push(q.c.id);
     if (!mistakes.includes(q.c.id)) mistakes.push(q.c.id);
     sfx('bad'); haptic('error');
-    if (game.type === 'blitz') { game.deadline -= 3000; praise(t.penalty, 'minus'); }
     if (game.type === 'lives') { game.lives--; praise(game.lives > 0 ? '💔' : t.noLives, 'minus'); }
   }
+  if (game.type === 'exam') { const e = document.querySelector('#game .errs'); if (e) e.textContent = t.examErr(game.wrong.length, game.limit); }
   $('#reveal').innerHTML = `${flag(q.c.id, 'sm')} <b>${esc(cp(q.c))}</b> — ${t.capOf} ${esc(nm(q.c))}${gain ? ` <span class="gain">+${gain} XP</span>` : ''}`;
   if (game.type === 'lives') { const l = document.querySelector('#game .lives'); if (l) l.textContent = hearts(game.lives); }
   checkAch(game);
   saveAll();
   if (game.type === 'lives' && game.lives <= 0) { stopTimer(); setTimeout(finish, 1700); return; }
+  if (game.type === 'exam' && game.wrong.length > game.limit) { game.failed = true; stopTimer(); praise('❌', 'minus'); setTimeout(finish, 1700); return; }
   const delay = game.type === 'blitz' ? (ok ? 350 : 1000) : (ok ? 900 : 1900);
   setTimeout(nextQuestion, delay);
 }
@@ -1289,7 +1329,8 @@ function finish() {
   game.time = Date.now() - game.t0;
   stats.played++;
   let record = false, best = null, fastRec = false;
-  if (game.kind === 'errors') { /* «Работа над ошибками»: без рекордов */ }
+  game.exam = game.type === 'exam' && game.kind === 'normal' ? examResult(game, countriesBonus()) : null;
+  if (game.kind === 'errors' || game.exam) { /* без рекордов: «Ошибки» и экзамен */ }
   else if (!endless(game.type) && !game.wrong.length && game.asked > 0) {
     const tk = game.kind === 'daily' ? 'daily' : game.key;
     const prevT = stats.bestTime[tk];
@@ -1298,7 +1339,7 @@ function finish() {
   } else if (!endless(game.type)) {
     game.bestTime = stats.bestTime[game.kind === 'daily' ? 'daily' : game.key];
   }
-  if (game.kind === 'normal') {
+  if (game.kind === 'normal' && !game.exam) {
     const prev = stats.best[game.key] || 0;
     if (game.score > prev) { stats.best[game.key] = game.score; record = game.score > 0; }
     best = stats.best[game.key];
@@ -1316,14 +1357,14 @@ function finish() {
   renderResult(record, best, rankUp, fastRec);
   go('result');
   const total = endless(game.type) ? Math.max(game.asked, 1) : game.qs.length;
-  if (record || rankUp || fastRec || game.score / total >= 0.7) {
-    setTimeout(() => { confetti(rankUp ? 140 : 90); sfx('win'); haptic('success'); }, 250);
+  if (record || rankUp || fastRec || (game.exam && game.exam.passed) || (!game.exam && game.score / total >= 0.7)) {
+    setTimeout(() => { confetti(rankUp || (game.exam && game.exam.passed) ? 140 : 90); sfx('win'); haptic('success'); }, 250);
   }
 }
 
 function renderResult(record, best, rankUp, fastRec) {
   const t = T(), blitz = endless(game.type);
-  const n = blitz ? game.asked : game.qs.length;
+  const n = blitz || game.failed ? game.asked : game.qs.length;
   const pct = n ? Math.round(game.score / n * 100) : 0;
   const emoji = blitz ? (game.score >= 25 ? '🌩️' : game.score >= 15 ? '⚡' : '⏱️') : pct >= 90 ? '🏆' : pct >= 70 ? '🎉' : pct >= 40 ? '👍' : '📚';
   const uniqWrong = [...new Set(game.wrong)];
@@ -1336,6 +1377,7 @@ function renderResult(record, best, rankUp, fastRec) {
   $('#result').innerHTML = `
     <div class="top"><span>${gameTitle()}</span><span></span></div>
     <div class="emoji">${emoji}</div>
+    ${game.exam ? examHtml(game, game.exam, game.title) : ''}
     <div class="big-score">${blitz ? game.score : `${game.score}/${n}`}</div>
     <div class="pct">${blitz ? `${t.answers}: ${n} · ${t.correctW}: ${game.score}` : `${pct}% · ${t.streak}: ${game.maxStreak}`}</div>
     ${blitz ? '' : `<div class="pct">${t.timeLine(fmtTime(game.time), (game.time / 1000 / Math.max(game.asked, 1)).toFixed(1).replace('.', settings.lang === 'ru' ? ',' : '.'))}</div>`}
@@ -1345,7 +1387,7 @@ function renderResult(record, best, rankUp, fastRec) {
     ${record ? `<span class="badge">${t.newRecord}</span>` : best != null ? `<div class="pct">${t.best}: ${best}</div>` : ''}
     <button class="btn" data-act="share">📤 ${t.share}</button>
     <div class="row">
-      <button class="btn sec" data-act="again">↻ ${t.again}</button>
+      <button class="btn sec" data-act="again">↻ ${game.exam && !game.exam.passed ? t.examRetry : t.again}</button>
       ${game.kind === 'normal' ? `<button class="btn sec" data-act="countries">🌍 ${t.toCountries}</button>` : `<button class="btn sec" data-act="home">${t.home}</button>`}
     </div>
     ${achHtml}
@@ -1356,7 +1398,8 @@ function share() {
   const t = T();
   const tm = game.time ? t.shareTime(fmtTime(game.time)) : '';
   const n = endless(game.type) ? game.asked : game.qs.length;
-  const text = game.type === 'lives' ? t.shareRun(game.score)
+  const text = game.exam && game.exam.passed ? t.shareExam(game.title, game.exam.grade)
+    : game.type === 'lives' ? t.shareRun(game.score)
     : game.type === 'blitz' ? t.shareBlitz(game.score)
     : game.sec === 'res' ? t.shareRes(game.score, n, tm)
     : game.sec === 'sea' ? t.shareSea(game.score, n, tm)
@@ -1538,9 +1581,12 @@ aspen|Аспен|Aspen|US|39.19|-106.82|exo|mnt|s`;
 const RESORTS = RES_RAW.trim().split('\n').map(l => {
   const [id, ru, en, c, la, lo, g, sub, k] = l.split('|');
   return { id, ru, en, c, lat: +la, lng: +lo, g, sub, kind: k || '' };
-}).filter(r => BY_ID[r.c]);
+}).filter(r => BY_ID[r.c]).map(r => Object.assign(r, {
+  // направления: Турция/Египет · Европа и Россия · Азия и Океания · Индийский океан и Африка · Америка и Карибы
+  g: r.g === 'exo' ? (r.sub === 'oce' ? 'aso' : (r.sub === 'ind' || r.sub === 'afr') ? 'afr' : 'am') : r.g === 'asia' ? 'aso' : r.g
+}));
 const RES_BY = Object.fromEntries(RESORTS.map(r => [r.id, r]));
-const RES_DIRS = ['all', 'tr', 'eu', 'asia', 'exo'];
+const RES_DIRS = ['all', 'tr', 'eu', 'aso', 'afr', 'am'];
 // Сложность курортов (опыт ×1 по умолчанию — самые известные)
 const RES_MED = new Set(('bodrum marmaris oludeniz marsaalam dahab elgouna rak aqaba sousse monastir hammamet djerba agadir essaouira ' +
   'svetlogorsk jurmala batumi goldsands budva dubrovnik ayianapa paphos mykonos rhodes corfu halkidiki sardinia sicily capri amalfi rimini cannes corsica ibiza costabrava madeira algarve ' +
@@ -1556,11 +1602,50 @@ const rmult = r => RES_HARD.has(r.id) ? 2 : RES_MED.has(r.id) ? 1.5 : 1;
 const rname = r => settings.lang === 'ru' ? r.ru : r.en;
 const rIcon = r => r.kind === 's' ? '⛷️' : r.kind === 'i' ? '🏝️' : '🏖️';
 const rTierTag = r => { const m = rmult(r); return `<span class="tier t${String(m).replace('.', '')}">${m === 2 ? '🔴' : m === 1.5 ? '🟡' : '🟢'} ×${m}</span>`; };
-const resPool = () => settings.rdir === 'all' ? RESORTS : RESORTS.filter(r => r.g === settings.rdir);
-const resKey = () => `res_${settings.rdir}_${settings.rlen}`;
+const resPool = () => RESORTS.filter(r => settings.rdirs.includes(r.g));
 
 // ===== ОБЩИЕ ШТУКИ ДЛЯ РАЗДЕЛОВ =====
 const tierBadge = m => `<span class="tier t${String(m).replace('.', '')}">${m >= 2 ? '🔴' : m >= 1.5 ? '🟡' : '🟢'} ×${m}</span>`;
+// ===== ЭКЗАМЕН =====
+const GRADES = ['C', 'B', 'A', 'A+'];
+const gradeOf = (e, l) => e === 0 ? 'A+' : e <= l / 3 ? 'A' : e <= l * 2 / 3 ? 'B' : 'C';
+const EXAM_LIM = { eu: 5, aso: 10, af: 5, am: 5 };
+const countriesLimit = () => isWorld() ? 20 : settings.regions.reduce((s, r) => s + (EXAM_LIM[r] || 5), 0);
+const playerName = () => (tg && tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.first_name) || T().player;
+const dipLine = key => stats.dip[key] ? T().dipMenu(stats.dip[key]) : T().dipNone;
+// итог экзамена: сдал/не сдал, оценка, бонус, диплом в коллекцию
+// бонус за A+ (A — 75%, B — 50%, C — 25%)
+const C_BONUS = { eu: 1425, af: 1425, am: 1425, aso: 1900 };
+const countriesBonus = () => isWorld() ? 4750 : settings.regions.reduce((s, r) => s + (C_BONUS[r] || 1425), 0);
+const resAll = () => RES_PARTS.every(p => settings.rdirs.includes(p));
+const seaAll = () => SEA_PARTS.every(p => settings.sregs.includes(p));
+const R_BONUS = { eu: 1500, tr: 1000, aso: 1000, afr: 1000, am: 1000 };
+const S_LIM = { eu: 20, aso: 30, afam: 25 };
+const genLimit = sec => sec === 'res'
+  ? (resAll() ? 20 : settings.rdirs.length * 5)
+  : (seaAll() ? 75 : settings.sregs.reduce((s, r) => s + S_LIM[r], 0));
+const genBonus = sec => sec === 'res'
+  ? (resAll() ? 5000 : settings.rdirs.reduce((s, d) => s + R_BONUS[d], 0))
+  : (seaAll() ? 5000 : settings.sregs.length * 1500);
+function examResult(g, aPlus) {
+  const passed = !g.failed && g.asked >= g.qs.length;
+  if (!passed) return { passed };
+  // бонус зависит от оценки; при пересдаче на оценку выше — только разница (чтобы не фармили)
+  const BON = { 'A+': aPlus, 'A': Math.round(aPlus * 0.75), 'B': Math.round(aPlus * 0.5), 'C': Math.round(aPlus * 0.25) }, k = 1;
+  const grade = gradeOf(g.wrong.length, g.limit), prev = stats.dip[g.key];
+  const better = !prev || GRADES.indexOf(grade) > GRADES.indexOf(prev);
+  const bonus = better ? (BON[grade] - (prev ? BON[prev] : 0)) * k : 0;
+  g.xp += bonus; stats.xp += bonus;
+  if (better) stats.dip[g.key] = grade;
+  return { passed, grade, bonus, prev };
+}
+function examHtml(g, ex, title) {
+  const t = T(), date = new Date().toLocaleDateString(settings.lang === 'ru' ? 'ru-RU' : 'en-GB');
+  if (!ex.passed) return `<div class="exam-fail"><b>❌ ${t.examFail}</b><span>${t.examFailWhy(g.limit, g.asked, g.qs.length)}</span></div>`;
+  return `<div class="diploma"><div class="dip-seal">🌍</div><small>${t.dipTitle}</small><b>${esc(playerName())}</b><span>${esc(t.dipPassed(title))}</span>
+    <div class="dip-grade">${t.dipGrade}: <em>${ex.grade}</em></div><small>${date} · GeoQuiz</small></div>
+    <div class="xp-line">${ex.bonus ? t.examBonus(ex.bonus) : t.examHave(ex.prev)}</div>`;
+}
 const hearts = n => '❤️'.repeat(Math.max(0, n)) + '🖤'.repeat(Math.max(0, 3 - n));
 const endless = type => type === 'blitz' || type === 'lives';
 const typeSeg = (k, cur) => `<div class="seg seg3">${TYPES.map(m => `<button class="chip ${cur === m ? 'on' : ''}" data-act="xset" data-k="${k}" data-v="${m}">${T()[m]}</button>`).join('')}</div>
@@ -1592,10 +1677,12 @@ function renderResorts() {
       <div class="type-hint" style="margin:0 0 12px">${t.r_where_hint}</div>
       <div class="label">${t.type}</div>
       ${typeSeg('rtype', settings.rtype)}
-      <div class="label">${t.dir}</div>
-      <div class="chips">${RES_DIRS.map(d => `<button class="chip ${settings.rdir === d ? 'on' : ''}" data-act="xset" data-k="rdir" data-v="${d}">${t['d_' + d]} <small>${d === 'all' ? RESORTS.length : RESORTS.filter(r => r.g === d).length}</small></button>`).join('')}</div>
-      ${endless(settings.rtype) ? '' : lenChips('rlen', settings.rlen, resPool().length)}
-      <div class="best-line">${t.best}: ${best != null ? best : '—'}${bt != null ? ` · ⏱ ${fmtTime(bt)}` : ''}</div>
+      <div class="label">${t.dirMulti}</div>
+      <div class="chips">${['all', ...RES_PARTS].map(d => {
+        const on = d === 'all' ? resAll() : (!resAll() && settings.rdirs.includes(d));
+        return `<button class="chip ${on ? 'on' : ''}" data-act="xmul" data-k="rdirs" data-v="${d}">${on && d !== 'all' ? '✓ ' : ''}${t['d_' + d]} <small>${d === 'all' ? RESORTS.length : RESORTS.filter(r => r.g === d).length}</small></button>`;
+      }).join('')}</div>
+      <div class="best-line">${settings.rtype === 'exam' ? `${t.examLimit(genLimit('res'))} · ${dipLine(k)}` : `${t.best}: ${best != null ? best : '—'}`}</div>
     </div>
     <button class="btn" data-act="gstart" data-v="res">▶ ${t.start}</button>`;
 }
@@ -1632,9 +1719,9 @@ const WATER_RAW = `pacific|Тихий океан|Pacific Ocean|o||1|US CA MX GT 
 atlantic|Атлантический океан|Atlantic Ocean|o||1|US CA BR AR UY GY SR VE FR ES PT GB IE IS MA SN MR GM GN GW SL LR CI GH TG BJ NG CM GQ GA CG CD AO NA ZA CV ST BS BB
 indian|Индийский океан|Indian Ocean|o||1|ZA MZ TZ KE SO MG MU SC KM MV LK IN ID AU
 arctic|Северный Ледовитый океан|Arctic Ocean|o||1|RU CA US NO
-med|Средиземное море|Mediterranean Sea|s|atlantic|1|ES FR MC IT MT GR TR CY SY LB EG LY TN DZ MA AL
-black|Чёрное море|Black Sea|s|med|1|RU GE TR BG RO
-azov|Азовское море|Sea of Azov|s|black|1.5|RU
+med|Средиземное море|Mediterranean Sea|s|atlantic|1|ES FR MC IT MT GR TR CY SY LB IL EG LY TN DZ MA AL
+black|Чёрное море|Black Sea|s|med|1|RU UA GE TR BG RO
+azov|Азовское море|Sea of Azov|s|black|1.5|RU UA
 caspian|Каспийское море|Caspian Sea|s||1|RU KZ TM IR AZ
 baltic|Балтийское море|Baltic Sea|s|atlantic|1|RU EE LV LT PL DE DK SE FI
 north|Северное море|North Sea|s|atlantic|1.5|GB NO DK DE NL BE FR
@@ -1650,7 +1737,7 @@ marmara|Мраморное море|Sea of Marmara|s|med|1.5|TR
 biscay|Бискайский залив|Bay of Biscay|g|atlantic|1.5|FR ES
 finland|Финский залив|Gulf of Finland|g|baltic|1.5|FI RU EE
 bothnia|Ботнический залив|Gulf of Bothnia|g|baltic|2|FI SE
-red|Красное море|Red Sea|s|indian|1|EG SD ER SA YE JO DJ
+red|Красное море|Red Sea|s|indian|1|EG SD ER SA YE JO IL DJ
 arabian|Аравийское море|Arabian Sea|s|indian|1.5|OM IN PK
 persian|Персидский залив|Persian Gulf|g|indian|1.5|IR IQ KW SA BH QA AE
 aden|Аденский залив|Gulf of Aden|g|indian|2|YE SO DJ
@@ -1669,7 +1756,8 @@ caribbean|Карибское море|Caribbean Sea|s|atlantic|1|MX BZ HN NI CR 
 mexico|Мексиканский залив|Gulf of Mexico|g|atlantic|1.5|US MX CU
 hudson|Гудзонов залив|Hudson Bay|g|arctic|2|CA
 coral|Коралловое море|Coral Sea|s|pacific|2|AU PG SB VU
-tasman|Тасманово море|Tasman Sea|s|pacific|2|AU NZ`;
+tasman|Тасманово море|Tasman Sea|s|pacific|2|AU NZ
+dead|Мёртвое море|Dead Sea|s||1.5|JO IL`;
 // Реки: id|RU|EN|сложность
 const RIVER_RAW = `moskva|Москва-река|Moskva|1
 neva|Нева|Neva|1
@@ -1847,7 +1935,7 @@ sydney|Сидней|Sydney|AU|w:tasman`;
 
 const WATERS = WATER_RAW.trim().split('\n').map(l => {
   const [id, ru, en, kind, parent, m, cs] = l.split('|');
-  return { id, ru, en, kind, parent: parent || null, m: +m, cs: cs.split(' ').filter(c => BY_ID[c]) };
+  return { id, ru, en, kind, parent: parent || null, m: +m, cs: cs.split(' ').filter(c => BY_ID[c] && c !== 'UA') }; // Украины в этом разделе нет
 });
 const W = Object.fromEntries(WATERS.map(w => [w.id, w]));
 const RIVERS = RIVER_RAW.trim().split('\n').map(l => { const [id, ru, en, m] = l.split('|'); return { id, ru, en, m: +m }; });
@@ -1868,8 +1956,13 @@ const cWatersDirect = cid => WATERS.filter(w => w.cs.includes(cid)).map(w => w.i
 const cWatersFull = cid => { const s = new Set(); cWatersDirect(cid).forEach(id => { s.add(id); wAnc(id).forEach(a => s.add(a)); }); return s; };
 // все страны водоёма: на его берегу + на берегу его частей
 const wCountriesFull = id => { const s = new Set(W[id].cs); wDesc(id).forEach(d => W[d].cs.forEach(c => s.add(c))); return s; };
-const regOf = cid => { const r = BY_ID[cid] && BY_ID[cid].r; return r === 'na' || r === 'cb' || r === 'sa' ? 'am' : r; };
-const SEA_REGS = ['world', 'eu', 'as', 'af', 'am', 'oc'];
+const regOf = cid => { const r = BY_ID[cid] && BY_ID[cid].r; return GRP[r] || r; };
+const seaReg = cid => { const g = regOf(cid); return g === 'af' || g === 'am' ? 'afam' : g; }; // в морях Африка и Америка вместе
+const SEA_REGS = ['world', ...SEA_PARTS];
+// «Что омывает страну?» — только про известные страны
+const SEA_CW = new Set(('RU TR EG IT ES FR GR GB IE NO SE FI DK DE NL PL EE LV LT PT HR ME AL BG RO GE CY MT ' +
+  'JP CN KR KP IN TH VN ID PH MY SG LK MV AE SA IR IQ JO IL OM YE KZ AZ TM ' +
+  'US CA MX CU BR AR CL PE CO VE AU NZ ZA MA TN LY DZ KE TZ MG SO DJ ER SD').split(' '));
 const riverCities = rid => CITIES.filter(c => c.rivers.includes(rid));
 const riverRegs = rid => new Set(riverCities(rid).map(c => regOf(c.c)));
 
@@ -1878,13 +1971,13 @@ const riverRegs = rid => new Set(riverCities(rid).map(c => regOf(c.c)));
 function seaSeeds() {
   const S = [];
   CITIES.forEach(c => {
-    if (c.rivers.length) S.push({ kind: 'cr', c, regs: new Set([regOf(c.c)]) });
-    else S.push({ kind: 'cs', c, regs: new Set([regOf(c.c)]) });
+    if (c.rivers.length) S.push({ kind: 'cr', c, regs: new Set([seaReg(c.c)]) });
+    else S.push({ kind: 'cs', c, regs: new Set([seaReg(c.c)]) });
   });
-  RIVERS.forEach(r => { if (riverCities(r.id).length) S.push({ kind: 'rc', r, regs: riverRegs(r.id) }); });
-  COUNTRIES.forEach(c => { if (cWatersDirect(c.id).length) S.push({ kind: 'cw', c, regs: new Set([regOf(c.id)]) }); });
-  WATERS.forEach(w => { if (w.cs.length) S.push({ kind: 'wc', w, regs: new Set(w.cs.map(regOf)) }); });
-  return S.filter(s => settings.sreg === 'world' || s.regs.has(settings.sreg));
+  RIVERS.forEach(r => { if (riverCities(r.id).length) S.push({ kind: 'rc', r, regs: new Set(riverCities(r.id).map(c => seaReg(c.c))) }); });
+  COUNTRIES.forEach(c => { if (SEA_CW.has(c.id) && cWatersDirect(c.id).length) S.push({ kind: 'cw', c, regs: new Set([seaReg(c.id)]) }); });
+  WATERS.forEach(w => { if (w.cs.length) S.push({ kind: 'wc', w, regs: new Set(w.cs.map(seaReg)) }); });
+  return S.filter(s => seaAll() || settings.sregs.some(r => s.regs.has(r)));
 }
 const pick3 = (prefer, rest) => [...new Set([...shuffle(prefer), ...shuffle(rest)])].slice(0, 3);
 const wOpt = id => ({ id, html: esc(wName(W[id])) });
@@ -1940,7 +2033,7 @@ function seaQuestion(s) {
   }
   // море → какую страну омывает
   const w = s.w, right = shuffle(w.cs)[0], full = wCountriesFull(w.id);
-  const coastal = COUNTRIES.filter(x => !full.has(x.id) && cWatersDirect(x.id).length);
+  const coastal = COUNTRIES.filter(x => x.id !== 'UA' && !full.has(x.id) && cWatersDirect(x.id).length);
   const reg = regOf(right);
   const d = pick3(coastal.filter(x => regOf(x.id) === reg).map(x => x.id), coastal.map(x => x.id));
   const all = [...full];
@@ -1959,6 +2052,7 @@ function buildSeaQs() {
   return out.map(s => Object.assign(seaQuestion(s), { onOk: () => { stats.seaOk++; } }));
 }
 const seaCount = () => seaSeeds().length;
+const seaCountFor = r => { const cur = settings.sregs; settings.sregs = r === 'world' ? SEA_PARTS.slice() : [r]; const n = seaSeeds().length; settings.sregs = cur; return n; };
 
 function renderSeas() {
   const t = T(), k = genKey('sea'), best = stats.genBest[k], bt = stats.genBestTime[k];
@@ -1968,33 +2062,38 @@ function renderSeas() {
       <div class="type-hint" style="margin:0 0 12px">${t.seasHint}</div>
       <div class="label">${t.type}</div>
       ${typeSeg('stype', settings.stype)}
-      <div class="label">${t.regionOne}</div>
-      <div class="chips">${SEA_REGS.map(r => `<button class="chip ${settings.sreg === r ? 'on' : ''}" data-act="xset" data-k="sreg" data-v="${r}">${t['sr_' + r]}</button>`).join('')}</div>
-      ${endless(settings.stype) ? '' : lenChips('slen', settings.slen, seaCount())}
-      <div class="best-line">${t.best}: ${best != null ? best : '—'}${bt != null ? ` · ⏱ ${fmtTime(bt)}` : ''}</div>
+      <div class="label">${t.region}</div>
+      <div class="chips">${SEA_REGS.map(r => {
+        const on = r === 'world' ? seaAll() : (!seaAll() && settings.sregs.includes(r));
+        return `<button class="chip ${on ? 'on' : ''}" data-act="xmul" data-k="sregs" data-v="${r}">${on && r !== 'world' ? '✓ ' : ''}${t['sr_' + r]} <small>${seaCountFor(r)}</small></button>`;
+      }).join('')}</div>
+      <div class="best-line">${settings.stype === 'exam' ? `${t.examLimit(genLimit('sea'))} · ${t.examQs(seaCount())} · ${dipLine(k)}` : `${t.best}: ${best != null ? best : '—'}`}</div>
     </div>
     <button class="btn" data-act="gstart" data-v="sea">▶ ${t.start}</button>`;
 }
 
 // ===== ОБЩИЙ ДВИЖОК (Курорты, Моря и реки) =====
 const GEN = {
-  res: { type: () => settings.rtype, len: () => settings.rlen, build: buildResQs, menu: 'resorts', title: () => `🏖 ${T()['d_' + settings.rdir]}`, name: () => T().resorts },
-  sea: { type: () => settings.stype, len: () => settings.slen, build: buildSeaQs, menu: 'seas', title: () => `🌊 ${T()['sr_' + settings.sreg]}`, name: () => T().seasTitle }
+  res: { type: () => settings.rtype, build: buildResQs, menu: 'resorts', name: () => T().resorts,
+    title: () => `🏖 ${resAll() ? T().d_all : RES_PARTS.filter(d => settings.rdirs.includes(d)).map(d => T()['d_' + d].replace(/^\S+\s/, '')).join(' + ')}` },
+  sea: { type: () => settings.stype, build: buildSeaQs, menu: 'seas', name: () => T().seasTitle,
+    title: () => `🌊 ${seaAll() ? T().sr_world : SEA_PARTS.filter(r => settings.sregs.includes(r)).map(r => T()['sr_' + r]).join(' + ')}` }
 };
 const genKey = sec => sec === 'res'
-  ? `res_${settings.rtype}_${settings.rdir}_${endless(settings.rtype) ? '' : settings.rlen}`
-  : `sea_${settings.stype}_${settings.sreg}_${endless(settings.stype) ? '' : settings.slen}`;
+  ? `res_${settings.rtype}_${resAll() ? 'all' : settings.rdirs.slice().sort().join('+')}`
+  : `sea_${settings.stype}_${seaAll() ? 'world' : settings.sregs.slice().sort().join('+')}`;
+// лимит ошибок экзамена: курорты — 5 на направление (20 на все), моря и реки — 5 на 50 вопросов
+
 
 function startGen(sec) {
   endGame();
   const cfg = GEN[sec], type = cfg.type();
   let qs = cfg.build();
-  if (!endless(type) && cfg.len() !== 'all') qs = qs.slice(0, cfg.len());
   if (!qs.length) return;
   game = {
     gen: true, sec, kind: 'gen', type, key: genKey(sec), qs, i: 0, asked: 0, score: 0, streak: 0, maxStreak: 0,
     wrong: [], hintUsed: false, locked: false, xp: 0, rank0: rankIdx(stats.xp), newAch: [], over: false,
-    t0: Date.now(), lives: type === 'lives' ? 3 : 0
+    t0: Date.now(), lives: type === 'lives' ? 3 : 0, limit: type === 'exam' ? genLimit(sec) : 0, title: GEN[sec].title().replace(/^\S+\s/, '')
   };
   go('game');
   if (type === 'blitz') { game.deadline = Date.now() + 60000; timerId = setInterval(tickBlitz, 100); }
@@ -2006,6 +2105,7 @@ function genTopRight(n) {
   if (game.type === 'blitz') return `<b id="timerTxt">⏱ ${Math.ceil(Math.max(0, game.deadline - Date.now()) / 1000)}</b>`;
   const clock = `<span id="clockTxt">⏱ ${fmtTime(Date.now() - game.t0)}</span>`;
   if (game.type === 'lives') return `<span class="lives">${hearts(game.lives)}</span> · ${clock}`;
+  if (game.type === 'exam') return `${game.i + 1} / ${n} · <span class="errs">${T().examErr(game.wrong.length, game.limit)}</span> · ${clock}`;
   return `${game.i + 1} / ${n} · ${clock}`;
 }
 function genBar(n) {
@@ -2064,14 +2164,15 @@ function resolveGen(ok, close) {
     game.streak = 0;
     game.wrong.push(q);
     sfx('bad'); haptic('error');
-    if (game.type === 'blitz') { game.deadline -= 3000; praise(t.penalty, 'minus'); }
     if (game.type === 'lives') { game.lives--; praise(game.lives > 0 ? '💔' : t.noLives, 'minus'); }
   }
   $('#reveal').innerHTML = `${q.reveal}${gain ? ` <span class="gain">+${gain} XP</span>` : ''}`;
   if (game.type === 'lives') { const l = document.querySelector('#game .lives'); if (l) l.textContent = hearts(game.lives); }
+  if (game.type === 'exam') { const e = document.querySelector('#game .errs'); if (e) e.textContent = t.examErr(game.wrong.length, game.limit); }
   checkAch(game);
   saveAll();
   if (game.type === 'lives' && game.lives <= 0) { stopTimer(); setTimeout(finishGen, 1700); return; }
+  if (game.type === 'exam' && game.wrong.length > game.limit) { game.failed = true; stopTimer(); praise('❌', 'minus'); setTimeout(finishGen, 1700); return; }
   setTimeout(nextGenQ, game.type === 'blitz' ? (ok ? 350 : 1000) : (ok ? 900 : 1900));
 }
 
@@ -2130,11 +2231,8 @@ function finishGen() {
   stats.played++;
   const prev = stats.genBest[game.key] || 0;
   let record = false, fastRec = false;
-  if (game.score > prev) { stats.genBest[game.key] = game.score; record = true; }
-  if (!endless(game.type) && !game.wrong.length && game.asked > 0) {
-    const pt = stats.genBestTime[game.key];
-    if (pt == null || game.time < pt) { fastRec = pt != null; stats.genBestTime[game.key] = game.time; }
-  }
+  game.exam = game.type === 'exam' ? examResult(game, genBonus(game.sec)) : null;
+  if (!game.exam && game.score > prev) { stats.genBest[game.key] = game.score; record = true; }
   if (game.type === 'blitz') stats.blitzBest = Math.max(stats.blitzBest, game.score);
   checkAch(game);
   saveAll();
@@ -2142,10 +2240,10 @@ function finishGen() {
   renderGenResult(record, rankUp, fastRec);
   go('result');
   const total = endless(game.type) ? Math.max(game.asked, 1) : game.qs.length;
-  if (record || rankUp || fastRec || game.score / total >= 0.7) setTimeout(() => { confetti(rankUp ? 140 : 90); sfx('win'); haptic('success'); }, 250);
+  if (record || rankUp || (game.exam && game.exam.passed) || (!game.exam && game.score / total >= 0.7)) setTimeout(() => { confetti(rankUp || (game.exam && game.exam.passed) ? 140 : 90); sfx('win'); haptic('success'); }, 250);
 }
 function renderGenResult(record, rankUp, fastRec) {
-  const t = T(), end = endless(game.type), n = end ? game.asked : game.qs.length;
+  const t = T(), end = endless(game.type), n = end || game.failed ? game.asked : game.qs.length;
   const pct = n ? Math.round(game.score / n * 100) : 0;
   const emoji = end ? (game.score >= 25 ? '🏆' : game.score >= 12 ? '🔥' : '💪') : pct >= 90 ? '🏆' : pct >= 70 ? '🎉' : pct >= 40 ? '👍' : '📚';
   const seen = new Set(), uniq = game.wrong.filter(q => !seen.has(q.key) && seen.add(q.key));
@@ -2157,16 +2255,16 @@ function renderGenResult(record, rankUp, fastRec) {
   const best = stats.genBest[game.key], bt = stats.genBestTime[game.key];
   $('#result').innerHTML = `
     <div class="top"><span>${GEN[game.sec].title()}</span><span></span></div>
-    <div class="emoji">${emoji}</div>
+    ${game.exam ? examHtml(game, game.exam, game.title) : `<div class="emoji">${emoji}</div>`}
     <div class="big-score">${end ? game.score : `${game.score}/${n}`}</div>
     <div class="pct">${end ? `${t.answers}: ${n} · ${t.correctW}: ${game.score}` : t.timeLine(fmtTime(game.time), (game.time / 1000 / Math.max(game.asked, 1)).toFixed(1).replace('.', settings.lang === 'ru' ? ',' : '.'))}</div>
     ${fastRec ? `<span class="badge">${t.newBestTime}</span>` : (!end && bt != null ? `<div class="pct">${t.bestTime}: ${fmtTime(bt)}</div>` : '')}
     <div class="xp-line">⭐ ${t.gotXp(game.xp)}</div>
     ${rankUp ? `<span class="badge">${t.newRank(rankName(rankIdx(stats.xp)))}</span>` : ''}
-    ${record ? `<span class="badge">${t.newRecord}</span>` : `<div class="pct">${t.best}: ${best}</div>`}
+    ${game.exam ? '' : record ? `<span class="badge">${t.newRecord}</span>` : `<div class="pct">${t.best}: ${best}</div>`}
     <button class="btn" data-act="share">📤 ${t.share}</button>
     <div class="row">
-      <button class="btn sec" data-act="again">↻ ${t.again}</button>
+      <button class="btn sec" data-act="again">↻ ${game.exam && !game.exam.passed ? t.examRetry : t.again}</button>
       <button class="btn sec" data-act="${GEN[game.sec].menu}">${game.sec === 'res' ? '🏖' : '🌊'} ${GEN[game.sec].name()}</button>
     </div>
     ${achHtml}
@@ -2281,8 +2379,8 @@ function finishKids() {
 
 // ===== СПРАВОЧНИК + 3D-ГЛОБУС =====
 // Координаты столиц: ISO|широта|долгота
-const GEO_RAW = `AL|41.33|19.82 AD|42.51|1.52 AT|48.21|16.37 BY|53.90|27.57 BE|50.85|4.35 BA|43.86|18.41 BG|42.70|23.32 HR|45.81|15.98 CY|35.17|33.36 CZ|50.08|14.44 DK|55.68|12.57 EE|59.44|24.75 FI|60.17|24.94 FR|48.86|2.35 DE|52.52|13.40 GR|37.98|23.73 HU|47.50|19.04 IS|64.15|-21.94 IE|53.35|-6.26 IT|41.90|12.50 LV|56.95|24.11 LI|47.14|9.52 LT|54.69|25.28 LU|49.61|6.13 MT|35.90|14.51 MD|47.01|28.86 MC|43.73|7.42 ME|42.44|19.26 NL|52.37|4.90 MK|42.00|21.43 NO|59.91|10.75 PL|52.23|21.01 PT|38.72|-9.14 RO|44.43|26.10 RU|55.76|37.62 SM|43.94|12.45 RS|44.79|20.45 SK|48.15|17.11 SI|46.06|14.51 ES|40.42|-3.70 SE|59.33|18.07 CH|46.95|7.45 GB|51.51|-0.13 VA|41.90|12.45
-AF|34.53|69.17 AM|40.18|44.51 AZ|40.41|49.87 BH|26.23|50.59 BD|23.81|90.41 BT|27.47|89.64 BN|4.90|114.94 KH|11.56|104.92 CN|39.90|116.41 GE|41.72|44.79 IN|28.61|77.21 ID|-6.21|106.85 IR|35.69|51.39 IQ|33.31|44.36 JP|35.68|139.69 JO|31.95|35.93 KZ|51.17|71.45 KW|29.38|47.99 KG|42.87|74.59 LA|17.98|102.63 LB|33.89|35.50 MY|3.14|101.69 MV|4.18|73.51 MN|47.89|106.91 MM|19.76|96.08 NP|27.72|85.32 KP|39.04|125.76 OM|23.59|58.41 PK|33.68|73.05 PH|14.60|120.98 QA|25.29|51.53 SA|24.71|46.68 SG|1.35|103.82 KR|37.57|126.98 LK|6.89|79.90 SY|33.51|36.28 TJ|38.56|68.79 TH|13.76|100.50 TL|-8.56|125.57 TR|39.93|32.86 TM|37.96|58.33 AE|24.45|54.38 UZ|41.30|69.24 VN|21.03|105.85 YE|15.37|44.19
+const GEO_RAW = `AL|41.33|19.82 AD|42.51|1.52 AT|48.21|16.37 BY|53.90|27.57 BE|50.85|4.35 BA|43.86|18.41 BG|42.70|23.32 HR|45.81|15.98 CY|35.17|33.36 CZ|50.08|14.44 DK|55.68|12.57 EE|59.44|24.75 FI|60.17|24.94 FR|48.86|2.35 DE|52.52|13.40 GR|37.98|23.73 HU|47.50|19.04 IS|64.15|-21.94 IE|53.35|-6.26 IT|41.90|12.50 LV|56.95|24.11 LI|47.14|9.52 LT|54.69|25.28 LU|49.61|6.13 MT|35.90|14.51 MD|47.01|28.86 MC|43.73|7.42 ME|42.44|19.26 NL|52.37|4.90 MK|42.00|21.43 NO|59.91|10.75 PL|52.23|21.01 PT|38.72|-9.14 RO|44.43|26.10 RU|55.76|37.62 SM|43.94|12.45 RS|44.79|20.45 SK|48.15|17.11 SI|46.06|14.51 ES|40.42|-3.70 SE|59.33|18.07 CH|46.95|7.45 UA|50.45|30.52 GB|51.51|-0.13 VA|41.90|12.45
+AF|34.53|69.17 AM|40.18|44.51 AZ|40.41|49.87 BH|26.23|50.59 BD|23.81|90.41 BT|27.47|89.64 BN|4.90|114.94 KH|11.56|104.92 CN|39.90|116.41 GE|41.72|44.79 IN|28.61|77.21 ID|-6.21|106.85 IR|35.69|51.39 IQ|33.31|44.36 IL|31.77|35.21 JP|35.68|139.69 JO|31.95|35.93 KZ|51.17|71.45 KW|29.38|47.99 KG|42.87|74.59 LA|17.98|102.63 LB|33.89|35.50 MY|3.14|101.69 MV|4.18|73.51 MN|47.89|106.91 MM|19.76|96.08 NP|27.72|85.32 KP|39.04|125.76 OM|23.59|58.41 PK|33.68|73.05 PH|14.60|120.98 QA|25.29|51.53 SA|24.71|46.68 SG|1.35|103.82 KR|37.57|126.98 LK|6.89|79.90 SY|33.51|36.28 TJ|38.56|68.79 TH|13.76|100.50 TL|-8.56|125.57 TR|39.93|32.86 TM|37.96|58.33 AE|24.45|54.38 UZ|41.30|69.24 VN|21.03|105.85 YE|15.37|44.19
 DZ|36.75|3.06 AO|-8.84|13.23 BJ|6.50|2.60 BW|-24.65|25.91 BF|12.37|-1.52 BI|-3.43|29.93 CV|14.93|-23.51 CM|3.85|11.50 CF|4.39|18.56 TD|12.13|15.06 KM|-11.70|43.26 CG|-4.26|15.24 CD|-4.44|15.27 CI|6.83|-5.29 DJ|11.59|43.15 EG|30.04|31.24 GQ|3.75|8.78 ER|15.32|38.93 SZ|-26.31|31.14 ET|9.03|38.74 GA|0.42|9.47 GM|13.45|-16.58 GH|5.60|-0.19 GN|9.64|-13.58 GW|11.86|-15.60 KE|-1.29|36.82 LS|-29.31|27.48 LR|6.30|-10.80 LY|32.89|13.19 MG|-18.88|47.51 MW|-13.96|33.79 ML|12.64|-8.00 MR|18.08|-15.98 MU|-20.16|57.50 MA|34.02|-6.83 MZ|-25.97|32.57 NA|-22.56|17.08 NE|13.51|2.11 NG|9.08|7.40 RW|-1.94|30.06 ST|0.34|6.73 SN|14.72|-17.47 SC|-4.62|55.45 SL|8.48|-13.23 SO|2.05|45.32 ZA|-25.75|28.19 SS|4.85|31.58 SD|15.50|32.56 TZ|-6.16|35.75 TG|6.13|1.22 TN|36.81|10.18 UG|0.35|32.58 ZM|-15.39|28.32 ZW|-17.83|31.05
 AG|17.12|-61.85 BS|25.05|-77.35 BB|13.10|-59.62 BZ|17.25|-88.77 CA|45.42|-75.70 CR|9.93|-84.08 CU|23.11|-82.37 DM|15.30|-61.39 DO|18.49|-69.93 SV|13.69|-89.22 GD|12.06|-61.75 GT|14.63|-90.51 HT|18.59|-72.31 HN|14.07|-87.19 JM|18.02|-76.80 MX|19.43|-99.13 NI|12.11|-86.24 PA|8.98|-79.52 KN|17.30|-62.72 LC|14.01|-60.99 VC|13.16|-61.22 TT|10.66|-61.51 US|38.91|-77.04
 AR|-34.60|-58.38 BO|-19.04|-65.26 BR|-15.79|-47.88 CL|-33.45|-70.67 CO|4.71|-74.07 EC|-0.18|-78.47 GY|6.80|-58.16 PY|-25.26|-57.58 PE|-12.05|-77.04 SR|5.85|-55.20 UY|-34.90|-56.16 VE|10.48|-66.90
@@ -2300,8 +2398,7 @@ const GEO_URLS = [
 const REGION_VIEW = {
   world: { lat: 25, lng: 30, altitude: 2.3 }, eu: { lat: 50, lng: 15, altitude: 1.3 },
   as: { lat: 30, lng: 90, altitude: 1.9 }, af: { lat: 3, lng: 20, altitude: 1.7 },
-  na: { lat: 28, lng: -95, altitude: 1.8 }, cb: { lat: 16, lng: -70, altitude: 0.9 }, sa: { lat: -18, lng: -60, altitude: 1.6 },
-  oc: { lat: -15, lng: 160, altitude: 1.9 }
+  aso: { lat: 10, lng: 115, altitude: 2.3 }, am: { lat: 8, lng: -80, altitude: 2.3 }
 };
 
 let refRegion = 'world', refQuery = '', refSel = null, refBuilt = false;
@@ -2335,10 +2432,11 @@ function isoOf(p) {
 
 // Общая загрузка карты стран (для глобуса и для режима «Контур»)
 const FEAT = {};
-let geoPromise = null;
+let geoPromise = null, ALL_FEATS = [];
 function loadGeo() {
   if (!geoPromise) {
     geoPromise = fetchJSON(GEO_URLS).then(geo => {
+      ALL_FEATS = geo.features.filter(f => f.properties.ADM0_A3 !== 'ATA');
       geo.features.forEach(f => {
         f.__id = isoOf(f.properties);
         if (f.__id && BY_ID[f.__id] && !FEAT[f.__id]) { hasPoly.add(f.__id); FEAT[f.__id] = f; }
@@ -2373,7 +2471,41 @@ function shapeParts(id) {
   keep.forEach(x => x.p.forEach(r => { pts += r.length; }));
   return (shapeCache[id] = { keep, pts });
 }
-const shapeOK = id => { const s = shapeParts(id); return !!(s && s.pts >= 10); };
+const shapeOK = id => !!FEAT[id]; // на карте с соседями узнаются даже маленькие страны
+
+// «Страна на карте»: кусок карты с соседями, нужная страна подсвечена
+function featRings(f, shift) {
+  const g = f.geometry, polys = g.type === 'Polygon' ? [g.coordinates] : g.coordinates;
+  return polys.map(p => p.map(r => r.map(([lo, la]) => [shift && lo < 0 ? lo + 360 : lo, la])));
+}
+function mapSVG(id) {
+  const s = shapeParts(id);
+  if (!s) return '';
+  let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity;
+  s.keep.forEach(k => k.p[0].forEach(([lo, la]) => { x0 = Math.min(x0, lo); x1 = Math.max(x1, lo); y0 = Math.min(y0, la); y1 = Math.max(y1, la); }));
+  const shift = x1 > 180; // страна через 180-й меридиан (Россия, Фиджи)
+  // окно карты: страна + соседи вокруг, не меньше ~14° по ширине
+  const cx = (x0 + x1) / 2, cy = (y0 + y1) / 2;
+  let w = Math.max((x1 - x0) * 2.2, 14), hgt = Math.max((y1 - y0) * 2.2, 10);
+  const k = Math.cos(Math.max(-75, Math.min(75, cy)) * Math.PI / 180);
+  if (w * k / hgt > 1.4) hgt = w * k / 1.4; else w = hgt * 1.4 / k; // пропорции ~ 7:5
+  const L = cx - w / 2, R = cx + w / 2, B = Math.max(-85, cy - hgt / 2), Tt = Math.min(85, cy + hgt / 2);
+  const P = (lo, la) => ((lo - L) * k).toFixed(2) + ' ' + (Tt - la).toFixed(2);
+  const path = rings => rings.map(p => p.map(r => 'M' + r.map(([lo, la]) => P(lo, la)).join('L') + 'Z').join('')).join('');
+  let others = '', target = '';
+  for (const f of ALL_FEATS) {
+    const rings = featRings(f, shift);
+    let fx0 = Infinity, fx1 = -Infinity, fy0 = Infinity, fy1 = -Infinity;
+    rings.forEach(p => p[0].forEach(([lo, la]) => { fx0 = Math.min(fx0, lo); fx1 = Math.max(fx1, lo); fy0 = Math.min(fy0, la); fy1 = Math.max(fy1, la); }));
+    if (fx1 < L || fx0 > R || fy1 < B || fy0 > Tt) continue; // вне окна
+    if (f.__id === id) target = path(rings); else others += path(rings);
+  }
+  const VW = (w * k).toFixed(2), VH = (Tt - B).toFixed(2);
+  // маленькую страну дополнительно обводим кружком
+  const tiny = Math.max((x1 - x0) * k, y1 - y0) < Math.min(w * k, hgt) * 0.08;
+  const ring = tiny ? `<circle cx="${((cx - L) * k).toFixed(2)}" cy="${(Tt - cy).toFixed(2)}" r="${(Math.min(w * k, hgt) * 0.07).toFixed(2)}" class="mring"/>` : '';
+  return `<svg class="shape map" viewBox="0 0 ${VW} ${VH}" preserveAspectRatio="xMidYMid slice"><rect width="${VW}" height="${VH}" class="sea"/><path d="${others}" class="land" fill-rule="evenodd"/><path d="${target}" class="target" fill-rule="evenodd"/>${ring}</svg>`;
+}
 function shapeSVG(id) {
   const s = shapeParts(id);
   if (!s) return '';
@@ -2396,7 +2528,7 @@ function polyColor(f) {
   if (f.__id && f.__id === refSel) return '#ff8a00';
   const c = BY_ID[f.__id];
   if (!c) return 'rgba(150,160,155,0.5)';
-  if (refRegion !== 'world' && c.r !== refRegion) return 'rgba(150,160,155,0.5)';
+  if (refRegion !== 'world' && GRP[c.r] !== refRegion) return 'rgba(150,160,155,0.5)';
   return '#45b36f';
 }
 function polyLabel(f) {
@@ -2565,6 +2697,12 @@ document.addEventListener('click', e => {
     settings[k] = ((k === 'rlen' || k === 'slen') && v !== 'all') ? Number(v) : v;
     saveAll();
     if (k[0] === 'r') renderResorts(); else renderSeas();
+  }
+  else if (a === 'xmul') {
+    const k = el.dataset.k;
+    settings[k] = toggleIn(settings[k], k === 'rdirs' ? RES_PARTS : SEA_PARTS, v);
+    saveAll();
+    if (k === 'rdirs') renderResorts(); else renderSeas();
   }
   else if (a === 'seas') { endGame(); renderSeas(); go('seas'); }
   else if (a === 'gstart') startGen(v);
