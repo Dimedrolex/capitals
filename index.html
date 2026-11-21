@@ -47,6 +47,17 @@ h1{font-size:24px;line-height:1.2}
 .best-line{font-size:13px;color:var(--hint)}
 .btn{display:block;width:100%;border:0;border-radius:14px;padding:15px;font-size:16px;font-weight:600;cursor:pointer;background:var(--accent);color:var(--accent-text);margin-bottom:10px}
 .btn.sec{background:var(--bg2);color:var(--text)}
+.btn{box-shadow:0 4px 0 rgba(0,0,0,.2);transition:transform .08s,box-shadow .08s,filter .15s}.btn.sec{box-shadow:0 4px 0 rgba(0,0,0,.1)}
+.btn:active:not(:disabled){transform:translateY(3px)!important;box-shadow:0 1px 0 rgba(0,0,0,.15)}
+#timerTxt,#clockTxt,.top{font-variant-numeric:tabular-nums}
+.q,.opts{animation:qin .2s ease-out}
+@keyframes qin{from{opacity:0;transform:translateX(12px)}}
+#game.hot .bar{box-shadow:0 0 10px rgba(255,138,0,.75)}
+#game.hot .bar i{background:linear-gradient(90deg,#ffb347,#ff8a00,#e52e71)!important}
+#game.hot .stk{color:#ff8a00;font-weight:700;display:inline-block;animation:hotpulse 1s ease-in-out infinite}
+@keyframes hotpulse{50%{transform:scale(1.12)}}
+@keyframes shine{0%{background-position:150% 0,0 0}30%,100%{background-position:-50% 0,0 0}}
+.daily.shine{background-image:linear-gradient(105deg,transparent 40%,rgba(255,255,255,.38) 50%,transparent 60%),linear-gradient(135deg,#ff8a00,#e52e71);background-size:250% 100%,auto;background-repeat:no-repeat;animation:shine 4.5s ease-in-out infinite}
 .btn:disabled{opacity:.45;cursor:default}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center}
@@ -61,9 +72,10 @@ h1{font-size:24px;line-height:1.2}
 .fl img{display:block;border-radius:4px;object-fit:cover}
 .fl.big{font-size:72px}.fl.big img{height:84px;width:auto;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,.18)}
 .fl.sm{font-size:20px;vertical-align:middle}.fl.sm img{height:20px;width:30px}
-.opts{display:grid;gap:10px}
-.opt{border:0;background:var(--bg2);color:var(--text);padding:16px;border-radius:14px;font-size:17px;text-align:left;cursor:pointer;transition:transform .1s,background .15s}
-.opt:active{transform:scale(.98)}
+.opts{display:grid;gap:12px}
+.opt{border:0;background:var(--bg2);color:var(--text);padding:16px;border-radius:14px;font-size:17px;text-align:left;cursor:pointer;transition:transform .08s,box-shadow .08s,background .15s;box-shadow:0 4px 0 rgba(0,0,0,.13)}
+.opt:active:not(:disabled){transform:translateY(3px);box-shadow:0 1px 0 rgba(0,0,0,.13)}
+.opt.ok,.opt.bad{box-shadow:0 4px 0 rgba(0,0,0,.22)}
 .opt.ok{background:var(--ok);color:#fff}
 .opt.bad{background:var(--bad);color:#fff;animation:shake .3s}
 .opt.gone{visibility:hidden}
@@ -188,7 +200,7 @@ h1{font-size:24px;line-height:1.2}
 .daily.countries{background:linear-gradient(135deg,#667eea,#764ba2)}
 #countries header{justify-content:flex-start;align-items:center}
 .diploma{position:relative;margin:6px auto 12px;max-width:380px;text-align:center;padding:22px 18px 16px;border-radius:18px;
-  background:linear-gradient(135deg,#fff8e1,#ffe9b0);color:#5a3d00;border:3px double #c9962b;box-shadow:0 8px 26px rgba(201,150,43,.25)}
+  background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,.7) 50%,transparent 60%) no-repeat,linear-gradient(135deg,#fff8e1,#ffe9b0);background-size:250% 100%,auto;animation:shine 4.5s ease-in-out infinite;color:#5a3d00;border:3px double #c9962b;box-shadow:0 8px 26px rgba(201,150,43,.25)}
 .diploma small{display:block;letter-spacing:.2em;font-size:11px;font-weight:700;opacity:.75}
 .diploma b{display:block;font-size:24px;margin:6px 0 2px;font-family:Georgia,serif}
 .diploma span{display:block;font-size:15px}
@@ -208,7 +220,9 @@ h1{font-size:24px;line-height:1.2}
 #seas header{justify-content:flex-start;align-items:center}
 .daily.kids{background:linear-gradient(135deg,#a18cd1,#f78fb3)}
 .tiles{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
-.tile{border:0;border-radius:18px;padding:14px;min-height:118px;color:#fff;text-align:left;cursor:pointer;display:flex;flex-direction:column;font:inherit}
+.tile{border:0;border-radius:18px;padding:14px;min-height:118px;color:#fff;text-align:left;cursor:pointer;display:flex;flex-direction:column;font:inherit;position:relative;overflow:hidden;box-shadow:inset 0 1px 0 rgba(255,255,255,.3)}
+.tile em{position:absolute;right:-12px;bottom:-18px;font-size:90px;line-height:1;font-style:normal;opacity:.15;transform:rotate(-15deg);pointer-events:none}
+.tile i,.tile b,.tile span{position:relative;z-index:1}
 .tile i{font-style:normal;font-size:32px;line-height:1;margin-bottom:auto}
 .tile b{font-size:16px;margin-top:10px}.tile span{font-size:12px;opacity:.9;margin-top:2px}
 .tile.countries{background:linear-gradient(135deg,#667eea,#764ba2)}
@@ -248,11 +262,54 @@ h1{font-size:24px;line-height:1.2}
   .opts .opt::after{content:attr(data-key);position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:12px;color:var(--hint);border:1px solid rgba(128,128,128,.35);border-radius:6px;padding:1px 6px;opacity:.8}
   .opts.kid .opt::after{display:none}
 }
+@media (prefers-reduced-motion:reduce){
+  .daily.shine,.diploma,#game.hot .stk,.q,.opts,.stamp.drop,.pp-book.thud{animation:none!important}
+}
+.btn.pp{background:linear-gradient(135deg,#7b1e2b,#4a0f19);color:#f3d58a;box-shadow:0 4px 0 #2e0910}
+.pp-book{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;border-radius:6px 16px 16px 6px;box-shadow:0 12px 30px rgba(0,0,0,.25);background:#5a1420}
+.pp-book::-webkit-scrollbar{display:none}
+.pp-book.thud{animation:thud .28s}
+@keyframes thud{30%{transform:translateY(4px)}65%{transform:translateY(-1px)}}
+.pp-page{flex:0 0 100%;scroll-snap-align:start;scroll-snap-stop:always;min-height:min(132vw,560px);position:relative;box-sizing:border-box}
+.pp-cover{background:#5a1420 url(cover.jpg) center/cover no-repeat}
+.pp-cover b,.pp-cover span{position:absolute;left:0;right:0;text-align:center;color:#e9c97c;font-family:Georgia,serif;text-shadow:0 1px 1px rgba(0,0,0,.5)}
+.pp-cover b{top:15%;font-size:26px;letter-spacing:.28em}
+.pp-cover span{bottom:15%;font-size:15px;letter-spacing:.32em;line-height:1.7}
+.pp-paper{color:#3b2a14;padding:18px 14px 20px;background:repeating-radial-gradient(circle at 50% 115%,rgba(150,110,60,.07) 0 2px,transparent 2px 10px),linear-gradient(#faf5ea,#efe4cc)}
+.pp-h{font:700 12px Georgia,serif;letter-spacing:.2em;text-transform:uppercase;color:#7a5a2a;text-align:center;margin-bottom:14px;border-bottom:1px solid rgba(122,90,42,.3);padding-bottom:8px}
+.pp-own{display:grid;grid-template-columns:96px 1fr;gap:14px;align-items:start}
+.pp-photo{width:96px;height:122px;border-radius:8px;background:linear-gradient(160deg,#ffd27a,#e07a3b);display:flex;align-items:center;justify-content:center;font-size:54px;box-shadow:inset 0 0 0 3px rgba(255,255,255,.55)}
+.pp-f small{display:block;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#8a6a3a}
+.pp-f b{display:block;font-size:15px;margin:1px 0 9px;font-family:Georgia,serif}
+.pp-mrz{margin-top:14px;font:12px/1.55 "Courier New",monospace;letter-spacing:.06em;word-break:break-all;opacity:.75;background:rgba(255,255,255,.45);padding:8px;border-radius:6px}
+.pp-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px 8px}
+.pp-slot{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;min-height:150px;background:none;border:0;padding:4px;font:inherit;color:inherit;cursor:pointer}
+.pp-slot.wide{grid-column:1/-1}
+.pp-empty{width:118px;height:118px;border:2px dashed rgba(122,90,42,.38);border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:rgba(90,65,30,.6);font-size:11.5px;line-height:1.25;text-align:center;padding:8px;box-sizing:border-box}
+.pp-empty i{font-style:normal;font-size:28px;opacity:.35;filter:grayscale(1)}
+.stamp{--ink:#1f4fa3;position:relative;width:122px;height:122px;border:3px solid var(--ink);color:var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;text-align:center;transform:rotate(var(--rot,-6deg));opacity:.9;filter:url(#ink);mix-blend-mode:multiply;box-sizing:border-box;padding:8px;line-height:1.1;font-family:"Courier New",monospace}
+.stamp::before{content:'';position:absolute;inset:5px;border:1.5px solid var(--ink);border-radius:inherit;pointer-events:none}
+.stamp.round{border-radius:50%}.stamp.rect{border-radius:8px}.stamp.oval{width:146px;height:104px;border-radius:50%}
+.stamp.big{width:168px;height:168px;border-width:4px}.stamp.big b{font-size:15px}.stamp.big em{font-size:26px}
+.stamp small{font-size:8.5px;letter-spacing:.14em;font-weight:700}
+.stamp i{font-style:normal;font-size:19px}
+.stamp b{font-size:11.5px;font-weight:800;text-transform:uppercase;letter-spacing:.03em;max-width:92%}
+.stamp span{font-size:10px;font-weight:700}
+.stamp em{font-style:normal;font-weight:900;font-size:20px}
+.stamp.pend{opacity:0}
+.stamp.drop{animation:stampDrop .38s cubic-bezier(.3,1.5,.5,1) both}
+@keyframes stampDrop{0%{opacity:0;transform:scale(2.6) rotate(calc(var(--rot) - 14deg))}70%{opacity:.95;transform:scale(.93) rotate(var(--rot))}100%{opacity:.9;transform:scale(1) rotate(var(--rot))}}
+.pp-modes{font-size:13px;letter-spacing:3px}.pp-modes .off{opacity:.22;filter:grayscale(1)}
+.pp-nav{display:flex;align-items:center;justify-content:center;gap:14px;margin:14px 0 4px}
+.pp-nav button{border:0;background:var(--bg2);color:var(--text);width:42px;height:42px;border-radius:50%;font-size:20px;cursor:pointer}
+.pp-dots i{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--hint);opacity:.35;margin:0 3px}
+.pp-dots i.on{opacity:1;background:var(--accent)}
 .toast{position:fixed;left:50%;bottom:30px;transform:translateX(-50%);background:rgba(0,0,0,.8);color:#fff;padding:10px 18px;border-radius:20px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none}
 .toast.show{opacity:1}
 </style>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="ink"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="2.6"/></filter></svg>
 <div class="wrap">
   <section id="home" class="screen active"></section>
   <section id="game" class="screen"></section>
@@ -263,6 +320,7 @@ h1{font-size:24px;line-height:1.2}
   <section id="kids" class="screen"></section>
   <section id="countries" class="screen"></section>
   <section id="seas" class="screen"></section>
+  <section id="passport" class="screen"></section>
 </div>
 <div class="toast" id="toast"></div>
 <div class="praise" id="praise"></div>
@@ -486,7 +544,7 @@ const I18N = {
     title: 'GeoQuiz', sub: 'Викторина о странах и курортах мира',
     daily: '🔥 Ежедневный челлендж', dailyDesc: '10 вопросов — одинаковые для всех сегодня',
     dailyDone: s => `Сегодня: ${s}/10 ✓ · можно переиграть`,
-    mode: 'Что угадываем', c2cap: 'Столицу по стране', cap2c: 'Страну по столице', shape: 'Страну на карте',
+    mode: 'Что угадываем', c2cap: 'Столицу по стране', cap2c: 'Страну по столице', shape: 'Страну на карте', flag: 'Страну по флагу',
     type: 'Тип игры', exam: '🎓 Экзамен', normal: 'Обычная', blitz: '⚡ Блиц 60 с', hardcore: '💀 Хардкор', lives: '❤️ 3 жизни',
     typeHint: { exam: 'Все вопросы раздела с лимитом ошибок. Сдал — диплом и бонус опыта', normal: '4 варианта ответа', blitz: 'Максимум ответов за 60 секунд', hardcore: 'Без вариантов — печатаешь ответ сам, опыт ×2', lives: 'Вопросы без конца и 3 ❤️. Ошибка — минус жизнь, 10 подряд — жизнь назад (не больше трёх)' },
     region: 'Регионы — можно несколько', world: 'Весь мир', eu: 'Европа', as: 'Азия', af: 'Африка',
@@ -494,7 +552,7 @@ const I18N = {
     len: 'Вопросов', all: 'До конца', start: 'Начать',
     errors: n => `🧠 Ошибки (${n})`, ref: 'Справочник', achBtn: (a, b) => `🏅 Достижения ${a}/${b}`,
     played: 'Игр', acc: 'Точность', bestStreak: 'Лучшая серия',
-    qc2cap: 'Столица страны', qcap2c: 'Чья это столица?', qshape: 'Какая страна выделена на карте?',
+    qc2cap: 'Столица страны', qcap2c: 'Чья это столица?', qshape: 'Какая страна выделена на карте?', qflag: 'Чей это флаг?', ghostNear: n => `До рекорда ${n}!`, ghostBeat: '🏁 Новый рекорд!',
     streak: 'Серия', quit: 'Выйти', capOf: 'столица',
     newRecord: '🏆 Новый рекорд!', best: 'Рекорд', mist: 'Запомни', noMist: 'Ни одной ошибки! 🔥',
     again: 'Ещё раз', share: 'Позвать друзей', home: 'В меню',
@@ -533,7 +591,9 @@ const I18N = {
     countriesBtn: '🌍 Страны и столицы', countriesBtnSub: n => `Столицы, контуры, блиц и 3 жизни — ${n} стран`,
     countriesTitle: 'Страны и столицы', countriesSub: n => `${n} стран мира`, toCountries: 'К странам',
     kidsBtn: '👶 Для детей', kidsBtnSub: 'Флаги и столицы известных стран — без очков и таймера',
-    exResume: '🎓 Незаконченный экзамен', exGo: 'Продолжить',
+    exResume: '🎓 Незаконченный экзамен',
+    ppBtn: 'Мой паспорт', ppTitle: 'Паспорт путешественника', ppWord: 'ПАСПОРТ', ppName: 'Имя', ppNo: 'Номер паспорта', ppRank: 'Звание', ppXp: 'Опыт', ppIssued: 'Дата выдачи', ppVisas: 'Штампы', ppKnown: 'Стран угадано',
+    ppSecC: 'Страны и столицы', ppSecS: 'Моря и реки', ppSecR: 'Курорты', ppGet: n => `Сдай экзамен:<br>${n}`, ppStamp: '🛂 Поставить штамп в паспорт', ppNewOne: '🛂 Новый штамп!', exGo: 'Продолжить', exNew: 'Заново',
     tCountries: 'Страны', tCountriesSub: 'Столицы, контуры, блиц', tSeas: 'Моря и реки', tSeasSub: 'Реки, моря, заливы', tRes: 'Курорты', tResSub: 'Пляжи, острова, горы', tKids: 'Детям', tKidsSub: 'Флаги и столицы',
     kidsTitle: 'Для детей', kidsSub: 'Самые известные страны мира', kidsNote: 'Без очков, таймера и рекордов — просто играем и учимся 🙂',
     kFlags: '🚩 Угадай флаг', kCaps: '🏙 Угадай столицу', kCount: n => `${n} стран · 10 вопросов`,
@@ -550,7 +610,7 @@ const I18N = {
     title: 'GeoQuiz', sub: 'A quiz about countries and resorts',
     daily: '🔥 Daily challenge', dailyDesc: '10 questions — the same for everyone today',
     dailyDone: s => `Today: ${s}/10 ✓ · play again`,
-    mode: 'What to guess', c2cap: 'Capital by country', cap2c: 'Country by capital', shape: 'Country on the map',
+    mode: 'What to guess', c2cap: 'Capital by country', cap2c: 'Country by capital', shape: 'Country on the map', flag: 'Country by flag',
     type: 'Game type', exam: '🎓 Exam', normal: 'Classic', blitz: '⚡ Blitz 60s', hardcore: '💀 Hardcore', lives: '❤️ 3 lives',
     typeHint: { exam: 'Every question of the section with an error limit. Pass — get a diploma and bonus XP', normal: '4 answer options', blitz: 'As many as you can in 60 s', hardcore: 'No options — type the answer yourself, XP ×2', lives: 'Endless questions and 3 ❤️. A mistake costs a life, 10 in a row gives one back (max three)' },
     region: 'Regions — pick several', world: 'Whole world', eu: 'Europe', as: 'Asia', af: 'Africa',
@@ -558,7 +618,7 @@ const I18N = {
     len: 'Questions', all: 'All of them', start: 'Start',
     errors: n => `🧠 Mistakes (${n})`, ref: 'Atlas', achBtn: (a, b) => `🏅 Achievements ${a}/${b}`,
     played: 'Games', acc: 'Accuracy', bestStreak: 'Best streak',
-    qc2cap: 'Capital of', qcap2c: 'Which country is this the capital of?', qshape: 'Which country is highlighted?',
+    qc2cap: 'Capital of', qcap2c: 'Which country is this the capital of?', qshape: 'Which country is highlighted?', qflag: 'Whose flag is this?', ghostNear: n => `${n} to beat your record!`, ghostBeat: '🏁 New record!',
     streak: 'Streak', quit: 'Quit', capOf: 'capital of',
     newRecord: '🏆 New record!', best: 'Best', mist: 'Remember these', noMist: 'No mistakes at all! 🔥',
     again: 'Play again', share: 'Challenge friends', home: 'Menu',
@@ -597,7 +657,9 @@ const I18N = {
     countriesBtn: '🌍 Countries & capitals', countriesBtnSub: n => `Capitals, shapes, blitz and 3 lives — ${n} countries`,
     countriesTitle: 'Countries & capitals', countriesSub: n => `${n} countries of the world`, toCountries: 'Countries',
     kidsBtn: '👶 For kids', kidsBtnSub: 'Flags and capitals of famous countries — no points, no timer',
-    exResume: '🎓 Unfinished exam', exGo: 'Continue',
+    exResume: '🎓 Unfinished exam',
+    ppBtn: 'My passport', ppTitle: 'Traveller passport', ppWord: 'PASSPORT', ppName: 'Name', ppNo: 'Passport No.', ppRank: 'Rank', ppXp: 'XP', ppIssued: 'Date of issue', ppVisas: 'Stamps', ppKnown: 'Countries guessed',
+    ppSecC: 'Countries & capitals', ppSecS: 'Seas & rivers', ppSecR: 'Resorts', ppGet: n => `Pass the exam:<br>${n}`, ppStamp: '🛂 Stamp my passport', ppNewOne: '🛂 New stamp!', exGo: 'Continue', exNew: 'Restart',
     tCountries: 'Countries', tCountriesSub: 'Capitals, shapes, blitz', tSeas: 'Seas & rivers', tSeasSub: 'Rivers, seas, gulfs', tRes: 'Resorts', tResSub: 'Beaches, islands, ski', tKids: 'Kids', tKidsSub: 'Flags and capitals',
     kidsTitle: 'For kids', kidsSub: 'The best-known countries of the world', kidsNote: 'No points, timer or records — just play and learn 🙂',
     kFlags: '🚩 Guess the flag', kCaps: '🏙 Guess the capital', kCount: n => `${n} countries · 10 questions`,
@@ -611,7 +673,7 @@ const I18N = {
     newBestTime: '🏎️ Speed record!', shareTime: t => ` in ${t}`
   }
 };
-const MODES = ['c2cap', 'cap2c', 'shape'];
+const MODES = ['c2cap', 'cap2c', 'flag', 'shape'];
 const SEA_PARTS = ['eu', 'aso', 'afam'];          // Моря и реки: Европа · Азия и Океания · Африка и Америка
 const RES_PARTS = ['tr', 'eu', 'aso', 'afr', 'am']; // Курорты: 5 направлений
 // выбор нескольких пунктов, как регионы в Странах: «всё» = все пункты
@@ -776,12 +838,13 @@ function fixSettings() {
 }
 function fixStats() {
   if (!stats || typeof stats !== 'object') stats = {};
-  const d = { played: 0, answered: 0, correct: 0, bestStreak: 0, best: {}, daily: {}, xp: 0, known: [], ach: {}, blitzBest: 0, shapeOk: 0, bestTime: {}, resKnown: [], resBest: {}, resBestTime: {}, genBest: {}, genBestTime: {}, seaOk: 0, dip: {} };
+  const d = { played: 0, answered: 0, correct: 0, bestStreak: 0, best: {}, daily: {}, xp: 0, known: [], ach: {}, blitzBest: 0, shapeOk: 0, bestTime: {}, resKnown: [], resBest: {}, resBestTime: {}, genBest: {}, genBestTime: {}, seaOk: 0, dip: {}, stampD: {}, since: '', ppNo: '', ppSeen: 0 };
   for (const k in d) if (stats[k] == null || typeof stats[k] !== typeof d[k]) stats[k] = d[k];
   if (!Array.isArray(stats.known)) stats.known = [];
   if (!Array.isArray(stats.resKnown)) stats.resKnown = [];
   if (!Array.isArray(mistakes)) mistakes = [];
   stats.known = stats.known.filter(id => BY_ID[id]);
+  if (!stats.since) stats.since = new Date().toISOString().slice(0, 10);
   mistakes = mistakes.filter(id => BY_ID[id]);
 }
 fixSettings(); fixStats();
@@ -1031,11 +1094,17 @@ function sfx(kind) {
     }
     else if (kind === 'ach') { [880, 1175, 1568].forEach((f, i) => play(f, i * .12, .3, 'triangle', .1)); }
     else if (kind === 'tick') { play(1400, 0, .05, 'square', .03); }
+    else if (kind === 'stamp') { play(90, 0, .22, 'sine', .35); play(150, 0, .07, 'square', .06); play(60, .02, .2, 'triangle', .2); }
+    else if (kind === 'hint') { play(880, 0, .07, 'triangle', .09); play(440, .07, .12, 'triangle', .09); }
+    else if (kind === 'fail') { [300, 250, 180].forEach((f, i) => play(f, i * .18, i === 2 ? .6 : .2, 'triangle', .12)); }
   } catch (e) {}
 }
 function hapticImpact(style) {
   try { if (tgv('6.1')) tg.HapticFeedback.impactOccurred(style); } catch (e) {}
 }
+function hapticSel() { try { if (tgv('6.1')) tg.HapticFeedback.selectionChanged(); } catch (e) {} }
+// Провал экзамена / кончились жизни: драматичный звук и двойная вибрация
+function failFx() { setTimeout(() => sfx('fail'), 250); haptic('error'); setTimeout(() => hapticImpact('heavy'), 150); }
 
 function toast(msg) { const t = $('#toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 1600); }
 
@@ -1104,14 +1173,15 @@ function renderHome() {
       </div>
     </header>
     ${rankCard()}
-    <button class="daily" data-act="daily"><b>${t.daily}</b><span>${d != null ? t.dailyDone(d) : t.dailyDesc}</span></button>
+    <button class="daily${d == null ? ' shine' : ''}" data-act="daily"><b>${t.daily}</b><span>${d != null ? t.dailyDone(d) : t.dailyDesc}</span></button>
     ${examResumeCard()}
     <div class="tiles">
-      <button class="tile countries" data-act="countries"><i>🌍</i><b>${t.tCountries}</b><span>${t.tCountriesSub}</span></button>
-      <button class="tile seas" data-act="seas"><i>🌊</i><b>${t.tSeas}</b><span>${t.tSeasSub}</span></button>
-      <button class="tile res" data-act="resorts"><i>🏖</i><b>${t.tRes}</b><span>${t.tResSub}</span></button>
-      <button class="tile kids" data-act="kids"><i>🧸</i><b>${t.tKids}</b><span>${t.tKidsSub}</span></button>
+      <button class="tile countries" data-act="countries"><em>🌍</em><i>🌍</i><b>${t.tCountries}</b><span>${t.tCountriesSub}</span></button>
+      <button class="tile seas" data-act="seas"><em>🌊</em><i>🌊</i><b>${t.tSeas}</b><span>${t.tSeasSub}</span></button>
+      <button class="tile res" data-act="resorts"><em>🏖</em><i>🏖</i><b>${t.tRes}</b><span>${t.tResSub}</span></button>
+      <button class="tile kids" data-act="kids"><em>🧸</em><i>🧸</i><b>${t.tKids}</b><span>${t.tKidsSub}</span></button>
     </div>
+    <button class="btn pp" data-act="passport">🛂 ${t.ppBtn} · ${stampCount()}/${STAMPS.length}</button>
     <div class="row">
       <button class="btn sec" data-act="errors" ${mistakes.length ? '' : 'disabled'}>${t.errors(mistakes.length)}</button>
       <button class="btn sec" data-act="ref">📖 ${t.ref}</button>
@@ -1131,7 +1201,7 @@ function renderCountries() {
     <header><button class="back" data-act="home">‹ ${t.back}</button><div style="flex:1"><h1>🌍 ${t.countriesTitle}</h1><div class="sub">${t.countriesSub(COUNTRIES.length)}</div></div></header>
     <div class="card">
       <div class="label">${t.mode}</div>
-      <div class="seg seg3">${MODES.map(m => `<button class="chip ${settings.mode === m ? 'on' : ''}" data-act="set" data-k="mode" data-v="${m}">${m === 'shape' ? '🗺️ ' : ''}${t[m]}</button>`).join('')}</div>
+      <div class="seg">${MODES.map(m => `<button class="chip ${settings.mode === m ? 'on' : ''}" data-act="set" data-k="mode" data-v="${m}">${m === 'shape' ? '🗺️ ' : m === 'flag' ? '🚩 ' : ''}${t[m]}</button>`).join('')}</div>
       <div class="label">${t.type}</div>
       <div class="seg seg3">${TYPES.map(m => `<button class="chip ${settings.type === m ? 'on' : ''}" data-act="set" data-k="type" data-v="${m}">${t[m]}</button>`).join('')}</div>
       <div class="type-hint">${t.typeHint[settings.type]}</div>
@@ -1142,7 +1212,7 @@ function renderCountries() {
       }).join('')}</div>
       <div class="best-line">${settings.type === 'exam' ? `${t.examLimit(countriesLimit())} · ${dipLine(bestKey())}` : `${t.best}: ${best != null ? best : '—'}`}</div>
     </div>
-    <button class="btn" data-act="start">▶ ${t.start}</button>
+    ${startBtns('start', '', bestKey())}
 `;
 }
 
@@ -1169,8 +1239,162 @@ function buildQuestions(pool, rnd) {
     return { c, opts: shuffle([c, ...cand.slice(0, 3)], rnd).map(o => o.id) };
   });
 }
+// Вопросы «туда и обратно» (На какой реке Вильнюс? / Какой город на Нерисе?) ставим не ближе GAP вопросов друг от друга
+function spreadMirrors(qs, GAP = 20) {
+  const id = q => String(q.key).split(':')[1], n = qs.length;
+  const adj = qs.map((a, i) => qs.reduce((r, b, j) => (i !== j && (a.right === id(b) || b.right === id(a)) ? r.concat(j) : r), []));
+  const pos = new Array(n).fill(-1), order = [];
+  // 1) жадно: берём первый вопрос без «пары» среди последних GAP; если такого нет — тот, у кого пара дальше всех
+  const free = (i, p) => adj[i].reduce((d, j) => pos[j] >= 0 ? Math.min(d, Math.abs(p - pos[j])) : d, GAP);
+  for (let p = 0; p < n; p++) {
+    let best = -1, bd = -1;
+    for (let i = 0; i < n; i++) if (pos[i] < 0) { const d = free(i, p); if (d > bd) { bd = d; best = i; if (d >= GAP) break; } }
+    pos[best] = p; order.push(best);
+  }
+  // 2) починка: близкие пары меняем местами с вопросами, где им будет просторно
+  const ok = (i, p, skip) => adj[i].every(j => j === skip || Math.abs(p - pos[j]) >= GAP);
+  for (let pass = 0; pass < 3; pass++) for (let i = 0; i < n; i++) {
+    if (ok(i, pos[i])) continue;
+    for (let k = 0; k < n; k++) {
+      const j = order[k]; if (j === i) continue;
+      const pi = pos[i], pj = pos[j];
+      if (ok(i, pj, j) && ok(j, pi, i)) { pos[i] = pj; pos[j] = pi; order[pj] = i; order[pi] = j; break; }
+    }
+  }
+  return order.map(i => qs[i]);
+}
+// Кнопка «Начать» в разделе: если этот экзамен не закончен — «Продолжить» и «Заново»
+function startBtns(act, v, key) {
+  const t = T(), s = examSaved(), dv = v ? ` data-v="${v}"` : '';
+  if (s && s.key === key) return `<div class="row">
+      <button class="btn" data-act="exres">▶ ${t.exGo} ${s.i}/${s.qs.length}</button>
+      <button class="btn sec" data-act="exnew" data-a="${act}"${dv}>↻ ${t.exNew}</button></div>`;
+  return `<button class="btn" data-act="${act}"${dv}>▶ ${t.start}</button>`;
+}
+
+// ===== ПАСПОРТ СО ШТАМПАМИ =====
+// sec: c — страны, s — моря и реки, r — курорты; форма, цвет чернил и наклон у каждого штампа свои
+const STAMPS = [
+  { id: 'c_eu', sec: 'c', ru: 'Европа', en: 'Europe', sh: 'round', ink: '#1f4fa3', rot: -8, ic: '✈︎' },
+  { id: 'c_aso', sec: 'c', ru: 'Азия и Океания', en: 'Asia & Oceania', sh: 'rect', ink: '#b3261e', rot: 6, ic: '✈︎' },
+  { id: 'c_af', sec: 'c', ru: 'Африка', en: 'Africa', sh: 'oval', ink: '#2e7d32', rot: -4, ic: '✈︎' },
+  { id: 'c_am', sec: 'c', ru: 'Америка', en: 'Americas', sh: 'rect', ink: '#6a1b9a', rot: -10, ic: '✈︎' },
+  { id: 'c_world', sec: 'c', ru: 'Весь мир', en: 'Whole world', sh: 'round big', ink: '#9a6b00', rot: -5, ic: '★' },
+  { id: 's_eu', sec: 's', ru: 'Европа', en: 'Europe', sh: 'round', ink: '#0d47a1', rot: 7, ic: '⚓︎' },
+  { id: 's_aso', sec: 's', ru: 'Азия и Океания', en: 'Asia & Oceania', sh: 'oval', ink: '#00695c', rot: -6, ic: '⚓︎' },
+  { id: 's_afam', sec: 's', ru: 'Африка и Америка', en: 'Africa & Americas', sh: 'rect', ink: '#1565c0', rot: 5, ic: '⚓︎' },
+  { id: 's_world', sec: 's', ru: 'Все моря', en: 'All seas', sh: 'round big', ink: '#9a6b00', rot: 4, ic: '★' },
+  { id: 'r_tr', sec: 'r', ru: 'Турция и Египет', en: 'Turkey & Egypt', sh: 'oval', ink: '#c62828', rot: 6, ic: '☀︎' },
+  { id: 'r_eu', sec: 'r', ru: 'Европа', en: 'Europe', sh: 'rect', ink: '#283593', rot: -7, ic: '☀︎' },
+  { id: 'r_aso', sec: 'r', ru: 'Азия', en: 'Asia', sh: 'round', ink: '#ad1457', rot: 9, ic: '☀︎' },
+  { id: 'r_afr', sec: 'r', ru: 'Африка', en: 'Africa', sh: 'rect', ink: '#2e7d32', rot: -5, ic: '☀︎' },
+  { id: 'r_am', sec: 'r', ru: 'Америка', en: 'Americas', sh: 'oval', ink: '#e65100', rot: 4, ic: '☀︎' },
+  { id: 'r_all', sec: 'r', ru: 'Все курорты', en: 'All resorts', sh: 'round big', ink: '#9a6b00', rot: -6, ic: '★' }
+];
+const ST_BY = Object.fromEntries(STAMPS.map(x => [x.id, x]));
+const MODE_IC = { c2cap: '🏛', cap2c: '🌐', flag: '🚩', shape: '🗺' };
+// Штампы собираются из дипломов: «Весь мир» даёт все штампы раздела, Европа+Африка — оба
+function stampsAll() {
+  const out = {};
+  const put = (id, g, mode) => {
+    if (!ST_BY[id]) return;
+    const o = out[id] || (out[id] = { g: null, m: [] });
+    if (!o.g || GRADES.indexOf(g) > GRADES.indexOf(o.g)) o.g = g;
+    if (mode && !o.m.includes(mode)) o.m.push(mode);
+  };
+  for (const k in stats.dip) {
+    const g = stats.dip[k], p = k.split('_'), r = p.slice(2).join('_');
+    if (p[0] === 'exam') (r === 'world' ? PARTS.concat('world') : r.split('+')).forEach(x => put('c_' + x, g, p[1]));
+    else if (p[0] === 'res' && p[1] === 'exam') (r === 'all' ? RES_PARTS.concat('all') : r.split('+')).forEach(x => put('r_' + x, g));
+    else if (p[0] === 'sea' && p[1] === 'exam') (r === 'world' ? SEA_PARTS.concat('world') : r.split('+')).forEach(x => put('s_' + x, g));
+  }
+  return out;
+}
+const stampCount = () => Object.keys(stampsAll()).length;
+const ppPageOf = id => id ? ({ c: 2, s: 3, r: 4 })[id[0]] : 0;
+const fmtDay = d => d ? d.split('-').reverse().join('.') : '—';
+let ppCur = 0;
+function ppNumber() {
+  const u = tg && tg.initDataUnsafe && tg.initDataUnsafe.user;
+  if (u && u.id) return 'GQ-' + String(u.id).slice(-6).padStart(6, '0');
+  if (!stats.ppNo) { stats.ppNo = 'GQ-' + String(Math.floor(Math.random() * 1e6)).padStart(6, '0'); saveAll(); }
+  return stats.ppNo;
+}
+function stampHtml(x, st, pend) {
+  const t = T(), L = settings.lang;
+  return `<div class="stamp ${x.sh}${pend ? ' pend' : ''}" data-st="${x.id}" style="--ink:${x.ink};--rot:${x.rot}deg">
+    <small>GEOQUIZ</small><i>${x.ic}</i><b>${esc(x[L])}</b><span>${fmtDay(stats.stampD[x.id] || stats.since)}</span><em>${st.g}</em></div>`;
+}
+function ppSection(sec, title, fresh) {
+  const t = T(), L = settings.lang, all = stampsAll();
+  const slots = STAMPS.filter(x => x.sec === sec).map(x => {
+    const st = all[x.id], wide = x.sh.includes('big') ? ' wide' : '';
+    const modes = sec === 'c' && st ? `<div class="pp-modes">${MODES.map(m => `<span class="${st.m.includes(m) ? '' : 'off'}">${MODE_IC[m]}</span>`).join('')}</div>` : '';
+    return st
+      ? `<div class="pp-slot${wide}">${stampHtml(x, st, fresh.includes(x.id))}${modes}</div>`
+      : `<button class="pp-slot${wide}" data-act="ppgo" data-v="${x.id}"><div class="pp-empty"><i>${x.ic === '★' ? '🌍' : sec === 'c' ? '🛂' : sec === 's' ? '⚓' : '🏖'}</i>${t.ppGet(esc(x[L]))}</div></button>`;
+  }).join('');
+  return `<div class="pp-page pp-paper"><div class="pp-h">${title}</div><div class="pp-grid">${slots}</div></div>`;
+}
+function renderPassport(fresh = []) {
+  const t = T(), i = rankIdx(stats.xp), name = playerName(), no = ppNumber();
+  const mrzName = String(name).toUpperCase().replace(/[^A-ZА-ЯЁ0-9]/g, '<');
+  const mrz1 = ('P<GEO' + mrzName + '<<').padEnd(36, '<').slice(0, 36);
+  const mrz2 = (no.replace('-', '') + '<' + stats.since.replace(/-/g, '').slice(2) + '<<' + stampCount() + '<<').padEnd(36, '<').slice(0, 36);
+  const pages = [
+    `<div class="pp-page pp-cover"><b>GEOQUIZ</b><span>${t.ppWord}<br>${settings.lang === 'ru' ? 'PASSPORT' : ''}</span></div>`,
+    `<div class="pp-page pp-paper"><div class="pp-h">${t.ppTitle}</div>
+      <div class="pp-own"><div class="pp-photo">${RANKS[i][1]}</div>
+        <div class="pp-f"><small>${t.ppName}</small><b>${esc(name)}</b><small>${t.ppNo}</small><b>${no}</b><small>${t.ppRank}</small><b>${esc(rankName(i))}</b></div></div>
+      <div class="pp-f" style="display:grid;grid-template-columns:1fr 1fr;gap:0 12px;margin-top:6px">
+        <div><small>${t.ppIssued}</small><b>${fmtDay(stats.since)}</b></div><div><small>${t.ppXp}</small><b>${stats.xp.toLocaleString('ru-RU')}</b></div>
+        <div><small>${t.ppVisas}</small><b>${stampCount()} / ${STAMPS.length}</b></div><div><small>${t.ppKnown}</small><b>${stats.known.length} / ${COUNTRIES.length}</b></div></div>
+      <div class="pp-mrz">${esc(mrz1)}<br>${esc(mrz2)}</div></div>`,
+    ppSection('c', t.ppSecC, fresh), ppSection('s', t.ppSecS, fresh), ppSection('r', t.ppSecR, fresh)
+  ];
+  $('#passport').innerHTML = `
+    <header><button class="back" data-act="home">‹ ${t.back}</button><div style="flex:1"><h1>🛂 ${t.ppBtn}</h1><div class="sub">${stampCount()} / ${STAMPS.length}</div></div></header>
+    <div class="pp-book" id="ppBook">${pages.join('')}</div>
+    <div class="pp-nav"><button data-act="ppprev">‹</button><span class="pp-dots">${pages.map((_, k) => `<i data-k="${k}"></i>`).join('')}</span><button data-act="ppnext">›</button></div>`;
+  const book = $('#ppBook');
+  if (book && book.addEventListener) book.addEventListener('scroll', () => {
+    const k = Math.round(book.scrollLeft / Math.max(1, book.clientWidth));
+    if (k !== ppCur) { ppCur = k; ppDots(); if (k > 0) { settings.ppPage = k; store.set('settings', settings); } }
+  }, { passive: true });
+}
+function ppDots() { document.querySelectorAll('#passport .pp-dots i').forEach((d, k) => d.classList.toggle('on', k === ppCur)); }
+function ppScroll(k, smooth = true) {
+  const book = $('#ppBook'); if (!book || !book.scrollTo) return;
+  k = Math.max(0, Math.min(4, k)); ppCur = k; ppDots();
+  book.scrollTo({ left: k * book.clientWidth, behavior: smooth ? 'smooth' : 'auto' });
+}
+// Открыть паспорт: первый раз — обложка, дальше она сама откидывается на последнюю страницу (или на страницу нового штампа)
+function openPassport(page, fresh = []) {
+  renderPassport(fresh); go('passport'); ppCur = 0; ppDots();
+  const first = !stats.ppSeen;
+  if (first) { stats.ppSeen = 1; saveAll(); }
+  const target = page || (first && !fresh.length ? 0 : (settings.ppPage || 1));
+  if (target) setTimeout(() => ppScroll(target), first && !fresh.length ? 0 : 400);
+  if (fresh.length) setTimeout(() => {
+    document.querySelectorAll('#passport .stamp.pend').forEach(el => { el.classList.remove('pend'); el.classList.add('drop'); });
+    setTimeout(() => {
+      sfx('stamp'); hapticImpact('heavy');
+      const b = $('#ppBook'); if (b) { b.classList.remove('thud'); void b.offsetWidth; b.classList.add('thud'); }
+      toast(T().ppNewOne);
+    }, 260);
+  }, 1100);
+}
+// Тап по пустому месту — сразу в нужный раздел с этим экзаменом
+function ppGo(id) {
+  const x = ST_BY[id]; if (!x) return;
+  const r = id.slice(2);
+  if (x.sec === 'c') { settings.type = 'exam'; settings.regions = r === 'world' ? PARTS.slice() : [r]; saveAll(); renderCountries(); go('countries'); }
+  else if (x.sec === 's') { settings.stype = 'exam'; settings.sregs = r === 'world' ? SEA_PARTS.slice() : [r]; saveAll(); renderSeas(); go('seas'); }
+  else { settings.rtype = 'exam'; settings.rdirs = r === 'all' ? RES_PARTS.slice() : [r]; saveAll(); renderResorts(); go('resorts'); }
+}
+
 // ===== АВТОСОХРАНЕНИЕ ЭКЗАМЕНА (только на этом устройстве) =====
-const EX_F = ['gen', 'sec', 'kind', 'mode', 'type', 'key', 'asked', 'score', 'streak', 'maxStreak', 'wrong', 'xp', 'limit', 'title', 'rank0', 'newAch'];
+const EX_F = ['gen', 'sec', 'kind', 'mode', 'type', 'key', 'asked', 'score', 'streak', 'maxStreak', 'wrong', 'xp', 'limit', 'title', 'rank0', 'newAch', 'cfg'];
 function examSave() {
   if (!game || game.type !== 'exam' || game.kind === 'errors') return;
   if (game.wrong.length > game.limit || game.i + 1 >= game.qs.length) { store.del('exam'); return; }
@@ -1194,9 +1418,9 @@ async function examResume() {
   const g = { i: s.i, hintUsed: false, locked: false, over: false, lives: 0 };
   EX_F.forEach(f => { g[f] = s[f]; });
   if (s.gen) {
-    g.qs = s.qs.map(q => Object.assign(q, { onOk: s.sec === 'res'
-      ? () => { const id = String(q.key).slice(2); if (!stats.resKnown.includes(id)) stats.resKnown.push(id); }
-      : () => { stats.seaOk++; } }));
+    const fresh = q => genFromKey(s.sec, q.key) || Object.assign(q, { onOk: () => {} });
+    g.qs = s.qs.map(fresh);
+    g.wrong = (s.wrong || []).map(fresh);
   } else {
     g.qs = s.qs.filter(q => BY_ID[q.c]).map(q => ({ c: BY_ID[q.c], opts: q.opts }));
     g.base = g.qs.map(q => q.c);
@@ -1216,7 +1440,7 @@ function examResumeCard() {
 }
 
 function stopTimer() { if (timerId) { clearInterval(timerId); timerId = null; } }
-function endGame() { stopTimer(); if (game) game.over = true; game = null; kgame = null; }
+function endGame() { stopTimer(); if (game) game.over = true; game = null; kgame = null; hotMode(); }
 
 async function startGame(kind) {
   const t = T();
@@ -1248,8 +1472,9 @@ async function startGame(kind) {
     kind, mode, type, key: bestKey(), base, qs: buildQuestions(pool, rnd),
     i: 0, asked: 0, score: 0, streak: 0, maxStreak: 0, wrong: [], hintUsed: false, locked: false,
     xp: 0, rank0: rankIdx(stats.xp), newAch: [], over: false, lives: type === 'lives' ? 3 : 0,
-    limit: type === 'exam' ? countriesLimit() : 0, title: regTitle()
+    limit: type === 'exam' ? countriesLimit() : 0, title: regTitle(), cfg: cfgOf()
   };
+  game.rec = kind === 'normal' ? ghostRec() : 0;
   go('game');
   game.t0 = Date.now();
   if (type === 'blitz') {
@@ -1265,7 +1490,9 @@ function tickBlitz() {
   if (!game || game.over) return stopTimer();
   const left = Math.max(0, game.deadline - Date.now());
   const tt = $('#timerTxt'), tb = $('#timerBar');
-  if (tt) tt.textContent = '⏱ ' + Math.ceil(left / 1000);
+  const sec = Math.ceil(left / 1000);
+  if (tt) tt.textContent = '⏱ ' + sec;
+  if (sec > 0 && sec <= 10 && sec !== game.tickSec) { game.tickSec = sec; sfx('tick'); hapticImpact('light'); }
   if (tb) { tb.style.width = (left / 600) + '%'; tb.classList.toggle('low', left < 10000); }
   if (left <= 0) { praise(T().timeUp, 'mega'); game.gen ? finishGen() : finish(); }
 }
@@ -1276,12 +1503,31 @@ function tickClock() {
   if (el) el.textContent = '⏱ ' + fmtTime(Date.now() - game.t0);
 }
 
+// Настройки регионов, с которыми начат экзамен: заголовок и бонус берём из них, а не из текущего меню
+const cfgOf = () => ({ regions: settings.regions.slice(), rdirs: settings.rdirs.slice(), sregs: settings.sregs.slice() });
+function withCfg(cfg, fn) {
+  if (!cfg) return fn();
+  const old = cfgOf(); Object.assign(settings, cfg);
+  try { return fn(); } finally { Object.assign(settings, old); }
+}
+// Призрак рекорда (блиц и 3 жизни): «До рекорда 2!» и «Новый рекорд!» прямо в игре
+function ghostRec() { return game ? ((game.gen ? stats.genBest : stats.best)[game.key] || 0) : 0; }
+function ghost() {
+  if (!game || !endless(game.type) || game.kind !== 'normal' && !game.gen) return;
+  const rec = game.rec, s = game.score, t = T();
+  if (!rec || game.ghostBeat) return;
+  if (s > rec) { game.ghostBeat = true; praise(t.ghostBeat, 'mega'); confetti(30); sfx('mega'); hapticImpact('heavy'); return; }
+  const left = rec - s + 1;
+  if (left <= 3 && left !== game.ghostLeft) { game.ghostLeft = left; praise(t.ghostNear(left), 'mega'); }
+}
+const ghostTag = () => game && endless(game.type) && game.rec ? ` · 🏁 ${game.rec}` : '';
+function hotMode() { const g = document.getElementById('game'); if (g && g.classList) g.classList.toggle('hot', !!(game && game.streak >= 5)); }
 function gameTitle() {
   const t = T();
   if (game.kind === 'daily') return t.dailyTitle;
   if (game.kind === 'errors') return t.errorsTitle;
   const pre = game.type === 'blitz' ? '⚡ ' : game.type === 'hardcore' ? '💀 ' : game.type === 'lives' ? '❤️ ' : '';
-  return pre + regTitle();
+  return pre + withCfg(game.cfg, regTitle);
 }
 const askWhat = () => game.mode === 'c2cap' ? 'c' : 'n'; // что нужно назвать: столицу или страну
 
@@ -1291,6 +1537,7 @@ function renderQuestion() {
   let qHtml;
   if (game.mode === 'c2cap') qHtml = `${flag(c.id, 'big')}<small>${t.qc2cap} ${tierTag(c)}</small><h2>${esc(nm(c))}</h2>`;
   else if (game.mode === 'cap2c') qHtml = `<div class="fl big">🏛️</div><small>${t.qcap2c} ${tierTag(c)}</small><h2>${esc(cp(c))}</h2>`;
+  else if (game.mode === 'flag') qHtml = `${flag(c.id, 'big')}<small>${t.qflag} ${tierTag(c)}</small>`;
   else qHtml = `${mapSVG(c.id)}<small>${t.qshape} ${tierTag(c)}</small>`;
 
   const blitz = game.type === 'blitz', hard = game.type === 'hardcore';
@@ -1313,7 +1560,7 @@ function renderQuestion() {
   $('#game').innerHTML = `
     <div class="top"><span>${gameTitle()}</span><span>${topRight}</span></div>
     ${bar}
-    <div class="top"><span>✅ ${game.score} · ⭐ ${game.xp} XP</span><span>${game.streak >= 3 ? '🔥' : '⚡'} ${t.streak}: ${game.streak}</span></div>
+    <div class="top"><span>✅ ${game.score}${ghostTag()} · ⭐ ${game.xp} XP</span><span class="stk">${game.streak >= 3 ? '🔥' : '⚡'} ${t.streak}: ${game.streak}</span></div>
     <div class="q">${qHtml}</div>
     ${answers}
     <div class="reveal" id="reveal"></div>
@@ -1363,12 +1610,12 @@ function resolve(ok, close) {
     if (game.type === 'lives') { game.lives--; praise(game.lives > 0 ? '💔' : t.noLives, 'minus'); }
   }
   if (game.type === 'exam') { const e = document.querySelector('#game .errs'); if (e) e.textContent = t.examErr(game.wrong.length, game.limit); }
-  $('#reveal').innerHTML = `${flag(q.c.id, 'sm')} <b>${esc(cp(q.c))}</b> — ${t.capOf} ${esc(nm(q.c))}${gain ? ` <span class="gain">+${gain} XP</span>` : ''}`;
+  $('#reveal').innerHTML = (game.mode === 'flag' ? `${flag(q.c.id, 'sm')} <b>${esc(nm(q.c))}</b>` : `${flag(q.c.id, 'sm')} <b>${esc(cp(q.c))}</b> — ${t.capOf} ${esc(nm(q.c))}`) + (gain ? ` <span class="gain">+${gain} XP</span>` : '');
   if (game.type === 'lives') { const l = document.querySelector('#game .lives'); if (l) l.textContent = hearts(game.lives); }
   checkAch(game);
-  saveAll(); examSave();
-  if (game.type === 'lives' && game.lives <= 0) { stopTimer(); setTimeout(finish, 1700); return; }
-  if (game.type === 'exam' && game.wrong.length > game.limit) { game.failed = true; stopTimer(); praise('❌', 'minus'); setTimeout(finish, 1700); return; }
+  saveAll(); examSave(); hotMode(); ghost();
+  if (game.type === 'lives' && game.lives <= 0) { stopTimer(); failFx(); setTimeout(finish, 1700); return; }
+  if (game.type === 'exam' && game.wrong.length > game.limit) { game.failed = true; stopTimer(); praise('❌', 'minus'); failFx(); setTimeout(finish, 1700); return; }
   const delay = game.type === 'blitz' ? (ok ? 350 : 2500) : (ok ? 900 : 1900);
   setTimeout(nextQuestion, delay);
 }
@@ -1416,6 +1663,7 @@ function useHint() {
   } else {
     const wrong = shuffle(q.opts.filter(id => id !== q.c.id)).slice(0, 2);
     document.querySelectorAll('.opt').forEach(b => { if (wrong.includes(b.dataset.id)) { b.classList.add('gone'); b.disabled = true; } });
+    sfx('hint'); hapticImpact('medium');
   }
   document.querySelector('[data-act="hint"]').disabled = true;
 }
@@ -1438,7 +1686,8 @@ function finish() {
   game.time = Date.now() - game.t0;
   stats.played++;
   let record = false, best = null, fastRec = false;
-  game.exam = game.type === 'exam' && game.kind === 'normal' ? examResult(game, countriesBonus()) : null;
+  game.title = withCfg(game.cfg, regTitle); // на текущем языке
+  game.exam = game.type === 'exam' && game.kind === 'normal' ? examResult(game, withCfg(game.cfg, countriesBonus)) : null;
   if (game.kind === 'errors' || game.exam) { /* без рекордов: «Ошибки» и экзамен */ }
   else if (!endless(game.type) && !game.wrong.length && game.asked > 0) {
     const tk = game.kind === 'daily' ? 'daily' : game.key;
@@ -1494,6 +1743,7 @@ function renderResult(record, best, rankUp, fastRec) {
     <div class="xp-line">⭐ ${t.gotXp(game.xp)}</div>
     ${rankUp ? `<span class="badge">${t.newRank(rankName(rankIdx(stats.xp)))}</span>` : ''}
     ${record ? `<span class="badge">${t.newRecord}</span>` : best != null ? `<div class="pct">${t.best}: ${best}</div>` : ''}
+    ${game.newStamps && game.newStamps.length ? `<button class="btn pp" data-act="ppstamp">${t.ppStamp}</button>` : ''}
     <button class="btn" data-act="share">📤 ${t.share}</button>
     <div class="row">
       <button class="btn sec" data-act="again">↻ ${game.exam && !game.exam.passed ? t.examRetry : t.again}</button>
@@ -1729,10 +1979,10 @@ const countriesBonus = () => isWorld() ? 4750 : settings.regions.reduce((s, r) =
 const resAll = () => RES_PARTS.every(p => settings.rdirs.includes(p));
 const seaAll = () => SEA_PARTS.every(p => settings.sregs.includes(p));
 const R_BONUS = { eu: 1500, tr: 1000, aso: 1000, afr: 1000, am: 1000 };
-const S_LIM = { eu: 20, aso: 30, afam: 25 };
+const S_LIM = { eu: 20, aso: 15, afam: 12 };
 const genLimit = sec => sec === 'res'
   ? (resAll() ? 20 : settings.rdirs.length * 5)
-  : (seaAll() ? 75 : settings.sregs.reduce((s, r) => s + S_LIM[r], 0));
+  : (seaAll() ? 45 : settings.sregs.reduce((s, r) => s + S_LIM[r], 0));
 const genBonus = sec => sec === 'res'
   ? (resAll() ? 5000 : settings.rdirs.reduce((s, d) => s + R_BONUS[d], 0))
   : (seaAll() ? 5000 : settings.sregs.length * 1500);
@@ -1745,7 +1995,13 @@ function examResult(g, aPlus) {
   const better = !prev || GRADES.indexOf(grade) > GRADES.indexOf(prev);
   const bonus = better ? (BON[grade] - (prev ? BON[prev] : 0)) * k : 0;
   g.xp += bonus; stats.xp += bonus;
-  if (better) stats.dip[g.key] = grade;
+  if (better) {
+    const before = stampsAll();
+    stats.dip[g.key] = grade;
+    const after = stampsAll(), day = new Date().toISOString().slice(0, 10);
+    g.newStamps = STAMPS.map(x => x.id).filter(id => after[id] && (!before[id] || after[id].g !== before[id].g || after[id].m.length !== before[id].m.length));
+    g.newStamps.forEach(id => { stats.stampD[id] = day; });
+  }
   return { passed, grade, bonus, prev };
 }
 function examHtml(g, ex, title) {
@@ -1793,7 +2049,7 @@ function renderResorts() {
       }).join('')}</div>
       <div class="best-line">${settings.rtype === 'exam' ? `${t.examLimit(genLimit('res'))} · ${dipLine(k)}` : `${t.best}: ${best != null ? best : '—'}`}</div>
     </div>
-    <button class="btn" data-act="gstart" data-v="res">▶ ${t.start}</button>`;
+    ${startBtns('gstart', 'res', genKey('res'))}`;
 }
 // равномерно по подгруппам — чтобы «все направления» не были одним Египтом
 function balancedRes(list) {
@@ -1804,9 +2060,10 @@ function balancedRes(list) {
   while (queues.some(q => q.length)) shuffle(queues).forEach(q => { if (q.length) out.push(q.pop()); });
   return out;
 }
-function buildResQs() {
+function buildResQs() { return balancedRes(resPool()).map(resQuestion); }
+function resQuestion(r) {
   const t = T();
-  return balancedRes(resPool()).map(r => {
+  {
     const pick = f => shuffle([...new Set(RESORTS.filter(f).map(x => x.c))]);
     const cand = [...new Set([...pick(x => x.sub === r.sub && x.c !== r.c), ...pick(x => x.g === r.g && x.c !== r.c), ...pick(x => x.c !== r.c)])].slice(0, 3);
     const c = BY_ID[r.c];
@@ -1819,7 +2076,7 @@ function buildResQs() {
       line: [flag(r.c, 'sm'), rname(r), nm(c)],
       onOk: () => { if (!stats.resKnown.includes(r.id)) stats.resKnown.push(r.id); }
     };
-  });
+  }
 }
 
 // ===== МОРЯ И РЕКИ: данные =====
@@ -2158,9 +2415,22 @@ function buildSeaQs() {
   const queues = shuffle(Object.keys(groups)).map(k => shuffle(groups[k]));
   const out = [];
   while (queues.some(q => q.length)) shuffle(queues).forEach(q => { if (q.length) out.push(q.pop()); });
-  return out.map(s => Object.assign(seaQuestion(s), { onOk: () => { stats.seaOk++; } }));
+  return spreadMirrors(out.map(s => Object.assign(seaQuestion(s), { onOk: () => { stats.seaOk++; } })));
 }
 const seaCount = () => seaSeeds().length;
+// Пересобрать вопрос по его коду (r:bali, cr:vilnius…) — на текущем языке, с новыми вариантами
+function genFromKey(sec, key) {
+  try {
+    if (sec === 'res') { const r = RESORTS.find(x => 'r:' + x.id === key); return r ? resQuestion(r) : null; }
+    if (!genFromKey.sea) {
+      const cur = settings.sregs; settings.sregs = SEA_PARTS.slice();
+      genFromKey.sea = {}; seaSeeds().forEach(s => { genFromKey.sea[s.kind + ':' + (s.c || s.r || s.w).id] = s; });
+      settings.sregs = cur;
+    }
+    const s = genFromKey.sea[key];
+    return s ? Object.assign(seaQuestion(s), { onOk: () => { stats.seaOk++; } }) : null;
+  } catch (e) { return null; }
+}
 const seaCountFor = r => { const cur = settings.sregs; settings.sregs = r === 'world' ? SEA_PARTS.slice() : [r]; const n = seaSeeds().length; settings.sregs = cur; return n; };
 
 function renderSeas() {
@@ -2178,7 +2448,7 @@ function renderSeas() {
       }).join('')}</div>
       <div class="best-line">${settings.stype === 'exam' ? `${t.examLimit(genLimit('sea'))} · ${t.examQs(seaCount())} · ${dipLine(k)}` : `${t.best}: ${best != null ? best : '—'}`}</div>
     </div>
-    <button class="btn" data-act="gstart" data-v="sea">▶ ${t.start}</button>`;
+    ${startBtns('gstart', 'sea', genKey('sea'))}`;
 }
 
 // ===== ОБЩИЙ ДВИЖОК (Курорты, Моря и реки) =====
@@ -2202,8 +2472,9 @@ function startGen(sec) {
   game = {
     gen: true, sec, kind: 'gen', type, key: genKey(sec), qs, i: 0, asked: 0, score: 0, streak: 0, maxStreak: 0,
     wrong: [], hintUsed: false, locked: false, xp: 0, rank0: rankIdx(stats.xp), newAch: [], over: false,
-    t0: Date.now(), lives: type === 'lives' ? 3 : 0, limit: type === 'exam' ? genLimit(sec) : 0, title: GEN[sec].title().replace(/^\S+\s/, '')
+    t0: Date.now(), lives: type === 'lives' ? 3 : 0, limit: type === 'exam' ? genLimit(sec) : 0, title: GEN[sec].title().replace(/^\S+\s/, ''), cfg: cfgOf()
   };
+  game.rec = ghostRec();
   go('game');
   if (type === 'blitz') { game.deadline = Date.now() + 60000; timerId = setInterval(tickBlitz, 100); }
   else timerId = setInterval(tickClock, 500);
@@ -2232,9 +2503,9 @@ function renderGenQ() {
        </form><div class="hard-hint" id="hardHint"></div>`
     : `<div class="opts">${q.opts.map((o, k) => `<button class="opt" data-key="${k + 1}" data-act="gopt" data-id="${o.id}">${o.html}</button>`).join('')}</div>`;
   $('#game').innerHTML = `
-    <div class="top"><span>${pre}${GEN[game.sec].title()}</span><span>${genTopRight(n)}</span></div>
+    <div class="top"><span>${pre}${withCfg(game.cfg, GEN[game.sec].title)}</span><span>${genTopRight(n)}</span></div>
     ${genBar(n)}
-    <div class="top"><span>✅ ${game.score} · ⭐ ${game.xp} XP</span><span>${game.streak >= 3 ? '🔥' : '⚡'} ${t.streak}: ${game.streak}</span></div>
+    <div class="top"><span>✅ ${game.score}${ghostTag()} · ⭐ ${game.xp} XP</span><span class="stk">${game.streak >= 3 ? '🔥' : '⚡'} ${t.streak}: ${game.streak}</span></div>
     <div class="q">${q.head}</div>
     ${answers}
     <div class="reveal" id="reveal"></div>
@@ -2279,9 +2550,9 @@ function resolveGen(ok, close) {
   if (game.type === 'lives') { const l = document.querySelector('#game .lives'); if (l) l.textContent = hearts(game.lives); }
   if (game.type === 'exam') { const e = document.querySelector('#game .errs'); if (e) e.textContent = t.examErr(game.wrong.length, game.limit); }
   checkAch(game);
-  saveAll(); examSave();
-  if (game.type === 'lives' && game.lives <= 0) { stopTimer(); setTimeout(finishGen, 1700); return; }
-  if (game.type === 'exam' && game.wrong.length > game.limit) { game.failed = true; stopTimer(); praise('❌', 'minus'); setTimeout(finishGen, 1700); return; }
+  saveAll(); examSave(); hotMode(); ghost();
+  if (game.type === 'lives' && game.lives <= 0) { stopTimer(); failFx(); setTimeout(finishGen, 1700); return; }
+  if (game.type === 'exam' && game.wrong.length > game.limit) { game.failed = true; stopTimer(); praise('❌', 'minus'); failFx(); setTimeout(finishGen, 1700); return; }
   setTimeout(nextGenQ, game.type === 'blitz' ? (ok ? 350 : 2500) : (ok ? 900 : 1900));
 }
 
@@ -2320,6 +2591,7 @@ function hintGen() {
   } else {
     const wrong = shuffle(q.opts.map(o => o.id).filter(id => id !== q.right)).slice(0, 2);
     document.querySelectorAll('#game .opt').forEach(b => { if (wrong.includes(b.dataset.id)) { b.classList.add('gone'); b.disabled = true; } });
+    sfx('hint'); hapticImpact('medium');
   }
   document.querySelector('[data-act="ghint"]').disabled = true;
 }
@@ -2341,7 +2613,8 @@ function finishGen() {
   stats.played++;
   const prev = stats.genBest[game.key] || 0;
   let record = false, fastRec = false;
-  game.exam = game.type === 'exam' ? examResult(game, genBonus(game.sec)) : null;
+  game.title = withCfg(game.cfg, GEN[game.sec].title).replace(/^\S+\s/, '');
+  game.exam = game.type === 'exam' ? examResult(game, withCfg(game.cfg, () => genBonus(game.sec))) : null;
   if (!game.exam && game.score > prev) { stats.genBest[game.key] = game.score; record = true; }
   if (game.type === 'blitz') stats.blitzBest = Math.max(stats.blitzBest, game.score);
   checkAch(game);
@@ -2364,7 +2637,7 @@ function renderGenResult(record, rankUp, fastRec) {
     ? `<div class="card"><div class="label">${t.achGot}</div><div class="ach-row">${game.newAch.map(a => `<span>${a.i} ${esc(achText(a)[0])}</span>`).join('')}</div></div>` : '';
   const best = stats.genBest[game.key], bt = stats.genBestTime[game.key];
   $('#result').innerHTML = `
-    <div class="top"><span>${GEN[game.sec].title()}</span><span></span></div>
+    <div class="top"><span>${withCfg(game.cfg, GEN[game.sec].title)}</span><span></span></div>
     ${game.exam ? examHtml(game, game.exam, game.title) : `<div class="emoji">${emoji}</div>`}
     <div class="big-score">${end ? game.score : `${game.score}/${n}`}</div>
     <div class="pct">${end ? `${t.answers}: ${n} · ${t.correctW}: ${game.score}` : t.timeLine(fmtTime(game.time), (game.time / 1000 / Math.max(game.asked, 1)).toFixed(1).replace('.', settings.lang === 'ru' ? ',' : '.'))}</div>
@@ -2372,6 +2645,7 @@ function renderGenResult(record, rankUp, fastRec) {
     <div class="xp-line">⭐ ${t.gotXp(game.xp)}</div>
     ${rankUp ? `<span class="badge">${t.newRank(rankName(rankIdx(stats.xp)))}</span>` : ''}
     ${game.exam ? '' : record ? `<span class="badge">${t.newRecord}</span>` : `<div class="pct">${t.best}: ${best}</div>`}
+    ${game.newStamps && game.newStamps.length ? `<button class="btn pp" data-act="ppstamp">${t.ppStamp}</button>` : ''}
     <button class="btn" data-act="share">📤 ${t.share}</button>
     <div class="row">
       <button class="btn sec" data-act="again">↻ ${game.exam && !game.exam.passed ? t.examRetry : t.again}</button>
@@ -2783,6 +3057,8 @@ document.addEventListener('click', e => {
   const el = e.target.closest('[data-act]');
   if (!el || el.disabled) return;
   const a = el.dataset.act, v = el.dataset.v;
+  if (el.classList.contains('chip') || a === 'lang') hapticSel();
+  else if (el.classList.contains('tile') || ['start', 'gstart', 'daily', 'kstart', 'exres', 'exnew', 'kids'].includes(a)) hapticImpact('light');
   if (a === 'lang') { settings.lang = v; settings.langManual = true; document.documentElement.lang = v; saveAll(); renderHome(); }
   else if (a === 'set') { settings[el.dataset.k] = (el.dataset.k === 'len' && v !== 'all') ? Number(v) : v; saveAll(); renderCountries(); }
   else if (a === 'sound') { settings.sound = !settings.sound; saveAll(); renderHome(); sfx('ok'); }
@@ -2792,6 +3068,7 @@ document.addEventListener('click', e => {
   else if (a === 'daily') startGame('daily');
   else if (a === 'exres') examResume();
   else if (a === 'exdrop') { store.del('exam'); renderHome(); }
+  else if (a === 'exnew') { store.del('exam'); if (el.dataset.a === 'gstart') startGen(v); else startGame('normal'); }
   else if (a === 'errors') startGame('errors');
   else if (a === 'ref') { renderRef(); go('ref'); }
   else if (a === 'refreg') { refRegion = v; refSel = null; renderRefChips(); renderSel(); fillRef(); updateGlobe(); flyRegion(v); }
@@ -2823,6 +3100,10 @@ document.addEventListener('click', e => {
   else if (a === 'ghint') hintGen();
   else if (a === 'gquit') { const sec = game && game.sec; endGame(); if (sec === 'res') { renderResorts(); go('resorts'); } else { renderSeas(); go('seas'); } }
   else if (a === 'ach') { renderAch(); go('ach'); }
+  else if (a === 'passport') openPassport();
+  else if (a === 'ppstamp') { const ns = (game && game.newStamps) || []; endGame(); openPassport(ppPageOf(ns[0]), ns); }
+  else if (a === 'ppgo') ppGo(v);
+  else if (a === 'ppprev' || a === 'ppnext') ppScroll(ppCur + (a === 'ppnext' ? 1 : -1));
   else if (a === 'quit' && game && game.kind === 'normal') { endGame(); renderCountries(); go('countries'); }
   else if (a === 'quit' || a === 'home') { endGame(); go('home'); }
   else if (a === 'again') { if (game && game.gen) { startGen(game.sec); } else { const k = game ? game.kind : 'normal'; endGame(); startGame(k); } }
