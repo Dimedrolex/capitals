@@ -265,6 +265,14 @@ h1{font-size:24px;line-height:1.2}
 @media (prefers-reduced-motion:reduce){
   .daily.shine,.diploma,#game.hot .stk,.q,.opts,.stamp.drop,.pp-book.thud{animation:none!important}
 }
+.quests{padding:12px 12px 10px}
+.qhead{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px}.qhead b{font-size:15px}.qhead span{font-size:12px;font-weight:700;color:#ff8a00;white-space:nowrap}
+.qrow{display:flex;align-items:center;gap:10px;width:100%;border:0;background:none;color:var(--text);font:inherit;text-align:left;padding:7px 2px;cursor:pointer;border-top:1px solid rgba(128,128,128,.15)}
+.qrow i{font-style:normal;font-size:18px}.qrow span{flex:1;font-size:14px;line-height:1.25}
+.qrow u{display:block;height:4px;border-radius:2px;background:rgba(128,128,128,.22);margin-top:5px;overflow:hidden;text-decoration:none}.qrow s{display:block;height:100%;background:var(--accent);text-decoration:none}
+.qrow em{font-style:normal;font-size:12px;color:var(--hint);font-variant-numeric:tabular-nums}.qrow small{font-size:11px;font-weight:700;color:#e6a100}
+.qrow.done span{opacity:.6}.qrow.done s{background:var(--ok)}
+.qfoot{font-size:12px;color:var(--hint);text-align:center;margin-top:6px}
 .btn.pp{background:linear-gradient(135deg,#7b1e2b,#4a0f19);color:#f3d58a;box-shadow:0 4px 0 #2e0910}
 .pp-book{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;border-radius:6px 16px 16px 6px;box-shadow:0 12px 30px rgba(0,0,0,.25);background:#5a1420}
 .pp-book::-webkit-scrollbar{display:none}
@@ -300,8 +308,11 @@ h1{font-size:24px;line-height:1.2}
 .stamp.drop{animation:stampDrop .38s cubic-bezier(.3,1.5,.5,1) both}
 @keyframes stampDrop{0%{opacity:0;transform:scale(2.6) rotate(calc(var(--rot) - 14deg))}70%{opacity:.95;transform:scale(.93) rotate(var(--rot))}100%{opacity:.9;transform:scale(1) rotate(var(--rot))}}
 .pp-modes{font-size:13px;letter-spacing:3px}.pp-modes .off{opacity:.22;filter:grayscale(1)}
-.pp-nav{display:flex;align-items:center;justify-content:center;gap:14px;margin:14px 0 4px}
-.pp-nav button{border:0;background:var(--bg2);color:var(--text);width:42px;height:42px;border-radius:50%;font-size:20px;cursor:pointer}
+.pp-wrap{position:relative}
+.pp-arr{position:absolute;top:clamp(110px,38vh,50%);transform:translateY(-50%);z-index:2;width:40px;height:40px;border:0;border-radius:50%;background:rgba(0,0,0,.38);color:#fff;font-size:24px;line-height:1;cursor:pointer;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);box-shadow:0 2px 8px rgba(0,0,0,.25);transition:opacity .2s}
+.pp-arr.l{left:6px}.pp-arr.r{right:6px}
+.pp-arr.hide{opacity:0;pointer-events:none}
+.pp-nav{display:flex;align-items:center;justify-content:center;margin:12px 0 4px}
 .pp-dots i{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--hint);opacity:.35;margin:0 3px}
 .pp-dots i.on{opacity:1;background:var(--accent)}
 .toast{position:fixed;left:50%;bottom:30px;transform:translateX(-50%);background:rgba(0,0,0,.8);color:#fff;padding:10px 18px;border-radius:20px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none}
@@ -592,6 +603,11 @@ const I18N = {
     countriesTitle: 'Страны и столицы', countriesSub: n => `${n} стран мира`, toCountries: 'К странам',
     kidsBtn: '👶 Для детей', kidsBtnSub: 'Флаги и столицы известных стран — без очков и таймера',
     exResume: '🎓 Незаконченный экзамен',
+    qTitle: '🎯 Задания на сегодня', qAll: 'Все три — ещё +200 XP', qAllDone: '🎉 Все задания выполнены! +200 XP получено', qDone: '✅ Задание выполнено! +100 XP', qBonus: '🎉 Все задания дня! +200 XP',
+    days: n => `🔥 ${n} ${plural(n, 'день', 'дня', 'дней')} подряд`, dayBonus: (n, xp) => `🔥 ${n} ${plural(n, 'день', 'дня', 'дней')} подряд! +${xp} XP`,
+    q_blitz10: 'Набери 10+ правильных в блице', q_res5: 'Угадай 5 курортов подряд без ошибок', q_errors3: 'Разбери 3 страны в «Ошибках»', q_daily: 'Пройди челлендж дня',
+    q_sea15: 'Ответь верно на 15 вопросов про моря и реки', q_streak7: 'Набери серию 7 в любом режиме', q_lives15: 'Набери 15 на 3 жизнях', q_flag10: 'Угадай 10 флагов',
+    q_shape5: 'Угадай 5 стран на карте', q_cap15: 'Ответь верно на 15 вопросов про столицы',
     ppBtn: 'Мой паспорт', ppTitle: 'Паспорт путешественника', ppWord: 'ПАСПОРТ', ppName: 'Имя', ppNo: 'Номер паспорта', ppRank: 'Звание', ppXp: 'Опыт', ppIssued: 'Дата выдачи', ppVisas: 'Штампы', ppKnown: 'Стран угадано',
     ppSecC: 'Страны и столицы', ppSecS: 'Моря и реки', ppSecR: 'Курорты', ppGet: n => `Сдай экзамен:<br>${n}`, ppStamp: '🛂 Поставить штамп в паспорт', ppNewOne: '🛂 Новый штамп!', exGo: 'Продолжить', exNew: 'Заново',
     tCountries: 'Страны', tCountriesSub: 'Столицы, контуры, блиц', tSeas: 'Моря и реки', tSeasSub: 'Реки, моря, заливы', tRes: 'Курорты', tResSub: 'Пляжи, острова, горы', tKids: 'Детям', tKidsSub: 'Флаги и столицы',
@@ -658,6 +674,11 @@ const I18N = {
     countriesTitle: 'Countries & capitals', countriesSub: n => `${n} countries of the world`, toCountries: 'Countries',
     kidsBtn: '👶 For kids', kidsBtnSub: 'Flags and capitals of famous countries — no points, no timer',
     exResume: '🎓 Unfinished exam',
+    qTitle: '🎯 Today\'s tasks', qAll: 'All three — another +200 XP', qAllDone: '🎉 All tasks done! +200 XP received', qDone: '✅ Task complete! +100 XP', qBonus: '🎉 All daily tasks! +200 XP',
+    days: n => `🔥 ${n}-day streak`, dayBonus: (n, xp) => `🔥 ${n}-day streak! +${xp} XP`,
+    q_blitz10: 'Get 10+ correct in blitz', q_res5: 'Guess 5 resorts in a row', q_errors3: 'Fix 3 countries in Mistakes', q_daily: 'Play the daily challenge',
+    q_sea15: 'Answer 15 seas & rivers questions right', q_streak7: 'Reach a streak of 7 in any mode', q_lives15: 'Score 15 in 3 lives', q_flag10: 'Guess 10 flags',
+    q_shape5: 'Guess 5 countries on the map', q_cap15: 'Answer 15 capital questions right',
     ppBtn: 'My passport', ppTitle: 'Traveller passport', ppWord: 'PASSPORT', ppName: 'Name', ppNo: 'Passport No.', ppRank: 'Rank', ppXp: 'XP', ppIssued: 'Date of issue', ppVisas: 'Stamps', ppKnown: 'Countries guessed',
     ppSecC: 'Countries & capitals', ppSecS: 'Seas & rivers', ppSecR: 'Resorts', ppGet: n => `Pass the exam:<br>${n}`, ppStamp: '🛂 Stamp my passport', ppNewOne: '🛂 New stamp!', exGo: 'Continue', exNew: 'Restart',
     tCountries: 'Countries', tCountriesSub: 'Capitals, shapes, blitz', tSeas: 'Seas & rivers', tSeasSub: 'Rivers, seas, gulfs', tRes: 'Resorts', tResSub: 'Beaches, islands, ski', tKids: 'Kids', tKidsSub: 'Flags and capitals',
@@ -838,7 +859,7 @@ function fixSettings() {
 }
 function fixStats() {
   if (!stats || typeof stats !== 'object') stats = {};
-  const d = { played: 0, answered: 0, correct: 0, bestStreak: 0, best: {}, daily: {}, xp: 0, known: [], ach: {}, blitzBest: 0, shapeOk: 0, bestTime: {}, resKnown: [], resBest: {}, resBestTime: {}, genBest: {}, genBestTime: {}, seaOk: 0, dip: {}, stampD: {}, since: '', ppNo: '', ppSeen: 0 };
+  const d = { played: 0, answered: 0, correct: 0, bestStreak: 0, best: {}, daily: {}, xp: 0, known: [], ach: {}, blitzBest: 0, shapeOk: 0, bestTime: {}, resKnown: [], resBest: {}, resBestTime: {}, genBest: {}, genBestTime: {}, seaOk: 0, dip: {}, quests: {}, dstr: {}, stampD: {}, since: '', ppNo: '', ppSeen: 0 };
   for (const k in d) if (stats[k] == null || typeof stats[k] !== typeof d[k]) stats[k] = d[k];
   if (!Array.isArray(stats.known)) stats.known = [];
   if (!Array.isArray(stats.resKnown)) stats.resKnown = [];
@@ -1175,6 +1196,7 @@ function renderHome() {
     ${rankCard()}
     <button class="daily${d == null ? ' shine' : ''}" data-act="daily"><b>${t.daily}</b><span>${d != null ? t.dailyDone(d) : t.dailyDesc}</span></button>
     ${examResumeCard()}
+    ${questsCard()}
     <div class="tiles">
       <button class="tile countries" data-act="countries"><em>🌍</em><i>🌍</i><b>${t.tCountries}</b><span>${t.tCountriesSub}</span></button>
       <button class="tile seas" data-act="seas"><em>🌊</em><i>🌊</i><b>${t.tSeas}</b><span>${t.tSeasSub}</span></button>
@@ -1272,6 +1294,100 @@ function startBtns(act, v, key) {
   return `<button class="btn" data-act="${act}"${dv}>▶ ${t.start}</button>`;
 }
 
+// ===== ЗАДАНИЯ ДНЯ И СЕРИЯ ДНЕЙ =====
+// g — группа (чтобы три задания были из разных разделов), need — сколько нужно
+const QUESTS = [
+  { id: 'blitz10', g: 'c', need: 10 }, { id: 'lives15', g: 'c', need: 15 }, { id: 'flag10', g: 'c', need: 10 }, { id: 'shape5', g: 'c', need: 5 }, { id: 'cap15', g: 'c', need: 15 },
+  { id: 'res5', g: 'r', need: 5 }, { id: 'sea15', g: 's', need: 15 }, { id: 'errors3', g: 'e', need: 3 }, { id: 'daily', g: 'd', need: 1 }, { id: 'streak7', g: 'x', need: 7 }
+];
+const Q_BY = Object.fromEntries(QUESTS.map(q => [q.id, q]));
+const QUEST_XP = 100, QUEST_ALL_XP = 200, DAY_BONUS = { 3: 50, 7: 150, 30: 500 };
+const localDay = (d = new Date()) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+function plural(n, a, b, c) { const m = n % 100, k = n % 10; return m > 10 && m < 20 ? c : k === 1 ? a : k > 1 && k < 5 ? b : c; }
+function questsToday() {
+  const day = localDay();
+  if (stats.quests.day !== day) {
+    const pool = shuffle(QUESTS.filter(q => q.id !== 'errors3' || mistakes.length >= 3)), used = new Set(), pick = [];
+    for (const q of pool) if (pick.length < 3 && !used.has(q.g)) { pick.push(q.id); used.add(q.g); }
+    stats.quests = { day, list: pick.map(id => ({ id, p: 0, done: false })), bonus: false };
+    saveAll();
+  }
+  return stats.quests;
+}
+function qProg(id, val, max) {
+  const Q = questsToday(), it = Q.list.find(x => x.id === id);
+  if (!it || it.done) return;
+  it.p = max ? Math.max(it.p, val) : it.p + val;
+  if (it.p >= Q_BY[id].need) {
+    it.p = Q_BY[id].need; it.done = true; stats.xp += QUEST_XP;
+    if (game) game.xp += QUEST_XP;
+    toast(T().qDone); sfx('ach'); hapticImpact('medium');
+    if (!Q.bonus && Q.list.every(x => x.done)) {
+      Q.bonus = true; stats.xp += QUEST_ALL_XP; if (game) game.xp += QUEST_ALL_XP;
+      setTimeout(() => { toast(T().qBonus); confetti(40); sfx('win'); }, 1700);
+    }
+  }
+}
+// после каждого ответа
+function questAnswer(ok) {
+  if (!game) return;
+  if (ok && game.kind === 'errors') qProg('errors3', 1);
+  qProg('streak7', game.streak, true);
+  if (game.gen) {
+    if (game.sec === 'res') { game.qRun = ok ? (game.qRun || 0) + 1 : 0; qProg('res5', game.qRun, true); }
+    if (game.sec === 'sea' && ok) qProg('sea15', 1);
+  } else if (ok) {
+    if (game.mode === 'flag') qProg('flag10', 1);
+    else if (game.mode === 'shape') qProg('shape5', 1);
+    else qProg('cap15', 1);
+  }
+}
+// в конце игры
+function questFinish() {
+  if (!game) return;
+  if (game.type === 'blitz') qProg('blitz10', game.score, true);
+  if (game.type === 'lives') qProg('lives15', game.score, true);
+  if (game.kind === 'daily') qProg('daily', 1);
+}
+// серия дней: засчитывается любая сыгранная игра
+function dayPlayed() {
+  const d = localDay(), ds = stats.dstr;
+  if (ds.last === d) return;
+  const y = new Date(); y.setDate(y.getDate() - 1);
+  ds.n = ds.last === localDay(y) ? (ds.n || 0) + 1 : 1;
+  ds.last = d; ds.best = Math.max(ds.best || 0, ds.n);
+  const bonus = DAY_BONUS[ds.n] || (ds.n > 30 && ds.n % 30 === 0 ? 500 : 0);
+  if (bonus) { stats.xp += bonus; if (game) game.xp += bonus; setTimeout(() => { toast(T().dayBonus(ds.n, bonus)); sfx('mega'); }, 900); }
+}
+function dayStreak() {
+  const ds = stats.dstr, y = new Date(); y.setDate(y.getDate() - 1);
+  return ds.last === localDay() || ds.last === localDay(y) ? (ds.n || 0) : 0;
+}
+function questsCard() {
+  const t = T(), Q = questsToday(), n = dayStreak();
+  const rows = Q.list.map(it => {
+    const q = Q_BY[it.id]; if (!q) return '';
+    return `<button class="qrow${it.done ? ' done' : ''}" data-act="qgo" data-v="${it.id}">
+      <i>${it.done ? '✅' : '🎯'}</i><span>${t['q_' + it.id]}<u><s style="width:${Math.round(it.p / q.need * 100)}%"></s></u></span><em>${it.p}/${q.need}</em><small>+${QUEST_XP}</small></button>`;
+  }).join('');
+  return `<div class="card quests"><div class="qhead"><b>${t.qTitle}</b>${n ? `<span>${t.days(n)}</span>` : ''}</div>${rows}
+    <div class="qfoot">${Q.bonus ? t.qAllDone : t.qAll}</div></div>`;
+}
+// тап по заданию — сразу туда, где его выполнить
+function qGo(id) {
+  const toC = (k, v) => { endGame(); if (k) settings[k] = v; saveAll(); renderCountries(); go('countries'); };
+  if (id === 'blitz10') toC('type', 'blitz');
+  else if (id === 'lives15') toC('type', 'lives');
+  else if (id === 'flag10') toC('mode', 'flag');
+  else if (id === 'shape5') toC('mode', 'shape');
+  else if (id === 'cap15') { if (settings.mode === 'flag' || settings.mode === 'shape') settings.mode = 'c2cap'; toC(); }
+  else if (id === 'streak7') toC();
+  else if (id === 'res5') { endGame(); renderResorts(); go('resorts'); }
+  else if (id === 'sea15') { endGame(); renderSeas(); go('seas'); }
+  else if (id === 'errors3') { if (mistakes.length) startGame('errors'); }
+  else if (id === 'daily') startGame('daily');
+}
+
 // ===== ПАСПОРТ СО ШТАМПАМИ =====
 // sec: c — страны, s — моря и реки, r — курорты; форма, цвет чернил и наклон у каждого штампа свои
 const STAMPS = [
@@ -1354,15 +1470,21 @@ function renderPassport(fresh = []) {
   ];
   $('#passport').innerHTML = `
     <header><button class="back" data-act="home">‹ ${t.back}</button><div style="flex:1"><h1>🛂 ${t.ppBtn}</h1><div class="sub">${stampCount()} / ${STAMPS.length}</div></div></header>
-    <div class="pp-book" id="ppBook">${pages.join('')}</div>
-    <div class="pp-nav"><button data-act="ppprev">‹</button><span class="pp-dots">${pages.map((_, k) => `<i data-k="${k}"></i>`).join('')}</span><button data-act="ppnext">›</button></div>`;
+    <div class="pp-wrap"><div class="pp-book" id="ppBook">${pages.join('')}</div>
+      <button class="pp-arr l" data-act="ppprev" aria-label="prev">‹</button><button class="pp-arr r" data-act="ppnext" aria-label="next">›</button></div>
+    <div class="pp-nav"><span class="pp-dots">${pages.map((_, k) => `<i data-k="${k}"></i>`).join('')}</span></div>`;
   const book = $('#ppBook');
   if (book && book.addEventListener) book.addEventListener('scroll', () => {
     const k = Math.round(book.scrollLeft / Math.max(1, book.clientWidth));
     if (k !== ppCur) { ppCur = k; ppDots(); if (k > 0) { settings.ppPage = k; store.set('settings', settings); } }
   }, { passive: true });
 }
-function ppDots() { document.querySelectorAll('#passport .pp-dots i').forEach((d, k) => d.classList.toggle('on', k === ppCur)); }
+function ppDots() {
+  document.querySelectorAll('#passport .pp-dots i').forEach((d, k) => d.classList.toggle('on', k === ppCur));
+  const l = document.querySelector('#passport .pp-arr.l'), r = document.querySelector('#passport .pp-arr.r');
+  if (l && l.classList) l.classList.toggle('hide', ppCur <= 0);
+  if (r && r.classList) r.classList.toggle('hide', ppCur >= 4);
+}
 function ppScroll(k, smooth = true) {
   const book = $('#ppBook'); if (!book || !book.scrollTo) return;
   k = Math.max(0, Math.min(4, k)); ppCur = k; ppDots();
@@ -1613,7 +1735,7 @@ function resolve(ok, close) {
   $('#reveal').innerHTML = (game.mode === 'flag' ? `${flag(q.c.id, 'sm')} <b>${esc(nm(q.c))}</b>` : `${flag(q.c.id, 'sm')} <b>${esc(cp(q.c))}</b> — ${t.capOf} ${esc(nm(q.c))}`) + (gain ? ` <span class="gain">+${gain} XP</span>` : '');
   if (game.type === 'lives') { const l = document.querySelector('#game .lives'); if (l) l.textContent = hearts(game.lives); }
   checkAch(game);
-  saveAll(); examSave(); hotMode(); ghost();
+  questAnswer(ok); saveAll(); examSave(); hotMode(); ghost();
   if (game.type === 'lives' && game.lives <= 0) { stopTimer(); failFx(); setTimeout(finish, 1700); return; }
   if (game.type === 'exam' && game.wrong.length > game.limit) { game.failed = true; stopTimer(); praise('❌', 'minus'); failFx(); setTimeout(finish, 1700); return; }
   const delay = game.type === 'blitz' ? (ok ? 350 : 2500) : (ok ? 900 : 1900);
@@ -1684,7 +1806,7 @@ function finish() {
   game.over = true;
   stopTimer();
   game.time = Date.now() - game.t0;
-  stats.played++;
+  stats.played++; questFinish(); dayPlayed();
   let record = false, best = null, fastRec = false;
   game.title = withCfg(game.cfg, regTitle); // на текущем языке
   game.exam = game.type === 'exam' && game.kind === 'normal' ? examResult(game, withCfg(game.cfg, countriesBonus)) : null;
@@ -2550,7 +2672,7 @@ function resolveGen(ok, close) {
   if (game.type === 'lives') { const l = document.querySelector('#game .lives'); if (l) l.textContent = hearts(game.lives); }
   if (game.type === 'exam') { const e = document.querySelector('#game .errs'); if (e) e.textContent = t.examErr(game.wrong.length, game.limit); }
   checkAch(game);
-  saveAll(); examSave(); hotMode(); ghost();
+  questAnswer(ok); saveAll(); examSave(); hotMode(); ghost();
   if (game.type === 'lives' && game.lives <= 0) { stopTimer(); failFx(); setTimeout(finishGen, 1700); return; }
   if (game.type === 'exam' && game.wrong.length > game.limit) { game.failed = true; stopTimer(); praise('❌', 'minus'); failFx(); setTimeout(finishGen, 1700); return; }
   setTimeout(nextGenQ, game.type === 'blitz' ? (ok ? 350 : 2500) : (ok ? 900 : 1900));
@@ -2610,7 +2732,7 @@ function finishGen() {
   game.over = true;
   stopTimer();
   game.time = Date.now() - game.t0;
-  stats.played++;
+  stats.played++; questFinish(); dayPlayed();
   const prev = stats.genBest[game.key] || 0;
   let record = false, fastRec = false;
   game.title = withCfg(game.cfg, GEN[game.sec].title).replace(/^\S+\s/, '');
@@ -3101,6 +3223,7 @@ document.addEventListener('click', e => {
   else if (a === 'gquit') { const sec = game && game.sec; endGame(); if (sec === 'res') { renderResorts(); go('resorts'); } else { renderSeas(); go('seas'); } }
   else if (a === 'ach') { renderAch(); go('ach'); }
   else if (a === 'passport') openPassport();
+  else if (a === 'qgo') qGo(v);
   else if (a === 'ppstamp') { const ns = (game && game.newStamps) || []; endGame(); openPassport(ppPageOf(ns[0]), ns); }
   else if (a === 'ppgo') ppGo(v);
   else if (a === 'ppprev' || a === 'ppnext') ppScroll(ppCur + (a === 'ppnext' ? 1 : -1));
